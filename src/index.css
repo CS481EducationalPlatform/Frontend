@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+
+
+
+
+  --primary-text-color:  #0a0a0a ;
+  --primary-background-color: #f8f3eb ;
+  --primary-outline-color:  #e68e06 ;
+
+  --secondary-text-color: #020101ec;
+  --secondary-background-color: #fff5e9;
+  
+  --tertiary-text-color: #1d1d1db7;
+  --tertiary-background-color: #ffead6;
+}
+
+[data-theme="dark"]{
+  --primary-text-color:  #fff9ed ;
+  --primary-background-color: #3a3a3a;
+  --primary-outline-color:  #FFBB80 ;
+
+  --secondary-text-color: #797979;
+  --secondary-background-color: #29292973;
+
+  --tertiary-text-color: #e6e6e6a6;
+  --tertiary-background-color: #1D1D1D;
+  /*fdfaf48c*/
+}

@@ -1,0 +1,109 @@
+/* Ensure full-page layout */
+.lesson-page {
+    display: flex;
+    height: 100vh;
+    background-color: slategrey;
+  }
+  
+  /* Sidebar styling */
+  .lesson-sidebar {
+    width: 25%;
+    padding: 20px;
+    background-color: #e2e8f0;
+    border-right: 2px solid #cbd5e1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .lesson-sidebar h2 {
+    font-size: 1.2rem;
+    border-bottom: 2px solid #000000;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #000000;
+  }
+  
+  /* Lesson button styling */
+  .lesson-button {
+    width: 200px;
+    margin: 10px;;
+    height: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgb(100, 144, 255);
+    color: black;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+  }
+  
+  .lesson-button:hover {
+    background-color: #ff6565;
+  }
+  
+  .lesson-button.active {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #2563eb;
+  }
+  
+  /* Back button */
+  .back-button {
+    margin-top: auto;
+    background-color: #3b82f6;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .back-button:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Lesson content area */
+  .lesson-content {
+    width: 75%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .lesson-content h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  
+  .lesson-content p {
+    color: #4b5563;
+  }
+  
+  .document-list {
+    margin-top: 10px;
+    padding-left: 0;
+  }
+  
+  .document-list li {
+    list-style: none;
+    color: #2563eb;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .document-list li:hover {
+    color: #1e40af;
+  }
+  
