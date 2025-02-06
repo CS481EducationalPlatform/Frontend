@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import CoursePage from "./pages/CoursePage";
 import LessonPage from "./pages/LessonPage";
@@ -318,10 +318,10 @@ function App() {
       <div className="App">
         {/* Navbar */}
         <nav className="navbar">
-          <div className="nav-brand">
+          <Link to="/" className="nav-brand">
             <img src="/babushka.png" alt={translations[language].babushkaAlt} className="nav-logo" />
             <span>Babushka Lessons</span>
-          </div>
+          </Link>
           <div className="nav-items">
             <select 
               className="language-select" 
