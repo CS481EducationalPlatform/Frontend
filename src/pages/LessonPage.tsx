@@ -52,8 +52,29 @@ const lessons = {
   ],
 };
 
+// Add translations
+const translations = {
+  en: {
+    courseLessons: "Course Lessons",
+    backToCourses: "Back to Courses",
+    selectLesson: "Select a lesson to view its content",
+    courseDocuments: "Course Documents",
+    noDocuments: "No documents available"
+  },
+  ru: {
+    courseLessons: "Уроки Курса",
+    backToCourses: "Назад к Курсам",
+    selectLesson: "Выберите урок для просмотра",
+    courseDocuments: "Документы Курса",
+    noDocuments: "Документы недоступны"
+  }
+};
 
-const LessonPage = () => {
+interface LessonPageProps {
+  language: 'en' | 'ru';
+}
+
+const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
   const { courseId } = useParams();
   const navigate = useNavigate();
   const courseLessons = lessons[courseId] || [];
@@ -63,7 +84,7 @@ const LessonPage = () => {
     <div className="lesson-page">
       {/* Sidebar with Lessons */}
       <div className="lesson-sidebar">
-        <h2>Course Lessons</h2>
+        <h2>{translations[language].courseLessons}</h2>
         {courseLessons.map((lesson) => (
           <Lesson
             key={lesson.id}
@@ -73,7 +94,7 @@ const LessonPage = () => {
           />
         ))}
         <button className="back-button" onClick={() => navigate("/")}>
-          Back to Courses
+          {translations[language].backToCourses}
         </button>
       </div>
 
@@ -91,7 +112,7 @@ const LessonPage = () => {
                 </div>
               </div>
             )}
-            <h3>Course Documents</h3>
+            <h3>{translations[language].courseDocuments}</h3>
             {currentLesson?.documents.length > 0 ? (
               <ul className="document-list">
                 {currentLesson.documents.map((doc, index) => (
@@ -99,11 +120,11 @@ const LessonPage = () => {
                 ))}
               </ul>
             ) : (
-              <p>No documents available.</p>
+              <p>{translations[language].noDocuments}</p>
             )}
           </>
         ) : (
-          <p>Select a lesson to view its content.</p>
+          <p>{translations[language].selectLesson}</p>
         )}
       </div>
     </div>
