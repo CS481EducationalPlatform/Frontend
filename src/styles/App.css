@@ -170,6 +170,7 @@ html, body {
   padding-left: 1rem;
   padding-right: 1rem;
   background-color: #ffffff;
+  color: #000000;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
   z-index: 1000;
 }
@@ -189,7 +190,7 @@ html, body {
 .nav-brand > span {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #ffffff;
+  color: #000000;
   text-decoration: none;
   cursor: pointer;
 }
@@ -249,6 +250,10 @@ html, body {
 [data-theme="dark"] .navbar {
   background-color: #888;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] span {
+  color: #ffffff;
 }
 
 [data-theme="dark"] .course-title {
