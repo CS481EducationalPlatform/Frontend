@@ -1,6 +1,18 @@
 import React from "react";
 
-const Lesson = ({ lesson, isActive, onSelect }) => {
+interface LessonType {
+  title: string;
+  tags: string[];
+  // Add other lesson properties as needed
+}
+
+interface LessonProps {
+  lesson: LessonType;
+  isActive: boolean;
+  onSelect: (lesson: LessonType) => void;
+}
+
+const Lesson = ({ lesson, isActive, onSelect }: LessonProps) => {
   return (
     <button
       className={`lesson-button ${
@@ -8,7 +20,16 @@ const Lesson = ({ lesson, isActive, onSelect }) => {
       }`}
       onClick={() => onSelect(lesson)}
     >
-      {lesson.title}
+      <div className="lesson-content-wrapper">
+        <div className="lesson-title">{lesson.title}</div>
+        <div className="lesson-tags">
+          {lesson.tags.map((tag, index) => (
+            <span key={index} className="lesson-tag">
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
     </button>
   );
 };
