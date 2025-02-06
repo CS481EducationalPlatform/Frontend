@@ -9,11 +9,14 @@ const translations = {
   },
   ru: {
     pageTitle: "Доступные Курсы",
+  },
+  es: {
+    pageTitle: "Cursos Disponibles",
   }
 };
 
 interface CoursePageProps {
-  language: 'en' | 'ru';
+  language: 'en' | 'ru' | 'es';
 }
 
 const courses = [

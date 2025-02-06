@@ -107,8 +107,8 @@
   max-width: 90%;
 }
 
-/* Language Toggle Button */
-.language-toggle {
+/* Replace language toggle button styles with dropdown styles */
+.language-select {
   position: fixed;
   top: 20px;
   right: 20px;
@@ -121,17 +121,27 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
   z-index: 1001;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 20px;
+  padding-right: 36px;
 }
 
-.language-toggle:hover {
-  background: #2563eb;
+.language-select:hover {
+  background-color: #2563eb;
 }
 
-.language-toggle img {
-  width: 20px;
-  height: 20px;
+.language-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.language-select option {
+  background-color: white;
+  color: #1f2937;
 }

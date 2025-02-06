@@ -10,19 +10,37 @@ const translations = {
     welcome: "Welcome to Babushka Lessons!",
     typeResponse: "Type your response...",
     backToCourses: "Back to Courses",
-    toggleLanguage: "РУС",
+    languageSelect: "Select Language",
     closeChat: "Close chat",
-    toggleLanguageAriaLabel: "Toggle language",
-    babushkaAlt: "Babushka Logo"
+    toggleLanguageAriaLabel: "Select language",
+    babushkaAlt: "Babushka Logo",
+    english: "English",
+    russian: "Russian",
+    spanish: "Spanish"
   },
   ru: {
     welcome: "Добро пожаловать в Уроки Бабушки!",
     typeResponse: "Введите ваш ответ...",
     backToCourses: "Назад к курсам",
-    toggleLanguage: "ENG",
+    languageSelect: "Выберите Язык",
     closeChat: "Закрыть чат",
-    toggleLanguageAriaLabel: "Переключить язык",
-    babushkaAlt: "Логотип Бабушки"
+    toggleLanguageAriaLabel: "Выберите язык",
+    babushkaAlt: "Логотип Бабушки",
+    english: "Английский",
+    russian: "Русский",
+    spanish: "Испанский"
+  },
+  es: {
+    welcome: "¡Bienvenido a las Lecciones de Babushka!",
+    typeResponse: "Escribe tu respuesta...",
+    backToCourses: "Volver a los Cursos",
+    languageSelect: "Seleccionar Idioma",
+    closeChat: "Cerrar chat",
+    toggleLanguageAriaLabel: "Seleccionar idioma",
+    babushkaAlt: "Logo de Babushka",
+    english: "Inglés",
+    russian: "Ruso",
+    spanish: "Español"
   }
 };
 
@@ -47,6 +65,16 @@ const babushkaResponses = {
     "Какая мудрость! Как свежая картошка с огорода!",
     "*Щипает за щёку* Такой умный! Греешь бабушкино сердце как свежий хлеб!",
     "В старой стране говорят: Знания как хороший суп - лучше со временем!"
+  ],
+  es: [
+    "¡Ay, mi niño querido! ¡Como mi borscht, el aprendizaje necesita tiempo!",
+    "En mis tiempos, no teníamos computadoras. ¡Pero tú estás aprendiendo bien!",
+    "Me recuerda cuando era joven en mi país. ¡Sigue así, малыш!",
+    "*Ajusta el pañuelo* ¡Sí, sí! ¡Te estás volviendo fuerte como un oso!",
+    "¡Babushka está orgullosa! ¡Toma пирожки virtual para energía!",
+    "¡Qué sabiduría muestras! ¡Como papa fresca del jardín!",
+    "*Pellizca tu mejilla* ¡Tan inteligente! ¡Calientas el corazón de Babushka como pan fresco!",
+    "En mi país decimos: ¡El conocimiento es como una buena sopa - mejor con tiempo!"
   ]
 };
 
@@ -65,7 +93,7 @@ const reverseMessageMap = babushkaResponses.ru.reduce((acc, msg, index) => {
 function App() {
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
-  const [language, setLanguage] = useState<'en' | 'ru'>('en');
+  const [language, setLanguage] = useState<'en' | 'ru' | 'es'>('en');
   const [chatMessages, setChatMessages] = useState<string[]>([
     translations[language].welcome,
   ]);
@@ -79,7 +107,11 @@ function App() {
 
   // Toggle language handler
   const toggleLanguage = () => {
-    setLanguage(prev => prev === 'en' ? 'ru' : 'en');
+    setLanguage(prev => {
+      if (prev === 'en') return 'ru';
+      if (prev === 'ru') return 'es';
+      return 'en';
+    });
   };
 
   // Update welcome message and translate existing Babushka messages when language changes
@@ -91,7 +123,7 @@ function App() {
           return msg;
         }
         // Update Babushka's welcome message
-        if (msg === translations['en'].welcome || msg === translations['ru'].welcome) {
+        if (msg === translations['en'].welcome || msg === translations['ru'].welcome || msg === translations['es'].welcome) {
           return translations[language].welcome;
         }
         // Translate Babushka messages
@@ -99,6 +131,9 @@ function App() {
           const content = msg.replace('Babushka: ', '');
           if (language === 'ru') {
             const translation = messageMap[content];
+            return translation ? `Babushka: ${translation}` : msg;
+          } else if (language === 'es') {
+            const translation = babushkaResponses.es.find(res => res.startsWith(content));
             return translation ? `Babushka: ${translation}` : msg;
           } else {
             const translation = reverseMessageMap[content];
@@ -203,14 +238,17 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* Language Toggle Button */}
-        <button 
-          className="language-toggle" 
-          onClick={toggleLanguage}
+        {/* Language Selector Dropdown */}
+        <select 
+          className="language-select" 
+          value={language}
+          onChange={(e) => setLanguage(e.target.value as 'en' | 'ru' | 'es')}
           aria-label={translations[language].toggleLanguageAriaLabel}
         >
-          {translations[language].toggleLanguage}
-        </button>
+          <option value="en">{translations[language].english}</option>
+          <option value="ru">{translations[language].russian}</option>
+          <option value="es">{translations[language].spanish}</option>
+        </select>
 
         {/* Babushka Image Now in Bottom Right */}
         <img src="/babushka.png" alt={translations[language].babushkaAlt} className="bottom-right-image" />
