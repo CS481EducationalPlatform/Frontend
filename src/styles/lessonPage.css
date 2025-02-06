@@ -17,8 +17,27 @@
     border-right: 2px solid #cbd5e1;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    align-items: center;
+    height: 100vh; /* Fixed height */
+    position: relative; /* For absolute positioning of back button */
+  }
+
+  /* Style the scrollbar */
+  .lesson-sidebar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .lesson-sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  .lesson-sidebar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  .lesson-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
   
   .lesson-sidebar h2 {
@@ -62,7 +81,11 @@
   
   /* Back button */
   .back-button {
-    margin-top: auto;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    margin: 0;
     background-color: #3b82f6;
     color: white;
     padding: 10px;
@@ -133,4 +156,11 @@
   
   .document-list li:hover {
     color: #1e40af;
+  }
+
+  /* Add a scrollable container for lessons */
+  .lesson-list {
+    overflow-y: auto;
+    flex-grow: 1;
+    margin-bottom: 60px; /* Space for back button */
   }
