@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { YoutubeEmbedder } from "../components/YoutubeEmbedder";
 import Lesson from "../components/Lesson";
-import "../styles/lessonPage.css"; 
+import "../styles/LessonPage.css"; 
 
 const lessons = {
   1: [

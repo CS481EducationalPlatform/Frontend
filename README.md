@@ -1,7 +1,12 @@
-# React + TypeScript + Vite
+# BabushkaLessons Frontend Development Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a simple frontend for BabushkaLessons.
 
+## Features
+
+- View courses and lessons
+- Watch video lessons
+- Read course documents
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
