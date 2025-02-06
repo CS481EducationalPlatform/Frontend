@@ -1,12 +1,16 @@
 # BabushkaLessons Frontend Development Project
 
-This project is a simple frontend for BabushkaLessons.
+This project is the frontend for the Educational Platform Babushka Lessons.
 
 ## Features
 
-- View courses and lessons
-- Watch video lessons
-- Read course documents
+- View courses and contained lessons
+- Watch video lessons in embedded player
+- Read course documents or download them
+- Upload new lessons (only the form)
+- Toggle dark mode
+- Chat with coding AI (form + temporary backend code)
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
@@ -39,5 +43,9 @@ export default {
 - Add the following to the .env file:
 
 ```sh
-VITE_OPENAI_API_KEY=your_api_key
+VITE_OPENAI_API_KEY=your_openai_api_key
 ```
+
+### License
+
+This project is completely closed source. All rights reserved.
