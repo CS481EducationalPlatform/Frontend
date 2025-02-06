@@ -44,6 +44,11 @@ function App() {
     }
   }, [chatMessages]);
 
+  // Add handler for closing chat
+  const handleCloseChat = () => {
+    setShowChat(false);
+  };
+
   return (
     <Router>
       <div className="App">
@@ -53,6 +58,13 @@ function App() {
         {/* Chat Box Now Positioned to the Right Side */}
         {showChat && (
           <div className="chat-container">
+            <button 
+              className="chat-close" 
+              onClick={handleCloseChat}
+              aria-label="Close chat"
+            >
+              ×
+            </button>
             <div className="chat-box" ref={chatContainerRef}>
               {chatMessages.map((msg, index) => (
                 <div key={index} className="chat-message">
