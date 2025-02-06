@@ -2,83 +2,61 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-/* Rotating Logo Animation */
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Babushka Image - Fixed Bottom Left */
-.bottom-left-image {
+/* Babushka Image - Move to Bottom Right */
+.bottom-right-image {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px; /* Move image to the right */
   width: 100px;
   height: auto;
   z-index: 1000;
 }
 
-/* Chat Bubble - Positioned Top Right of Image */
-.chat-bubble {
+/* Chat Container - Aligns to Right Side */
+.chat-container {
   position: fixed;
-  bottom: 140px; /* Appears above the image */
-  left: 120px;   /* Moves it to the right of the image */
-  background-color: #fff;
-  color: #000;
-  padding: 12px 16px;
-  border-radius: 16px;
-  font-size: 14px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  bottom: 140px; /* Above the image */
+  right: 120px;  /* Move chat box to the right side */
+  display: flex;
+  flex-direction: column; /* Messages appear above input */
+  align-items: flex-end;
   z-index: 1001;
-  max-width: 200px;
-  text-align: center;
+  width: 220px;
+}
+
+/* Chat Box - Messages Appear Here */
+.chat-box {
+  width: 100%;
+  height: 150px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column; /* Messages stack from top to bottom */
+  background-color: #fff;
   border: 2px solid #ccc;
-  animation: fadeIn 0.5s ease-in-out, fadeOut 0.5s ease-in-out 4s forwards;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  text-align: left;
 }
 
-/* Speech Bubble Tail */
-.chat-bubble::after {
-  content: "";
-  position: absolute;
-  bottom: -12px; /* Positions the tail below the bubble */
-  left: 15px;
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 12px solid #fff;
+/* Individual Chat Messages */
+.chat-message {
+  background-color: #f1f1f1;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px; /* Adds space between messages */
+  max-width: 90%;
 }
 
-/* Fade-in and fade-out animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(
+/* Chat Input - Positioned BELOW Chat Box */
+.chat-input {
+  margin-top: 6px; /* Push input below chat box */
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
+  text-align: left;
+}

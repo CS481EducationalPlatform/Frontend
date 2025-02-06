@@ -1,36 +1,75 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CoursePage from "./pages/CoursePage";
 import LessonPage from "./pages/LessonPage";
-import "./styles/App.css";
+import "./styles/App.css"; // Ensure styles are in App.css
 
 function App() {
-  const [showText, setShowText] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+  const [userMessage, setUserMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState<string[]>([
+    "Welcome to Babushka Lessons!",
+  ]);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Show the chat bubble after 1 second
+    // Show the chat after 1 second
     const showTimer = setTimeout(() => {
-      setShowText(true);
-
-      // Hide the chat bubble after 30 seconds
-      const hideTimer = setTimeout(() => {
-        setShowText(false);
-      }, 30000); // 30 seconds
-
-      return () => clearTimeout(hideTimer);
-    }, 1000); // 1 second delay
+      setShowChat(true);
+    }, 1000);
 
     return () => clearTimeout(showTimer);
   }, []);
 
+  // Handle input change
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserMessage(event.target.value);
+  };
+
+  // Handle submission when pressing Enter
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && userMessage.trim() !== "") {
+      setChatMessages((prevMessages) => [
+        ...prevMessages, // Keep messages in order (new at the bottom)
+        `You: ${userMessage}`,
+      ]);
+      setUserMessage(""); // Clear input field
+    }
+  };
+
+  // Scroll to the latest message when chat updates
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; // Scroll to bottom
+    }
+  }, [chatMessages]);
+
   return (
     <Router>
       <div className="App">
-        {/* Babushka Image at Bottom Left */}
-        <img src="/babushka.png" alt="Logo" className="bottom-left-image" />
+        {/* Babushka Image Now in Bottom Right */}
+        <img src="/babushka.png" alt="Logo" className="bottom-right-image" />
 
-        {/* Chat Bubble Text Box (Appears above the image) */}
-        {showText && <div className="chat-bubble">Welcome to Babushka Lessons!</div>}
+        {/* Chat Box Now Positioned to the Right Side */}
+        {showChat && (
+          <div className="chat-container">
+            <div className="chat-box" ref={chatContainerRef}>
+              {chatMessages.map((msg, index) => (
+                <div key={index} className="chat-message">
+                  {msg}
+                </div>
+              ))}
+            </div>
+            <input
+              type="text"
+              className="chat-input"
+              placeholder="Type your response..."
+              value={userMessage}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+        )}
 
         {/* Routes */}
         <Routes>
