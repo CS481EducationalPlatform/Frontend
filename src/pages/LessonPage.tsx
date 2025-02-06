@@ -103,22 +103,25 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
 
   return (
     <div className="lesson-page">
-      {/* Sidebar with Lessons */}
       <div className="lesson-sidebar">
-        <h2>{translations[language].courseLessons}</h2>
-        <div className="lesson-list">
-          {courseLessons.map((lesson) => (
-            <Lesson
-              key={lesson.id}
-              lesson={lesson}
-              isActive={lesson.id === currentLesson?.id}
-              onSelect={setCurrentLesson}
-            />
-          ))}
+        <div className="lesson-sidebar-content">
+          <h2>{translations[language].courseLessons}</h2>
+          <div className="lesson-list">
+            {courseLessons.map((lesson) => (
+              <Lesson
+                key={lesson.id}
+                lesson={lesson}
+                isActive={lesson.id === currentLesson?.id}
+                onSelect={setCurrentLesson}
+              />
+            ))}
+          </div>
         </div>
-        <button className="back-button" onClick={() => navigate("/")}>
-          {translations[language].backToCourses}
-        </button>
+        <div className="back-button-container">
+          <button className="back-button" onClick={() => navigate("/")}>
+            {translations[language].backToCourses}
+          </button>
+        </div>
       </div>
 
       {/* Lesson Content Section */}

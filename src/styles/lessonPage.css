@@ -1,91 +1,99 @@
-/* Ensure full-page layout */
 .lesson-page {
     display: flex;
-    min-height: 100vh;
+    height: calc(100vh - 64px); /* Adjust for navbar height */
     background-color: slategrey;
     width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  
-  /* Sidebar styling */
-  .lesson-sidebar {
+    overflow: hidden; /* Prevent page-level scroll */
+}
+
+/* Sidebar styling */
+.lesson-sidebar {
     width: 15%;
-    padding: 20px;
     background-color: #e2e8f0;
     border-right: 2px solid #cbd5e1;
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Fixed height */
-    position: relative; /* For absolute positioning of back button */
-  }
+    height: 100%;
+}
 
-  /* Style the scrollbar */
-  .lesson-sidebar::-webkit-scrollbar {
-    width: 8px;
-  }
+/* Add a wrapper for the scrollable content */
+.lesson-sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
 
-  .lesson-sidebar::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-  }
+/* Style the scrollbar */
+.lesson-sidebar::-webkit-scrollbar {
+  width: 8px;
+}
 
-  .lesson-sidebar::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-  }
+.lesson-sidebar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
 
-  .lesson-sidebar::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-  
-  .lesson-sidebar h2 {
-    font-size: 1.2rem;
-    border-bottom: 2px solid #000000;
-    font-weight: bold;
-    margin-bottom: 16px;
-    color: #000000;
-  }
-  
-  /* Lesson button styling */
-  .lesson-button {
-    width: 200px;
-    margin: 10px;;
-    height: 100px;
+.lesson-sidebar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.lesson-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 
-    background-color: rgb(100, 144, 255);
-    color: #ffffff;
-    border: 2px solid #000000;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+.lesson-sidebar h2 {
+  font-size: 1.2rem;
+  border-bottom: 2px solid #000000;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: #000000;
+}
 
-  }
-  
-  .lesson-button:hover {
-    background-color: #ff6565;
-  }
-  
-  .lesson-button.active {
-    background-color: #3b82f6;
-    color: white;
-    border-color: #2563eb;
-  }
-  
-  /* Back button */
-  .back-button {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    margin: 0;
+/* Lesson button styling */
+.lesson-button {
+  width: 200px;
+  margin: 10px;;
+  height: 100px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgb(100, 144, 255);
+  color: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+}
+
+.lesson-button:hover {
+  background-color: #ff6565;
+}
+
+.lesson-button.active {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #2563eb;
+}
+
+/* Back button */
+.back-button-container {
+    position: sticky;
+    bottom: 0;
+    background-color: #e2e8f0; /* Same as sidebar background */
+    padding: 20px;
+    border-top: 1px solid #cbd5e1;
+    margin-top: auto;
+}
+
+/* Update back button */
+.back-button {
+    width: 100%;
     background-color: #3b82f6;
     color: white;
     padding: 10px;
@@ -94,73 +102,63 @@
     cursor: pointer;
     font-weight: bold;
     transition: all 0.2s ease-in-out;
-  }
-  
-  .back-button:hover {
-    background-color: #2563eb;
-  }
-  
-  /* Lesson content area */
-  .lesson-content {
-    width: 75%;
+}
+
+.back-button:hover {
+  background-color: #2563eb;
+}
+
+/* Lesson content area */
+.lesson-content {
+    flex: 1;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-  }
-  
-  .lesson-content h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 16px;
-  }
-  
-  /* Add styles for the empty state message */
-  .lesson-content > p {
-    font-size: 1.8rem;
-    color: #4b5563;
-    margin: auto;  /* This will center vertically when it's the only content */
-    text-align: center;
-    font-weight: 500;
-  }
-  
-  /* Keep existing specific styles for paragraphs within lesson content */
-  .lesson-content > :not(> p) p {
-    color: #4b5563;
-  }
-  
-  .document-list {
-    margin-top: 10px;
-    padding-left: 0;
-  }
-  
-  .document-list li {
-    list-style: none;
-    color: #2563eb;
-    cursor: pointer;
-    text-decoration: underline;
-    font-size: 1.2rem;
-    padding: 8px 0;
-    position: relative;
-    padding-left: 24px;
-  }
+    overflow-y: auto; /* Make content area scrollable */
+    height: 100%;
+}
 
-  .document-list li:before {
-    content: "•";
-    position: absolute;
-    left: 8px;
-    color: #2563eb;
-  }
-  
-  .document-list li:hover {
-    color: #1e40af;
-  }
+.lesson-content h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
 
-  /* Add a scrollable container for lessons */
-  .lesson-list {
-    overflow-y: auto;
-    flex-grow: 1;
-    margin-bottom: 60px; /* Space for back button */
-  }
+/* Add styles for the empty state message */
+.lesson-content > p {
+  font-size: 1.8rem;
+  color: #4b5563;
+  margin: auto;  /* This will center vertically when it's the only content */
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Keep existing specific styles for paragraphs within lesson content */
+.lesson-content > :not(> p) p {
+  color: #4b5563;
+}
+
+.document-list {
+  margin-top: 10px;
+  padding-left: 0;
+}
+
+.document-list li {
+  list-style: none;
+  color: #2563eb;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1.2rem;
+  padding: 8px 0;
+  position: relative;
+  padding-left: 24px;
+}
+
+.document-list li:before {
+  content: "•";
+  position: absolute;
+  left: 8px;
+  color: #2563eb;
+}
+
+.document-list li:hover {
+  color: #1e40af;
+}
