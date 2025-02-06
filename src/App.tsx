@@ -175,9 +175,6 @@ const createMessageMaps = () => {
   return maps;
 };
 
-// Create the message maps
-const messageMaps = createMessageMaps();
-
 function App() {
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
