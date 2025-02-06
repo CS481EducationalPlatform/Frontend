@@ -316,19 +316,27 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* Language Selector Dropdown */}
-        <select 
-          className="language-select" 
-          value={language}
-          onChange={(e) => setLanguage(e.target.value as 'en' | 'ru' | 'es' | 'fr' | 'uk')}
-          aria-label={translations[language].toggleLanguageAriaLabel}
-        >
-          <option value="en">{translations[language].english}</option>
-          <option value="uk">{translations[language].ukrainian}</option>
-          <option value="ru">{translations[language].russian}</option>
-          <option value="es">{translations[language].spanish}</option>
-          <option value="fr">{translations[language].french}</option>
-        </select>
+        {/* Navbar */}
+        <nav className="navbar">
+          <div className="nav-brand">
+            <img src="/babushka.png" alt={translations[language].babushkaAlt} className="nav-logo" />
+            <span>Babushka Lessons</span>
+          </div>
+          <div className="nav-items">
+            <select 
+              className="language-select" 
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as 'en' | 'ru' | 'es' | 'fr' | 'uk')}
+              aria-label={translations[language].toggleLanguageAriaLabel}
+            >
+              <option value="en">{translations[language].english}</option>
+              <option value="uk">{translations[language].ukrainian}</option>
+              <option value="ru">{translations[language].russian}</option>
+              <option value="es">{translations[language].spanish}</option>
+              <option value="fr">{translations[language].french}</option>
+            </select>
+          </div>
+        </nav>
 
         {/* Babushka Image Now in Bottom Right */}
         <img src="/babushka.png" alt={translations[language].babushkaAlt} className="bottom-right-image" />
