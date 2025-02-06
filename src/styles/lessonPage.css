@@ -111,14 +111,16 @@
 .lesson-content {
     flex: 1;
     padding: 20px;
-    overflow-y: auto; /* Make content area scrollable */
+    overflow-y: auto;
     height: 100%;
+    color: #000000;
 }
 
 .lesson-content h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 16px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #000000;
 }
 
 .document-list {
@@ -146,4 +148,10 @@
 
 .document-list li:hover {
   color: #1e40af;
+}
+
+/* Add dark mode overrides */
+[data-theme="dark"] .lesson-content,
+[data-theme="dark"] .lesson-content h2 {
+    color: #ffffff;
 }
