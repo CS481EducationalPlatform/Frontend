@@ -32,62 +32,85 @@ const courses = [
   {
     id: 1,
     title: "Programming Basics",
-    icon: <FaCode />
+    icon: <FaCode />,
+    instructor: "Tatiana Harrison"
   },
   {
     id: 2,
     title: "Advanced Programming",
-    icon: <FaLaptopCode />
+    icon: <FaLaptopCode />,
+    instructor: "Tatiana Harrison"
   },
+
   {
     id: 3,
     title: "Data Structures and Algorithms",
-    icon: <IoHardwareChip />
+    icon: <IoHardwareChip />,
+    instructor: "Tatiana Harrison"
   },
   {
     id: 4,
     title: "Full-Stack Software Development",
-    icon: <FaProjectDiagram />
+    icon: <FaProjectDiagram />,
+    instructor: "Tatiana Harrison"
   },
+
   {
     id: 5,
     title: "Database Management",
-    icon: <FaDatabase />
+    icon: <FaDatabase />,
+    instructor: "Tatiana Harrison"
+
   },
   {
     id: 6,
     title: "Data Science",
-    icon: <FaChartBar />
+    icon: <FaChartBar />,
+    instructor: "Tatiana Harrison"
+
   },
   {
     id: 7,
     title: "Web Development",
-    icon: <FaGlobe />
+    icon: <FaGlobe />,
+    instructor: "Tatiana Harrison"
+
   },
   {
     id: 8,
     title: "Cybersecurity",
-    icon: <FaShieldAlt />
+    icon: <FaShieldAlt />,
+    instructor: "Tatiana Harrison"
+
   },
   {
     id: 9,
     title: "Technical Writing",
-    icon: <FaBook />
+    icon: <FaBook />,
+    instructor: "Tatiana Harrison"
+
   },
   {
     id: 10,
     title: "Project Management",
-    icon: <FaTasks />
+    icon: <FaTasks />,
+    instructor: "Tatiana Harrison"
+
   },
   {
     id: 11,
     title: "Machine Learning",
-    icon: <FaBrain />
+    icon: <FaBrain />,
+    instructor: "Tatiana Harrison"
+
   },
   {
+
     id: 12,
     title: "Data Visualization",
-    icon: <FaChartLine />
+    icon: <FaChartLine />,
+    instructor: "Tatiana Harrison"
+
   }
 ];
 

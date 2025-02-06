@@ -34,10 +34,11 @@
   /* Style the course buttons */
   .course-button {
     width: 200px;
-    height: 100px;
+    min-height: 120px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     background-color: rgb(100, 144, 255);
     color: #ffffff;
     border: 2px solid #000000;
@@ -49,7 +50,7 @@
     transition: all 0.3s ease-in-out;
     padding: 1rem;
   }
-  
+
   .course-content {
     display: flex;
     flex-direction: column;
@@ -63,6 +64,12 @@
   }
   
   .course-title-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
     text-align: center;
     font-family: 'Inter', sans-serif;
     font-size: 0.9rem;
@@ -79,3 +86,17 @@
   .course-button:hover .course-icon {
     transform: scale(1.1);
   }
+
+.course-instructor {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-style: italic;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  width: 100%;
+}
+
+.course-title-text p {
+  margin: 0.25rem 0;
+}
