@@ -10,21 +10,27 @@
   
   /* Style the course title */
   .course-title {
-    font-size: 2rem;
+    font-size: 4rem;
     color: black;
-    border: 2px solid #000000;
     font-weight: bold;
-    margin-bottom: 20px;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    right: 0;
+    text-align: center;
   }
   
+
   /* Grid container for courses */
   .course-grid {
     display: grid;
-    border: 2px solid bla;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+    position: absolute;
+    top: 200px;
   }
   
+
   /* Style the course buttons */
   .course-button {
     width: 200px;
@@ -33,7 +39,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgb(100, 144, 255);
-    color: black;
+    color: #ffffff;
     border: 2px solid #000000;
     border-radius: 10px;
     font-size: 1rem;
