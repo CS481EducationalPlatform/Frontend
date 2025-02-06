@@ -12,6 +12,15 @@ code {
     monospace;
 }
 
+.bottom-left-image {
+  position: fixed;
+  bottom: 20px;  /* Adjust as needed */
+  left: 20px;  /* Adjust as needed */
+  width: 100px;  /* Adjust size */
+  height: auto;
+  z-index: 1000;  /* Ensure it's above other elements */
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
