@@ -49,6 +49,30 @@ const courses = [
   {
     id: 6,
     title: "Data Science",
+  },
+  {
+    id: 7,
+    title: "Web Development",
+  },
+  {
+    id: 8,
+    title: "Cybersecurity",
+  },
+  {
+    id: 9,
+    title: "Technical Writing",
+  },
+  {
+    id: 10,
+    title: "Project Management",
+  },
+  {
+    id: 11,
+    title: "Machine Learning",
+  },
+  {
+    id: 12,
+    title: "Data Visualization",
   }
 ];
 
