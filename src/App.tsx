@@ -6,6 +6,7 @@ import AboutPage from "./pages/AboutPage";
 import UploadPage from "./pages/UploadPage";
 import "./styles/App.css";
 import "./styles/Pages.css";
+import OpenAI from 'openai';
 
 // Translation dictionary
 const translations = {
@@ -101,84 +102,87 @@ const translations = {
   }
 };
 
-// Babushka responses based on language
-const babushkaResponses = {
-  en: [
-    "Ah, my sweet child! Just like my borscht, learning takes time to simmer!",
-    "In my day, we had no fancy computers. But you, you are learning good!",
-    "Reminds me of when I was young in old country. Keep going, малыш!",
-    "*Adjusts headscarf* Yes, yes! You are getting stronger like bear!",
-    "Babushka is proud! Here, have virtual пирожки for energy!",
-    "Such wisdom you show! Like fresh potato from garden!",
-    "*Pinches your cheek* So smart! You make Babushka's heart warm like fresh bread!",
-    "In old country, we say: Knowledge is like good soup - better with time!"
-  ],
-  ru: [
-    "Ах, мой сладкий! Как мой борщ, учение требует времени!",
-    "В моё время компьютеров не было. Но ты хорошо учишься!",
-    "Напоминает мне молодость в старой стране. Продолжай, малыш!",
-    "*Поправляет платок* Да, да! Ты становишься сильным как медведь!",
-    "Бабушка гордится! Держи виртуальные пирожки для энергии!",
-    "Какая мудрость! Как свежая картошка с огорода!",
-    "*Щипает за щёку* Такой умный! Греешь бабушкино сердце как свежий хлеб!",
-    "В старой стране говорят: Знания как хороший суп - лучше со временем!"
-  ],
-  es: [
-    "¡Ay, mi niño querido! ¡Como mi borscht, el aprendizaje necesita tiempo!",
-    "En mis tiempos, no teníamos computadoras. ¡Pero tú estás aprendiendo bien!",
-    "Me recuerda cuando era joven en mi país. ¡Sigue así, малыш!",
-    "*Ajusta el pañuelo* ¡Sí, sí! ¡Te estás volviendo fuerte como un oso!",
-    "¡Babushka está orgullosa! ¡Toma пирожки virtual para energía!",
-    "¡Qué sabiduría muestras! ¡Como papa fresca del jardín!",
-    "*Pellizca tu mejilla* ¡Tan inteligente! ¡Calientas el corazón de Babushka como pan fresco!",
-    "En mi país decimos: ¡El conocimiento es como una buena sopa - mejor con tiempo!"
-  ],
-  fr: [
-    "Ah, mon petit ! Comme mon bortsch, l'apprentissage prend du temps !",
-    "De mon temps, nous n'avions pas d'ordinateurs. Mais toi, tu apprends bien !",
-    "Ça me rappelle ma jeunesse au pays. Continue comme ça, малыш !",
-    "*Ajuste son foulard* Oui, oui ! Tu deviens fort comme un ours !",
-    "Babouchka est fière ! Tiens, prends des пирожки virtuels pour l'énergie !",
-    "Quelle sagesse tu montres ! Comme une pomme de terre fraîche du jardin !",
-    "*Pince ta joue* Si intelligent ! Tu réchauffes le cœur de Babouchka comme du pain frais !",
-    "Dans mon pays, on dit : Le savoir est comme une bonne soupe - meilleur avec le temps !"
-  ],
-  uk: [
-    "Ах, моя дитино! Як мій борщ, навчання потребує часу!",
-    "У мій час комп'ютерів не було. Але ти добре вчишся!",
-    "Нагадує мені молодість в рідному краю. Продовжуй, малятко!",
-    "*Поправляє хустку* Так, так! Ти стаєш сильним як ведмідь!",
-    "Бабуся пишається! Тримай віртуальні пиріжки для енергії!",
-    "Яка мудрість! Як свіжа картопля з городу!",
-    "*Щипає за щічку* Такий розумний! Грієш бабусине серце як свіжий хліб!",
-    "У нашому краю кажуть: Знання як добрий суп - кращає з часом!"
-  ]
+// Type for chat message
+interface ChatMessage {
+  text: string;
+  sender: 'user' | 'babushka';
+}
+
+// Educational topics we can recognize and respond to
+const educationalTopics = {
+  algorithms: ['algorithm', 'sort', 'search', 'complexity'],
+  dataStructures: ['array', 'list', 'tree', 'graph', 'stack', 'queue'],
+  programming: ['code', 'program', 'function', 'variable', 'class'],
+  webDev: ['html', 'css', 'javascript', 'react', 'web'],
+  database: ['sql', 'database', 'query', 'table', 'join'],
+  general: ['help', 'learn', 'study', 'understand', 'explain']
 };
 
-// First, let's update the message mapping system to handle all languages
-const createMessageMaps = () => {
-  const maps: Record<string, Record<string, string>> = {};
-  const languages = ['en', 'ru', 'es', 'fr', 'uk'] as const;
-
-  // Create mappings between all language pairs
-  languages.forEach(fromLang => {
-    maps[fromLang] = {};
-    languages.forEach(toLang => {
-      if (fromLang !== toLang) {
-        babushkaResponses[fromLang].forEach((msg, index) => {
-          maps[fromLang][msg] = babushkaResponses[toLang][index];
-        });
-      }
-    });
-  });
-
-  return maps;
+// Helper function to detect topics in user message
+const detectTopics = (message: string): string[] => {
+  const lowercaseMsg = message.toLowerCase();
+  return Object.entries(educationalTopics)
+    .filter(([_, keywords]) => 
+      keywords.some(keyword => lowercaseMsg.includes(keyword)))
+    .map(([topic]) => topic);
 };
+
+// Add this type for language-specific prompts
+interface LanguagePrompt {
+  system: string;
+  default: string;
+}
+
+// Add language-specific system prompts
+const systemPrompts: Record<string, LanguagePrompt> = {
+  en: {
+    system: "You are Babushka, a wise and kind programming teacher. Keep responses extremely concise and focused. Explain programming concepts in the most direct way possible. Use simple analogies only when necessary.",
+    default: "I'd be happy to help you learn about programming. What would you like to know?"
+  },
+  ru: {
+    system: "Вы Бабушка, мудрый и добрый учитель программирования. Давайте максимально краткие и целенаправленные ответы. Объясняйте концепции программирования наиболее прямым способом. Используйте простые аналогии только при необходимости.",
+    default: "Я с радостью помогу вам изучить программирование. Что бы вы хотели узнать?"
+  },
+  es: {
+    system: "Eres Babushka, una sabia y amable profesora de programación. Mantén las respuestas extremadamente concisas y enfocadas. Explica los conceptos de programación de la manera más directa posible. Usa analogías simples solo cuando sea necesario.",
+    default: "Me encantaría ayudarte a aprender sobre programación. ¿Qué te gustaría saber?"
+  },
+  fr: {
+    system: "Vous êtes Babushka, une enseignante sage et bienveillante en programmation. Gardez les réponses extrêmement concises et ciblées. Expliquez les concepts de programmation de la manière la plus directe possible. Utilisez des analogies simples uniquement si nécessaire.",
+    default: "Je serais ravie de vous aider à apprendre la programmation. Que souhaitez-vous savoir ?"
+  },
+  uk: {
+    system: "Ви Бабуся, мудрий і добрий вчитель програмування. Давайте максимально стислі та цілеспрямовані відповіді. Пояснюйте концепції програмування найбільш прямим способом. Використовуйте прості аналогії лише за необхідності.",
+    default: "Я з радістю допоможу вам вивчити програмування. Що би ви хотіли дізнатися?"
+  }
+};
+
+// Keep interfaces and constants outside
+interface ChatHistoryMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+// Initialize OpenAI client outside
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+  dangerouslyAllowBrowser: true
+});
 
 function App() {
+  // Define language state first
+  const [language, setLanguage] = useState<'en' | 'ru' | 'es' | 'fr' | 'uk'>('en');
+  
+  // Then use it in other state initializations
+  const [messages, setMessages] = useState<Array<{role: string, content: string}>>([
+    {
+      role: 'system',
+      content: systemPrompts[language].system
+    }
+  ]);
+
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
-  const [language, setLanguage] = useState<'en' | 'ru' | 'es' | 'fr' | 'uk'>('en');
   const [chatMessages, setChatMessages] = useState<string[]>([
     translations[language].welcome,
   ]);
@@ -212,46 +216,16 @@ function App() {
     setIsDarkMode(prev => !prev);
   }, []);
 
-  // Update welcome message and translate existing Babushka messages when language changes
+  // Update useEffect for language changes
   useEffect(() => {
-    setChatMessages(prev => {
-      return prev.map(msg => {
-        // Keep user messages as they are
-        if (msg.startsWith('You:')) {
-          return msg;
-        }
-
-        // If it's a welcome message, show in current language
-        if (Object.values(translations).map(t => t.welcome).includes(msg)) {
-          return translations[language].welcome;
-        }
-
-        // If it's a Babushka message, translate to current language
-        if (msg.startsWith('Babushka:')) {
-          const content = msg.replace('Babushka: ', '');
-          
-          // Find which response index this message corresponds to
-          let messageIndex = -1;
-          for (const [lang, responses] of Object.entries(babushkaResponses)) {
-            const index = responses.indexOf(content);
-            if (index !== -1) {
-              messageIndex = index;
-              break;
-            }
-          }
-
-          // If we found the message, return it in the current language
-          if (messageIndex !== -1) {
-            return `Babushka: ${babushkaResponses[language][messageIndex]}`;
-          }
-          
-          // If we couldn't find the message, return it unchanged
-          return msg;
-        }
-
-        return msg;
-      });
-    });
+    // Update system message in chat history when language changes
+    setMessages(prev => [
+      {
+        role: 'system',
+        content: systemPrompts[language].system
+      },
+      ...prev.slice(1) // Keep all messages except the first system message
+    ]);
   }, [language]);
 
   // Effect to handle theme changes
@@ -274,35 +248,48 @@ function App() {
     return () => clearTimeout(showTimer);
   }, []);
 
-  // Handle input change
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserMessage(event.target.value);
-  };
-
-  // Get random Babushka response
-  const getBabushkaResponse = () => {
-    const responses = babushkaResponses[language];
-    const randomIndex = Math.floor(Math.random() * responses.length);
-    return `Babushka: ${responses[randomIndex]}`;
-  };
-
-  // Modified handle key down to include Babushka's response
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && userMessage.trim() !== "") {
-      setChatMessages((prevMessages) => [
-        ...prevMessages,
-        `You: ${userMessage}`,
-      ]);
+  const generateResponse = async (userInput: string) => {
+    try {
+      // Immediately update chat with user input
+      setChatMessages(prev => [...prev, `You: ${userInput}`, "Babushka: typing..."]);
+  
+      // Prepare chat history for OpenAI API
+      const updatedMessages = [
+        ...messages,
+        { role: 'user', content: userInput }
+      ];
+  
+      setMessages(updatedMessages); // Keep state in sync
+  
+      // Call OpenAI API and WAIT for the response
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini", // Use a model you have access to
+        messages: updatedMessages,
+        temperature: 0.7,
+        max_tokens: 250
+      });
+  
+      // Extract and validate response
+      const response = completion?.choices?.[0]?.message?.content?.trim();
       
-      // Add Babushka's response after a short delay
-      setTimeout(() => {
-        setChatMessages((prevMessages) => [
-          ...prevMessages,
-          getBabushkaResponse()
-        ]);
-      }, 1000);
-
-      setUserMessage(""); // Clear input field
+      if (!response) {
+        throw new Error("No response received from OpenAI");
+      }
+  
+      // Replace "Babushka: typing..." with the real response
+      setChatMessages(prev => [...prev.slice(0, -1), `Babushka: ${response}`]);
+  
+      // Save assistant response to chat history
+      setMessages(prev => [
+        ...prev,
+        { role: 'assistant', content: response }
+      ]);
+  
+    } catch (error) {
+      console.error('Chat error:', error);
+  
+      // If API fails, replace "typing..." with a fallback message
+      setChatMessages(prev => [...prev.slice(0, -1), "Babushka: Sorry, I couldn't process that. Try again!"]);
     }
   };
 
@@ -341,6 +328,20 @@ function App() {
 
   const handleMouseUp = () => {
     setIsDragging(false);
+  };
+
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter" && userMessage.trim() !== "") {
+      const input = userMessage.trim();
+      setUserMessage(""); // Clear input field immediately
+  
+      // Wait for response before updating chat
+      await generateResponse(input);
+    }
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUserMessage(event.target.value);
   };
 
   // Add event listeners
