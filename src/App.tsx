@@ -183,8 +183,8 @@ function App() {
 
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState<string[]>([
-    translations[language].welcome,
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    { text: translations[language].welcome, sender: 'babushka' }
   ]);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -251,7 +251,11 @@ function App() {
   const generateResponse = async (userInput: string) => {
     try {
       // Immediately update chat with user input
-      setChatMessages(prev => [...prev, `You: ${userInput}`, "Babushka: typing..."]);
+      setChatMessages(prev => [
+        ...prev,
+        { text: userInput, sender: 'user' },
+        { text: "typing...", sender: 'babushka' }
+      ]);
   
       // Prepare chat history for OpenAI API
       const updatedMessages = [
@@ -276,8 +280,11 @@ function App() {
         throw new Error("No response received from OpenAI");
       }
   
-      // Replace "Babushka: typing..." with the real response
-      setChatMessages(prev => [...prev.slice(0, -1), `Babushka: ${response}`]);
+      // Replace "typing..." with the real response
+      setChatMessages(prev => [
+        ...prev.slice(0, -1),
+        { text: response, sender: 'babushka' }
+      ]);
   
       // Save assistant response to chat history
       setMessages(prev => [
@@ -287,9 +294,10 @@ function App() {
   
     } catch (error) {
       console.error('Chat error:', error);
-  
-      // If API fails, replace "typing..." with a fallback message
-      setChatMessages(prev => [...prev.slice(0, -1), "Babushka: Sorry, I couldn't process that. Try again!"]);
+      setChatMessages(prev => [
+        ...prev.slice(0, -1),
+        { text: "Sorry, I couldn't process that. Try again!", sender: 'babushka' }
+      ]);
     }
   };
 
@@ -409,8 +417,11 @@ function App() {
               onMouseDown={handleMouseDown}
             >
               {chatMessages.map((msg, index) => (
-                <div key={index} className="chat-message">
-                  {msg}
+                <div 
+                  key={index} 
+                  className={`chat-message ${msg.sender === 'user' ? 'user-message' : 'babushka-message'}`}
+                >
+                  {msg.text}
                 </div>
               ))}
             </div>
