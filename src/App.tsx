@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import CoursePage from "./pages/CoursePage";
 import LessonPage from "./pages/LessonPage";
 import AboutPage from "./pages/AboutPage";
@@ -23,7 +23,9 @@ const translations = {
     french: "French",
     ukrainian: "Ukrainian",
     about: "About",
-    upload: "Upload"
+    upload: "Upload",
+    darkMode: "Dark Mode",
+    lightMode: "Light Mode",
   },
   ru: {
     welcome: "Добро пожаловать в Уроки Бабушки!",
@@ -39,7 +41,9 @@ const translations = {
     french: "Французский",
     ukrainian: "Украинский",
     about: "О нас",
-    upload: "Загрузить"
+    upload: "Загрузить",
+    darkMode: "Темный режим",
+    lightMode: "Светлый режим",
   },
   es: {
     welcome: "¡Bienvenido a las Lecciones de Babushka!",
@@ -55,7 +59,9 @@ const translations = {
     french: "Francés",
     ukrainian: "Ucraniano",
     about: "Acerca de",
-    upload: "Subir"
+    upload: "Subir",
+    darkMode: "Modo oscuro",
+    lightMode: "Modo claro",
   },
   fr: {
     welcome: "Bienvenue aux Leçons de Babouchka !",
@@ -71,7 +77,9 @@ const translations = {
     french: "Français",
     ukrainian: "Ukrainien",
     about: "À propos",
-    upload: "Télécharger"
+    upload: "Télécharger",
+    darkMode: "Mode sombre",
+    lightMode: "Mode clair",
   },
   uk: {
     welcome: "Ласкаво просимо до Уроків Бабусі!",
@@ -87,7 +95,9 @@ const translations = {
     french: "Французька",
     ukrainian: "Українська",
     about: "Про нас",
-    upload: "Завантажити"
+    upload: "Завантажити",
+    darkMode: "Темний режим",
+    lightMode: "Світлий режим",
   }
 };
 
@@ -183,6 +193,12 @@ function App() {
   const [startHeight, setStartHeight] = useState(0);
   const chatBoxRef = useRef<HTMLDivElement>(null);
 
+  // Add dark mode to translations
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme === 'dark';
+  });
+
   // Toggle language handler
   const toggleLanguage = () => {
     setLanguage(prev => {
@@ -193,6 +209,11 @@ function App() {
       return 'en';
     });
   };
+
+  // Toggle dark mode handler
+  const toggleDarkMode = useCallback(() => {
+    setIsDarkMode(prev => !prev);
+  }, []);
 
   // Update welcome message and translate existing Babushka messages when language changes
   useEffect(() => {
@@ -235,6 +256,17 @@ function App() {
       });
     });
   }, [language]);
+
+  // Effect to handle theme changes
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     // Show the chat after 1 second
@@ -338,6 +370,13 @@ function App() {
           <div className="nav-items">
             <Link to="/upload" className="nav-link">{translations[language].upload}</Link>
             <Link to="/about" className="nav-link">{translations[language].about}</Link>
+            <button 
+              className="theme-toggle"
+              onClick={toggleDarkMode}
+              aria-label={isDarkMode ? translations[language].lightMode : translations[language].darkMode}
+            >
+              {isDarkMode ? '☀️' : '🌙'}
+            </button>
             <select 
               className="language-select" 
               value={language}

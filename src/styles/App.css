@@ -209,3 +209,71 @@ html, body {
 .nav-link:hover {
   background-color: #f3f4f6;
 }
+
+/* Theme toggle button */
+.theme-toggle {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dark mode styles */
+[data-theme="dark"] .navbar {
+  background-color: #1a1a1a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .nav-brand {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .nav-link {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .nav-link:hover {
+  background-color: #333333;
+}
+
+[data-theme="dark"] .chat-box {
+  background-color: #2a2a2a;
+  border-color: #444444;
+}
+
+[data-theme="dark"] .chat-message {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .chat-input {
+  background-color: #2a2a2a;
+  border-color: #444444;
+  color: #ffffff;
+}
+
+[data-theme="dark"] body {
+  background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+[data-theme="dark"] .chat-close {
+  background: #ff4545;
+}
+
+[data-theme="dark"] .chat-close:hover {
+  background: #ff2525;
+}
