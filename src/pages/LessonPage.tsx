@@ -44,7 +44,13 @@ const LessonPage = () => {
           <>
             <h2>{currentLesson?.title}</h2>
             {currentLesson?.videoUrl && (
-              <YoutubeEmbedder url={currentLesson.videoUrl} width={800} height={450} />
+              <div className="video-container" style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
+                <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
+                    <YoutubeEmbedder url={currentLesson.videoUrl} width="100%" height="100%" />
+                  </div>
+                </div>
+              </div>
             )}
             <h3>Documents</h3>
             {currentLesson?.documents.length > 0 ? (
