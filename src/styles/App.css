@@ -27,8 +27,8 @@
 /* Close Button for Chat */
 .chat-close {
   position: absolute;
-  top: -25px;
-  right: 0;
+  top: 0px;
+  right: -25px;
   background: #ff6565;
   color: white;
   border: none;
