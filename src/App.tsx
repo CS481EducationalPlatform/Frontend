@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import CoursePage from "./pages/CoursePage";
 import LessonPage from "./pages/LessonPage";
-import "./styles/App.css"; // Ensure styles are in App.css
+import "./styles/App.css";
 
 // Translation dictionary
 const translations = {

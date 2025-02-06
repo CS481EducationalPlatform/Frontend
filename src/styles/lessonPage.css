@@ -122,20 +122,6 @@
   margin-bottom: 16px;
 }
 
-/* Add styles for the empty state message */
-.lesson-content > p {
-  font-size: 1.8rem;
-  color: #4b5563;
-  margin: auto;  /* This will center vertically when it's the only content */
-  text-align: center;
-  font-weight: 500;
-}
-
-/* Keep existing specific styles for paragraphs within lesson content */
-.lesson-content > :not(> p) p {
-  color: #4b5563;
-}
-
 .document-list {
   margin-top: 10px;
   padding-left: 0;
@@ -150,11 +136,11 @@
   padding: 8px 0;
   position: relative;
   padding-left: 24px;
+  text-align: center;
 }
 
 .document-list li:before {
   content: "•";
-  position: absolute;
   left: 8px;
   color: #2563eb;
 }

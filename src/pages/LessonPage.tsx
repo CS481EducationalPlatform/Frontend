@@ -6,8 +6,8 @@ import "../styles/LessonPage.css";
 
 const lessons = {
   1: [
-    { id: 1, title: "Java Basics", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", documents: ["Lesson1.pdf"] },
-    { id: 2, title: "UML Diagramming", videoUrl: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ", documents: ["Lesson2.pdf"] },
+    { id: 1, title: "Java Basics", videoUrl: "https://www.youtube.com/watch?v=GdzRzWymT4c", documents: ["Lesson1.pdf", "Lesson1.java"] },
+    { id: 2, title: "UML Diagramming", videoUrl: "https://www.youtube.com/watch?v=WnMQ8HlmeXc", documents: ["Lesson2.pdf", "Lesson2.java"] },
     { id: 3, title: "Object-Oriented Programming", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", documents: ["Lesson3.pdf"] },
     { id: 4, title: "Exception Handling", videoUrl: "https://www.youtube.com/watch?v=3JZ_D3ELwOQ", documents: ["Lesson4.pdf"] },
     { id: 5, title: "Collections Framework", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", documents: ["Lesson5.pdf"] },
