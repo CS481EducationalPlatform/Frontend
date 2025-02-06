@@ -17,21 +17,31 @@
   left: 0;
   right: 0;
   text-align: center;
+  margin-bottom: 60px;
+  padding-bottom: 20px;
 }
 
-/* Grid container for courses */
+/* Update the course grid container */
 .course-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, 300px); /* Auto-fit columns of 300px */
+  justify-content: center; /* Center the grid in the container */
   gap: 20px;
   position: absolute;
-  top: 200px;
+  top: 180px;
+  bottom: 40px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Hide horizontal overflow */
+  padding: 20px;
+  width: calc(100% - 40px);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 /* Style the course buttons */
 .course-button {
-  width: 200px;
-  min-height: 120px;
+  width: 300px;
+  height: 180px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,8 +61,8 @@
 }
 
 .course-icon {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
 }
 
 .course-title-text {
@@ -64,7 +74,7 @@
   width: 100%;
   text-align: center;
   font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   line-height: 1.2;
 }
 
@@ -76,7 +86,7 @@
 }
 
 .course-instructor {
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.9);
   margin-top: auto;
   padding-top: 0.5rem;
@@ -99,4 +109,17 @@
   background-color: #17396f;
   border-color: #3b82f6;
   transform: translateY(-2px);
+}
+
+/* Add dark mode scrollbar styles */
+[data-theme="dark"] .course-grid::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+[data-theme="dark"] .course-grid::-webkit-scrollbar-thumb {
+  background: #666;
+}
+
+[data-theme="dark"] .course-grid::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }
