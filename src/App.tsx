@@ -4,13 +4,43 @@ import CoursePage from "./pages/CoursePage";
 import LessonPage from "./pages/LessonPage";
 import "./styles/App.css"; // Ensure styles are in App.css
 
+// Translation dictionary
+const translations = {
+  en: {
+    welcome: "Welcome to Babushka Lessons!",
+    typeResponse: "Type your response...",
+    backToCourses: "Back to Courses",
+    toggleLanguage: "РУС",
+  },
+  ru: {
+    welcome: "Добро пожаловать в Уроки Бабушки!",
+    typeResponse: "Введите ваш ответ...",
+    backToCourses: "Назад к курсам",
+    toggleLanguage: "ENG",
+  }
+};
+
 function App() {
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
+  const [language, setLanguage] = useState<'en' | 'ru'>('en');
   const [chatMessages, setChatMessages] = useState<string[]>([
-    "Welcome to Babushka Lessons!",
+    translations[language].welcome,
   ]);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // Toggle language handler
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'en' ? 'ru' : 'en');
+  };
+
+  // Update welcome message when language changes
+  useEffect(() => {
+    setChatMessages(prev => [
+      translations[language].welcome,
+      ...prev.slice(1)
+    ]);
+  }, [language]);
 
   useEffect(() => {
     // Show the chat after 1 second
@@ -52,6 +82,15 @@ function App() {
   return (
     <Router>
       <div className="App">
+        {/* Language Toggle Button */}
+        <button 
+          className="language-toggle" 
+          onClick={toggleLanguage}
+          aria-label="Toggle language"
+        >
+          {translations[language].toggleLanguage}
+        </button>
+
         {/* Babushka Image Now in Bottom Right */}
         <img src="/babushka.png" alt="Logo" className="bottom-right-image" />
 
@@ -75,7 +114,7 @@ function App() {
             <input
               type="text"
               className="chat-input"
-              placeholder="Type your response..."
+              placeholder={translations[language].typeResponse}
               value={userMessage}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}

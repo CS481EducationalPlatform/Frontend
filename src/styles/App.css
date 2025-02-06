@@ -84,3 +84,32 @@
   width: 100%;
   text-align: left;
 }
+
+/* Language Toggle Button */
+.language-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1001;
+}
+
+.language-toggle:hover {
+  background: #2563eb;
+}
+
+.language-toggle img {
+  width: 20px;
+  height: 20px;
+}
