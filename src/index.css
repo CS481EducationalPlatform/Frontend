@@ -26,10 +26,6 @@ code {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-
-
-
-
   --primary-text-color:  #0a0a0a ;
   --primary-background-color: #f8f3eb ;
   --primary-outline-color:  #e68e06 ;
@@ -51,5 +47,4 @@ code {
 
   --tertiary-text-color: #e6e6e6a6;
   --tertiary-background-color: #1D1D1D;
-  /*fdfaf48c*/
 }
