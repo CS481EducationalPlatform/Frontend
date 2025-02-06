@@ -53,6 +53,12 @@ function App() {
   ]);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  // Add state and refs for resize handling
+  const [isDragging, setIsDragging] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [startHeight, setStartHeight] = useState(0);
+  const chatBoxRef = useRef<HTMLDivElement>(null);
+
   // Toggle language handler
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'en' ? 'ru' : 'en');
@@ -119,6 +125,43 @@ function App() {
     setShowChat(false);
   };
 
+  // Add resize handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Only trigger if clicking near the top edge
+    if (e.clientY <= (e.currentTarget as HTMLElement).getBoundingClientRect().top + 10) {
+      setIsDragging(true);
+      setStartY(e.clientY);
+      setStartHeight(chatBoxRef.current?.offsetHeight || 0);
+    }
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (isDragging && chatBoxRef.current) {
+      const deltaY = startY - e.clientY;
+      const newHeight = Math.min(
+        Math.max(startHeight + deltaY, 100), // min height
+        window.innerHeight - 200 // max height
+      );
+      chatBoxRef.current.style.height = `${newHeight}px`;
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Add event listeners
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, startY, startHeight]);
+
   return (
     <Router>
       <div className="App">
@@ -134,7 +177,7 @@ function App() {
         {/* Babushka Image Now in Bottom Right */}
         <img src="/babushka.png" alt="Logo" className="bottom-right-image" />
 
-        {/* Chat Box Now Positioned to the Right Side */}
+        {/* Chat Box */}
         {showChat && (
           <div className="chat-container">
             <button 
@@ -144,7 +187,11 @@ function App() {
             >
               ×
             </button>
-            <div className="chat-box" ref={chatContainerRef}>
+            <div 
+              ref={chatBoxRef}
+              className="chat-box"
+              onMouseDown={handleMouseDown}
+            >
               {chatMessages.map((msg, index) => (
                 <div key={index} className="chat-message">
                   {msg}
