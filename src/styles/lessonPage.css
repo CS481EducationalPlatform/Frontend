@@ -93,7 +93,17 @@
     margin-bottom: 16px;
   }
   
-  .lesson-content p {
+  /* Add styles for the empty state message */
+  .lesson-content > p {
+    font-size: 1.8rem;
+    color: #4b5563;
+    margin: auto;  /* This will center vertically when it's the only content */
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  /* Keep existing specific styles for paragraphs within lesson content */
+  .lesson-content > :not(> p) p {
     color: #4b5563;
   }
   
