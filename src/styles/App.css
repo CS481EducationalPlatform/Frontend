@@ -234,8 +234,16 @@ html, body {
 
 /* Dark mode styles */
 [data-theme="dark"] .navbar {
-  background-color: #1a1a1a;
+  background-color: #888;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .course-title {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .course-button {
+  border: 1px solid #ffffff;
 }
 
 [data-theme="dark"] .nav-brand {
@@ -268,6 +276,7 @@ html, body {
 
 [data-theme="dark"] body {
   background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
+  color: #ffffff;
 }
 
 [data-theme="dark"] .chat-close {
