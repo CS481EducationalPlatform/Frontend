@@ -12,11 +12,14 @@ const translations = {
   },
   es: {
     pageTitle: "Cursos Disponibles",
+  },
+  fr: {
+    pageTitle: "Cours Disponibles",
   }
 };
 
 interface CoursePageProps {
-  language: 'en' | 'ru' | 'es';
+  language: 'en' | 'ru' | 'es' | 'fr';
 }
 
 const courses = [

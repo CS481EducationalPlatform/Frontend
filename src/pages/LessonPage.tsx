@@ -74,11 +74,18 @@ const translations = {
     selectLesson: "Selecciona una lección para ver su contenido",
     courseDocuments: "Documentos del Curso",
     noDocuments: "No hay documentos disponibles"
+  },
+  fr: {
+    courseLessons: "Leçons du Cours",
+    backToCourses: "Retour aux Cours",
+    selectLesson: "Sélectionnez une leçon pour voir son contenu",
+    courseDocuments: "Documents du Cours",
+    noDocuments: "Aucun document disponible"
   }
 };
 
 interface LessonPageProps {
-  language: 'en' | 'ru' | 'es';
+  language: 'en' | 'ru' | 'es' | 'fr';
 }
 
 const LessonPage: React.FC<LessonPageProps> = ({ language }) => {

@@ -16,7 +16,8 @@ const translations = {
     babushkaAlt: "Babushka Logo",
     english: "English",
     russian: "Russian",
-    spanish: "Spanish"
+    spanish: "Spanish",
+    french: "French"
   },
   ru: {
     welcome: "Добро пожаловать в Уроки Бабушки!",
@@ -28,7 +29,8 @@ const translations = {
     babushkaAlt: "Логотип Бабушки",
     english: "Английский",
     russian: "Русский",
-    spanish: "Испанский"
+    spanish: "Испанский",
+    french: "Французский"
   },
   es: {
     welcome: "¡Bienvenido a las Lecciones de Babushka!",
@@ -40,7 +42,21 @@ const translations = {
     babushkaAlt: "Logo de Babushka",
     english: "Inglés",
     russian: "Ruso",
-    spanish: "Español"
+    spanish: "Español",
+    french: "Francés"
+  },
+  fr: {
+    welcome: "Bienvenue aux Leçons de Babouchka !",
+    typeResponse: "Écrivez votre réponse...",
+    backToCourses: "Retour aux Cours",
+    languageSelect: "Choisir la Langue",
+    closeChat: "Fermer le chat",
+    toggleLanguageAriaLabel: "Sélectionner la langue",
+    babushkaAlt: "Logo de Babouchka",
+    english: "Anglais",
+    russian: "Russe",
+    spanish: "Espagnol",
+    french: "Français"
   }
 };
 
@@ -75,25 +91,46 @@ const babushkaResponses = {
     "¡Qué sabiduría muestras! ¡Como papa fresca del jardín!",
     "*Pellizca tu mejilla* ¡Tan inteligente! ¡Calientas el corazón de Babushka como pan fresco!",
     "En mi país decimos: ¡El conocimiento es como una buena sopa - mejor con tiempo!"
+  ],
+  fr: [
+    "Ah, mon petit ! Comme mon bortsch, l'apprentissage prend du temps !",
+    "De mon temps, nous n'avions pas d'ordinateurs. Mais toi, tu apprends bien !",
+    "Ça me rappelle ma jeunesse au pays. Continue comme ça, малыш !",
+    "*Ajuste son foulard* Oui, oui ! Tu deviens fort comme un ours !",
+    "Babouchka est fière ! Tiens, prends des пирожки virtuels pour l'énergie !",
+    "Quelle sagesse tu montres ! Comme une pomme de terre fraîche du jardin !",
+    "*Pince ta joue* Si intelligent ! Tu réchauffes le cœur de Babouchka comme du pain frais !",
+    "Dans mon pays, on dit : Le savoir est comme une bonne soupe - meilleur avec le temps !"
   ]
 };
 
-// Create a mapping between English and Russian responses
-const messageMap = babushkaResponses.en.reduce((acc, msg, index) => {
-  acc[msg] = babushkaResponses.ru[index];
-  return acc;
-}, {} as Record<string, string>);
+// First, let's update the message mapping system to handle all languages
+const createMessageMaps = () => {
+  const maps: Record<string, Record<string, string>> = {};
+  const languages = ['en', 'ru', 'es', 'fr'] as const;
 
-// And the reverse mapping
-const reverseMessageMap = babushkaResponses.ru.reduce((acc, msg, index) => {
-  acc[msg] = babushkaResponses.en[index];
-  return acc;
-}, {} as Record<string, string>);
+  // Create mappings between all language pairs
+  languages.forEach(fromLang => {
+    maps[fromLang] = {};
+    languages.forEach(toLang => {
+      if (fromLang !== toLang) {
+        babushkaResponses[fromLang].forEach((msg, index) => {
+          maps[fromLang][msg] = babushkaResponses[toLang][index];
+        });
+      }
+    });
+  });
+
+  return maps;
+};
+
+// Create the message maps
+const messageMaps = createMessageMaps();
 
 function App() {
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
-  const [language, setLanguage] = useState<'en' | 'ru' | 'es'>('en');
+  const [language, setLanguage] = useState<'en' | 'ru' | 'es' | 'fr'>('en');
   const [chatMessages, setChatMessages] = useState<string[]>([
     translations[language].welcome,
   ]);
@@ -110,6 +147,7 @@ function App() {
     setLanguage(prev => {
       if (prev === 'en') return 'ru';
       if (prev === 'ru') return 'es';
+      if (prev === 'es') return 'fr';
       return 'en';
     });
   };
@@ -122,24 +160,35 @@ function App() {
         if (msg.startsWith('You:')) {
           return msg;
         }
-        // Update Babushka's welcome message
-        if (msg === translations['en'].welcome || msg === translations['ru'].welcome || msg === translations['es'].welcome) {
+
+        // If it's a welcome message, show in current language
+        if (Object.values(translations).map(t => t.welcome).includes(msg)) {
           return translations[language].welcome;
         }
-        // Translate Babushka messages
+
+        // If it's a Babushka message, translate to current language
         if (msg.startsWith('Babushka:')) {
           const content = msg.replace('Babushka: ', '');
-          if (language === 'ru') {
-            const translation = messageMap[content];
-            return translation ? `Babushka: ${translation}` : msg;
-          } else if (language === 'es') {
-            const translation = babushkaResponses.es.find(res => res.startsWith(content));
-            return translation ? `Babushka: ${translation}` : msg;
-          } else {
-            const translation = reverseMessageMap[content];
-            return translation ? `Babushka: ${translation}` : msg;
+          
+          // Find which response index this message corresponds to
+          let messageIndex = -1;
+          for (const [lang, responses] of Object.entries(babushkaResponses)) {
+            const index = responses.indexOf(content);
+            if (index !== -1) {
+              messageIndex = index;
+              break;
+            }
           }
+
+          // If we found the message, return it in the current language
+          if (messageIndex !== -1) {
+            return `Babushka: ${babushkaResponses[language][messageIndex]}`;
+          }
+          
+          // If we couldn't find the message, return it unchanged
+          return msg;
         }
+
         return msg;
       });
     });
@@ -242,12 +291,13 @@ function App() {
         <select 
           className="language-select" 
           value={language}
-          onChange={(e) => setLanguage(e.target.value as 'en' | 'ru' | 'es')}
+          onChange={(e) => setLanguage(e.target.value as 'en' | 'ru' | 'es' | 'fr')}
           aria-label={translations[language].toggleLanguageAriaLabel}
         >
           <option value="en">{translations[language].english}</option>
           <option value="ru">{translations[language].russian}</option>
           <option value="es">{translations[language].spanish}</option>
+          <option value="fr">{translations[language].french}</option>
         </select>
 
         {/* Babushka Image Now in Bottom Right */}
