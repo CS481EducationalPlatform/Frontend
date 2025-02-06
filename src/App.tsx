@@ -11,12 +11,18 @@ const translations = {
     typeResponse: "Type your response...",
     backToCourses: "Back to Courses",
     toggleLanguage: "РУС",
+    closeChat: "Close chat",
+    toggleLanguageAriaLabel: "Toggle language",
+    babushkaAlt: "Babushka Logo"
   },
   ru: {
     welcome: "Добро пожаловать в Уроки Бабушки!",
     typeResponse: "Введите ваш ответ...",
     backToCourses: "Назад к курсам",
     toggleLanguage: "ENG",
+    closeChat: "Закрыть чат",
+    toggleLanguageAriaLabel: "Переключить язык",
+    babushkaAlt: "Логотип Бабушки"
   }
 };
 
@@ -44,6 +50,18 @@ const babushkaResponses = {
   ]
 };
 
+// Create a mapping between English and Russian responses
+const messageMap = babushkaResponses.en.reduce((acc, msg, index) => {
+  acc[msg] = babushkaResponses.ru[index];
+  return acc;
+}, {} as Record<string, string>);
+
+// And the reverse mapping
+const reverseMessageMap = babushkaResponses.ru.reduce((acc, msg, index) => {
+  acc[msg] = babushkaResponses.en[index];
+  return acc;
+}, {} as Record<string, string>);
+
 function App() {
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
@@ -64,12 +82,32 @@ function App() {
     setLanguage(prev => prev === 'en' ? 'ru' : 'en');
   };
 
-  // Update welcome message when language changes
+  // Update welcome message and translate existing Babushka messages when language changes
   useEffect(() => {
-    setChatMessages(prev => [
-      translations[language].welcome,
-      ...prev.slice(1)
-    ]);
+    setChatMessages(prev => {
+      return prev.map(msg => {
+        // Keep user messages as they are
+        if (msg.startsWith('You:')) {
+          return msg;
+        }
+        // Update Babushka's welcome message
+        if (msg === translations['en'].welcome || msg === translations['ru'].welcome) {
+          return translations[language].welcome;
+        }
+        // Translate Babushka messages
+        if (msg.startsWith('Babushka:')) {
+          const content = msg.replace('Babushka: ', '');
+          if (language === 'ru') {
+            const translation = messageMap[content];
+            return translation ? `Babushka: ${translation}` : msg;
+          } else {
+            const translation = reverseMessageMap[content];
+            return translation ? `Babushka: ${translation}` : msg;
+          }
+        }
+        return msg;
+      });
+    });
   }, [language]);
 
   useEffect(() => {
@@ -169,13 +207,13 @@ function App() {
         <button 
           className="language-toggle" 
           onClick={toggleLanguage}
-          aria-label="Toggle language"
+          aria-label={translations[language].toggleLanguageAriaLabel}
         >
           {translations[language].toggleLanguage}
         </button>
 
         {/* Babushka Image Now in Bottom Right */}
-        <img src="/babushka.png" alt="Logo" className="bottom-right-image" />
+        <img src="/babushka.png" alt={translations[language].babushkaAlt} className="bottom-right-image" />
 
         {/* Chat Box */}
         {showChat && (
@@ -183,7 +221,7 @@ function App() {
             <button 
               className="chat-close" 
               onClick={handleCloseChat}
-              aria-label="Close chat"
+              aria-label={translations[language].closeChat}
             >
               ×
             </button>
@@ -211,8 +249,8 @@ function App() {
 
         {/* Routes */}
         <Routes>
-          <Route path="/" element={<CoursePage />} />
-          <Route path="/course/:courseId" element={<LessonPage />} />
+          <Route path="/" element={<CoursePage language={language} />} />
+          <Route path="/course/:courseId" element={<LessonPage language={language} />} />
         </Routes>
       </div>
     </Router>

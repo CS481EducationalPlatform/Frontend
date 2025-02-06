@@ -2,6 +2,20 @@ import React from "react";
 import CourseTitle from "../components/CourseTitleComponent";
 import "../styles/CoursePage.css";
 
+// Add translations for course page
+const translations = {
+  en: {
+    pageTitle: "Available Courses",
+  },
+  ru: {
+    pageTitle: "Доступные Курсы",
+  }
+};
+
+interface CoursePageProps {
+  language: 'en' | 'ru';
+}
+
 const courses = [
   {
     id: 1,
@@ -29,10 +43,10 @@ const courses = [
   }
 ];
 
-const CoursePage = () => {
+const CoursePage: React.FC<CoursePageProps> = ({ language }) => {
   return (
     <div className="course-page">
-      <h1 className="course-title">Available Courses</h1>
+      <h1 className="course-title">{translations[language].pageTitle}</h1>
       <div className="course-grid">
         {courses.map((course) => (
           <CourseTitle key={course.id} {...course} />
@@ -41,4 +55,5 @@ const CoursePage = () => {
     </div>
   );
 };
+
 export default CoursePage;
