@@ -21,8 +21,10 @@ const CourseTitle: React.FC<CourseTitleProps> = ({ id, title, description, icon,
       <div className="course-title-text">
         <strong>{title}</strong>
         <p className="course-instructor">Instructor: {instructor}</p>
+        <p className="course-description">{description}</p>
       </div>
     </button>
+
   );
 };
 

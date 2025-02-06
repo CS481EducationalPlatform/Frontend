@@ -44,7 +44,7 @@
   height: 180px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   background-color: rgb(100, 144, 255);
   color: #ffffff;
@@ -55,14 +55,16 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  padding: 1rem;
+  padding: 0.5rem;
   box-sizing: border-box;
-  gap: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: wrap;
 }
 
 .course-icon {
   font-size: 2rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.1rem;
 }
 
 .course-title-text {
@@ -93,6 +95,13 @@
   font-style: italic;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   width: 100%;
+}
+
+.course-description {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: normal;
+  margin: 0.25rem 0;
 }
 
 .course-title-text p {
