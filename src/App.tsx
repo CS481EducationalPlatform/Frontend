@@ -2,7 +2,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import CoursePage from "./pages/CoursePage";
 import LessonPage from "./pages/LessonPage";
+import AboutPage from "./pages/AboutPage";
+import UploadPage from "./pages/UploadPage";
 import "./styles/App.css";
+import "./styles/Pages.css";
 
 // Translation dictionary
 const translations = {
@@ -18,7 +21,9 @@ const translations = {
     russian: "Russian",
     spanish: "Spanish",
     french: "French",
-    ukrainian: "Ukrainian"
+    ukrainian: "Ukrainian",
+    about: "About",
+    upload: "Upload"
   },
   ru: {
     welcome: "Добро пожаловать в Уроки Бабушки!",
@@ -32,7 +37,9 @@ const translations = {
     russian: "Русский",
     spanish: "Испанский",
     french: "Французский",
-    ukrainian: "Украинский"
+    ukrainian: "Украинский",
+    about: "О нас",
+    upload: "Загрузить"
   },
   es: {
     welcome: "¡Bienvenido a las Lecciones de Babushka!",
@@ -46,7 +53,9 @@ const translations = {
     russian: "Ruso",
     spanish: "Español",
     french: "Francés",
-    ukrainian: "Ucraniano"
+    ukrainian: "Ucraniano",
+    about: "Acerca de",
+    upload: "Subir"
   },
   fr: {
     welcome: "Bienvenue aux Leçons de Babouchka !",
@@ -60,7 +69,9 @@ const translations = {
     russian: "Russe",
     spanish: "Espagnol",
     french: "Français",
-    ukrainian: "Ukrainien"
+    ukrainian: "Ukrainien",
+    about: "À propos",
+    upload: "Télécharger"
   },
   uk: {
     welcome: "Ласкаво просимо до Уроків Бабусі!",
@@ -74,7 +85,9 @@ const translations = {
     russian: "Російська",
     spanish: "Іспанська",
     french: "Французька",
-    ukrainian: "Українська"
+    ukrainian: "Українська",
+    about: "Про нас",
+    upload: "Завантажити"
   }
 };
 
@@ -323,6 +336,8 @@ function App() {
             <span>Babushka Lessons</span>
           </Link>
           <div className="nav-items">
+            <Link to="/upload" className="nav-link">{translations[language].upload}</Link>
+            <Link to="/about" className="nav-link">{translations[language].about}</Link>
             <select 
               className="language-select" 
               value={language}
@@ -377,6 +392,8 @@ function App() {
         <Routes>
           <Route path="/" element={<CoursePage language={language} />} />
           <Route path="/course/:courseId" element={<LessonPage language={language} />} />
+          <Route path="/about" element={<AboutPage language={language} />} />
+          <Route path="/upload" element={<UploadPage language={language} />} />
         </Routes>
       </div>
     </Router>
