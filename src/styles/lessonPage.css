@@ -11,7 +11,7 @@
   
   /* Sidebar styling */
   .lesson-sidebar {
-    width: 25%;
+    width: 15%;
     padding: 20px;
     background-color: #e2e8f0;
     border-right: 2px solid #cbd5e1;
@@ -39,7 +39,7 @@
     justify-content: center;
 
     background-color: rgb(100, 144, 255);
-    color: black;
+    color: #ffffff;
     border: 2px solid #000000;
     border-radius: 10px;
     font-size: 1rem;

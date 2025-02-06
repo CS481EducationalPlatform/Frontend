@@ -24,7 +24,7 @@ const LessonPage = () => {
     <div className="lesson-page">
       {/* Sidebar with Lessons */}
       <div className="lesson-sidebar">
-        <h2>Lessons</h2>
+        <h2>Course Lessons</h2>
         {courseLessons.map((lesson) => (
           <Lesson
             key={lesson.id}
@@ -52,7 +52,7 @@ const LessonPage = () => {
                 </div>
               </div>
             )}
-            <h3>Documents</h3>
+            <h3>Course Documents</h3>
             {currentLesson?.documents.length > 0 ? (
               <ul className="document-list">
                 {currentLesson.documents.map((doc, index) => (
