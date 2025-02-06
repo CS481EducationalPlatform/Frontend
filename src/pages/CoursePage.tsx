@@ -1,23 +1,31 @@
 import React from "react";
 import CourseTitle from "../components/CourseTitleComponent";
-import "../styles/CoursePage.css"; 
+import "../styles/CoursePage.css";
 
 const courses = [
   {
     id: 1,
-    title: "React Basics",
+    title: "Programming Basics",
   },
   {
     id: 2,
-    title: "Advanced Django",
+    title: "Advanced Programming",
   },
   {
     id: 3,
-    title: "Full-Stack Development",
+    title: "Data Structures and Algorithms",
   },
   {
-    id: 3,
-    title: "Test 3",
+    id: 4,
+    title: "Full-Stack Software Development",
+  },
+  {
+    id: 5,
+    title: "Database Management",
+  },
+  {
+    id: 6,
+    title: "Data Science",
   }
 ];
 
