@@ -15,11 +15,14 @@ const translations = {
   },
   fr: {
     pageTitle: "Cours Disponibles",
+  },
+  uk: {
+    pageTitle: "Доступні Курси",
   }
 };
 
 interface CoursePageProps {
-  language: 'en' | 'ru' | 'es' | 'fr';
+  language: 'en' | 'ru' | 'es' | 'fr' | 'uk';
 }
 
 const courses = [

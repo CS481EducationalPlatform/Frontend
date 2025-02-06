@@ -17,7 +17,8 @@ const translations = {
     english: "English",
     russian: "Russian",
     spanish: "Spanish",
-    french: "French"
+    french: "French",
+    ukrainian: "Ukrainian"
   },
   ru: {
     welcome: "Добро пожаловать в Уроки Бабушки!",
@@ -30,7 +31,8 @@ const translations = {
     english: "Английский",
     russian: "Русский",
     spanish: "Испанский",
-    french: "Французский"
+    french: "Французский",
+    ukrainian: "Украинский"
   },
   es: {
     welcome: "¡Bienvenido a las Lecciones de Babushka!",
@@ -43,7 +45,8 @@ const translations = {
     english: "Inglés",
     russian: "Ruso",
     spanish: "Español",
-    french: "Francés"
+    french: "Francés",
+    ukrainian: "Ucraniano"
   },
   fr: {
     welcome: "Bienvenue aux Leçons de Babouchka !",
@@ -56,7 +59,22 @@ const translations = {
     english: "Anglais",
     russian: "Russe",
     spanish: "Espagnol",
-    french: "Français"
+    french: "Français",
+    ukrainian: "Ukrainien"
+  },
+  uk: {
+    welcome: "Ласкаво просимо до Уроків Бабусі!",
+    typeResponse: "Введіть вашу відповідь...",
+    backToCourses: "Назад до Курсів",
+    languageSelect: "Вибрати Мову",
+    closeChat: "Закрити чат",
+    toggleLanguageAriaLabel: "Вибрати мову",
+    babushkaAlt: "Логотип Бабусі",
+    english: "Англійська",
+    russian: "Російська",
+    spanish: "Іспанська",
+    french: "Французька",
+    ukrainian: "Українська"
   }
 };
 
@@ -101,13 +119,23 @@ const babushkaResponses = {
     "Quelle sagesse tu montres ! Comme une pomme de terre fraîche du jardin !",
     "*Pince ta joue* Si intelligent ! Tu réchauffes le cœur de Babouchka comme du pain frais !",
     "Dans mon pays, on dit : Le savoir est comme une bonne soupe - meilleur avec le temps !"
+  ],
+  uk: [
+    "Ах, моя дитино! Як мій борщ, навчання потребує часу!",
+    "У мій час комп'ютерів не було. Але ти добре вчишся!",
+    "Нагадує мені молодість в рідному краю. Продовжуй, малятко!",
+    "*Поправляє хустку* Так, так! Ти стаєш сильним як ведмідь!",
+    "Бабуся пишається! Тримай віртуальні пиріжки для енергії!",
+    "Яка мудрість! Як свіжа картопля з городу!",
+    "*Щипає за щічку* Такий розумний! Грієш бабусине серце як свіжий хліб!",
+    "У нашому краю кажуть: Знання як добрий суп - кращає з часом!"
   ]
 };
 
 // First, let's update the message mapping system to handle all languages
 const createMessageMaps = () => {
   const maps: Record<string, Record<string, string>> = {};
-  const languages = ['en', 'ru', 'es', 'fr'] as const;
+  const languages = ['en', 'ru', 'es', 'fr', 'uk'] as const;
 
   // Create mappings between all language pairs
   languages.forEach(fromLang => {
@@ -130,7 +158,7 @@ const messageMaps = createMessageMaps();
 function App() {
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
-  const [language, setLanguage] = useState<'en' | 'ru' | 'es' | 'fr'>('en');
+  const [language, setLanguage] = useState<'en' | 'ru' | 'es' | 'fr' | 'uk'>('en');
   const [chatMessages, setChatMessages] = useState<string[]>([
     translations[language].welcome,
   ]);
@@ -145,7 +173,8 @@ function App() {
   // Toggle language handler
   const toggleLanguage = () => {
     setLanguage(prev => {
-      if (prev === 'en') return 'ru';
+      if (prev === 'en') return 'uk';
+      if (prev === 'uk') return 'ru';
       if (prev === 'ru') return 'es';
       if (prev === 'es') return 'fr';
       return 'en';
@@ -291,10 +320,11 @@ function App() {
         <select 
           className="language-select" 
           value={language}
-          onChange={(e) => setLanguage(e.target.value as 'en' | 'ru' | 'es' | 'fr')}
+          onChange={(e) => setLanguage(e.target.value as 'en' | 'ru' | 'es' | 'fr' | 'uk')}
           aria-label={translations[language].toggleLanguageAriaLabel}
         >
           <option value="en">{translations[language].english}</option>
+          <option value="uk">{translations[language].ukrainian}</option>
           <option value="ru">{translations[language].russian}</option>
           <option value="es">{translations[language].spanish}</option>
           <option value="fr">{translations[language].french}</option>
