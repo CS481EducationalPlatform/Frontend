@@ -20,6 +20,30 @@ const translations = {
   }
 };
 
+// Babushka responses based on language
+const babushkaResponses = {
+  en: [
+    "Ah, my sweet child! Just like my borscht, learning takes time to simmer!",
+    "In my day, we had no fancy computers. But you, you are learning good!",
+    "Reminds me of when I was young in old country. Keep going, малыш!",
+    "*Adjusts headscarf* Yes, yes! You are getting stronger like bear!",
+    "Babushka is proud! Here, have virtual пирожки for energy!",
+    "Such wisdom you show! Like fresh potato from garden!",
+    "*Pinches your cheek* So smart! You make Babushka's heart warm like fresh bread!",
+    "In old country, we say: Knowledge is like good soup - better with time!"
+  ],
+  ru: [
+    "Ах, мой сладкий! Как мой борщ, учение требует времени!",
+    "В моё время компьютеров не было. Но ты хорошо учишься!",
+    "Напоминает мне молодость в старой стране. Продолжай, малыш!",
+    "*Поправляет платок* Да, да! Ты становишься сильным как медведь!",
+    "Бабушка гордится! Держи виртуальные пирожки для энергии!",
+    "Какая мудрость! Как свежая картошка с огорода!",
+    "*Щипает за щёку* Такой умный! Греешь бабушкино сердце как свежий хлеб!",
+    "В старой стране говорят: Знания как хороший суп - лучше со временем!"
+  ]
+};
+
 function App() {
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
@@ -56,13 +80,29 @@ function App() {
     setUserMessage(event.target.value);
   };
 
-  // Handle submission when pressing Enter
+  // Get random Babushka response
+  const getBabushkaResponse = () => {
+    const responses = babushkaResponses[language];
+    const randomIndex = Math.floor(Math.random() * responses.length);
+    return `Babushka: ${responses[randomIndex]}`;
+  };
+
+  // Modified handle key down to include Babushka's response
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && userMessage.trim() !== "") {
       setChatMessages((prevMessages) => [
-        ...prevMessages, // Keep messages in order (new at the bottom)
+        ...prevMessages,
         `You: ${userMessage}`,
       ]);
+      
+      // Add Babushka's response after a short delay
+      setTimeout(() => {
+        setChatMessages((prevMessages) => [
+          ...prevMessages,
+          getBabushkaResponse()
+        ]);
+      }, 1000);
+
       setUserMessage(""); // Clear input field
     }
   };
