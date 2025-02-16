@@ -163,11 +163,18 @@ interface ChatHistoryMessage {
   content: string;
 }
 
-// Initialize OpenAI client outside
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true
-});
+//Simple variable to catch failure
+let AI = false;
+try {
+  // Initialize OpenAI client outside
+  const openai = new OpenAI({
+    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true
+  });
+  AI = true;
+} catch (error){
+  AI = false;
+}
 
 function App() {
   // Define language state first
@@ -402,7 +409,7 @@ function App() {
         <img src="/babushka.png" alt={translations[language].babushkaAlt} className="bottom-right-image" />
 
         {/* Chat Box */}
-        {showChat && (
+        {showChat && AI && (
           <div className="chat-container">
             <button 
               className="chat-close" 

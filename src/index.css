@@ -28,25 +28,56 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --primary-text-color:  #0a0a0a ;
-  --primary-background-color: #f8f3eb ;
-  --primary-outline-color:  #e68e06 ;
+  --black-white: #000000;
+  --white-black: #FFFFFF;
 
-  --secondary-text-color: #020101ec;
-  --secondary-background-color: #fff5e9;
-  
-  --tertiary-text-color: #1d1d1db7;
-  --tertiary-background-color: #ffead6;
+  --header-primary: #1f2937;
+  --text-primary: #4b5563;
+  --text-secondary: #1a1a1a;
+  --label-primary: #374151;
+
+  --background-primary: #FFFFFF;
+  --background-secondary: #e9ecef;
+  --background-tertiary: #3b82f6;
+  --background-four: rgba(0, 0, 0, 0.1);
+  --background-five: #FFFFFF;
+  --background-six: #ff6565;
+
+  --closehover-primary: #ff4545;
+  --linkhover-background-primary: #f3f4f6;
+
+  --backgroundgradient-primary: linear-gradient(180deg, #87CEEB 0%, #FFFFFF 100%);
+  --button-background-primary: rgb(100, 144, 255);
+
+  --border-secondary: #e5e7eb;
+
+  --boxshadow-primary: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
 }
 
 [data-theme="dark"]{
-  --primary-text-color:  #fff9ed ;
-  --primary-background-color: #3a3a3a;
-  --primary-outline-color:  #FFBB80 ;
+  /*Enable swapping between pure black (light) and white (dark)*/
+  --black-white: #FFFFFF;
+  --white-black: #000000;
 
-  --secondary-text-color: #797979;
-  --secondary-background-color: #29292973;
+  --header-primary: #FFFFFF;
+  --text-primary: #FFFFFF;
+  --text-secondary: #FFFFFF;
+  --label-primary: #FFFFFF;
 
-  --tertiary-text-color: #e6e6e6a6;
-  --tertiary-background-color: #1D1D1D;
+  --background-primary: #1f2937;
+  --background-secondary: #4b5563;
+  --background-tertiary: #2563eb;
+  --background-four: rgba(255, 255, 255, 0.1);
+  --background-five: #888888;
+  --background-six: #ff4545;
+
+  --closehover-primary: #ff2525;
+  --linkhover-background-primary: #333333;
+
+  --backgroundgradient-primary: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
+  --button-background-primary: rgb(80, 115, 204);
+
+  --border-secondary: #374151;
+
+  --boxshadow-primary: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

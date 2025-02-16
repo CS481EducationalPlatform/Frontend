@@ -111,14 +111,14 @@
     padding: 20px;
     overflow-y: auto;
     height: 100%;
-    color: #000000;
+    color: var(--black-white);
 }
 
 .lesson-content h2 {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 16px;
-    color: #000000;
+    color: var(--black-white);
 }
 
 .document-list {
@@ -146,12 +146,6 @@
 
 .document-list li:hover {
   color: #1e40af;
-}
-
-/* Add dark mode overrides */
-[data-theme="dark"] .lesson-content,
-[data-theme="dark"] .lesson-content h2 {
-    color: #ffffff;
 }
 
 /* Add new styles for lesson content wrapper and tags */

@@ -11,7 +11,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 4rem;
   font-weight: 700;
-  color: black;
+  color: var(--black-white);
   position: absolute;
   top: 40px;
   left: 0;
@@ -46,9 +46,9 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  background-color: rgb(100, 144, 255);
+  background-color: var(--button-background-primary);
   color: #ffffff;
-  border: 2px solid #000000;
+  border: 2px solid var(--black-white);
   border-radius: 10px;
   font-family: 'Inter', sans-serif;
   font-size: 1rem;
@@ -106,18 +106,6 @@
 
 .course-title-text p {
   margin: 0.25rem 0;
-}
-
-/* Add dark mode styles for course button */
-[data-theme="dark"] .course-button {
-  background-color: rgb(80, 115, 204); /* Slightly darker blue for dark mode */
-  border: 2px solid #ffffff;
-}
-
-[data-theme="dark"] .course-button:hover {
-  background-color: #17396f;
-  border-color: #3b82f6;
-  transform: translateY(-2px);
 }
 
 /* Add dark mode scrollbar styles */
