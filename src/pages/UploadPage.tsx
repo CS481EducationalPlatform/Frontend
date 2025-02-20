@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { gapi } from "gapi-script";
+import { UploadVideoI, uploadYTvideo } from "../services/uploadService";
+import Grid from "@mui/material/Grid2";
 
 interface UploadPageProps {
   language: 'en' | 'ru' | 'es' | 'fr' | 'uk';
@@ -73,6 +76,7 @@ const translations = {
 };
 
 const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
+  //Kellen
   const [title, setTitle] = useState('');
   const [video, setVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
@@ -83,6 +87,55 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
     video: false,
     thumbnail: false
   });
+
+  //Jace
+  const [file, setFile] = useState<File | null>(null);
+  const [videoInfo, setVideoInfo] = useState<UploadVideoI>({
+    title: "",
+    description: "",
+    user_id: "1",
+    course_id: "1",
+    page_id: "1",
+    accessToken: ""
+  })
+
+  //CHANGE to being pulled from database securely
+  const CLIENT_ID = "178516670715-5l32e4c5lanhgvn8iv7sa7r23l57o2qq.apps.googleusercontent.com";
+
+  useEffect(() => {
+    // Initialize the Google API client
+    const initClient = () => {
+      gapi.client.init({
+        clientId: CLIENT_ID,
+        scope: "https://www.googleapis.com/auth/youtube.upload",
+      });
+    };
+    gapi.load("client:auth2", initClient);
+  }, []);
+
+  const handleSignIn = async () => {
+    const authInstance = gapi.auth2.getAuthInstance();
+    const user = await authInstance.signIn();
+    const token = user.getAuthResponse().access_token;
+    setVideoInfo({...videoInfo, accessToken: token});
+    alert("Successfully signed in");
+  };
+
+  const handleUpload = async () => {
+    console.log(1);
+    if (!file) return alert("Please select a file");
+    if (!videoInfo.accessToken) return alert("Please sign in first");
+
+    alert("Beginning Upload");
+    console.log(2);
+    try {
+      await uploadYTvideo(videoInfo, file);
+      console.log(3);
+      alert("Database Success : Uploading to YouTube");
+    } catch (error) {
+      alert("Upload Failed")
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,11 +179,11 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
   };
 
   return (
-    <div className="upload-page">
+    <div className="upload-page" style={{alignItems:'center'}}>
       <h1>{translations[language].title}</h1>
       <p>{translations[language].description}</p>
       
-      <form onSubmit={handleSubmit} className="upload-form">
+      {/*<form onSubmit={handleSubmit} className="upload-form">
         <div className="form-group">
           <label htmlFor="title">{translations[language].lessonTitle}</label>
           <input
@@ -199,6 +252,36 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
           {translations[language].upload}
         </button>
       </form>
+      */}
+
+        {/* JACE */}
+        <Grid direction="column" spacing={0} alignItems="center" container sx={{width:'250px'}}>
+        {!videoInfo.accessToken && (
+          <button onClick={handleSignIn} style={{height:'100px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Sign in with Google</button>
+        )}
+        <div style={{paddingLeft:'25px', }}>
+          <input
+            type="file"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            style={{fontSize:'16px', width:'100%', height:'100px', border:'0px solid black',borderRadius:'8px', alignContent:'center'}}
+          />
+        </div>
+        <input
+          type="text"
+          value={videoInfo.title}
+          onChange={(e) => setVideoInfo({...videoInfo, title: e.target.value})}
+          placeholder="Title"
+          style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
+        />
+        <textarea
+          value={videoInfo.description}
+          style={{height:'100px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
+          onChange={(e) => setVideoInfo({...videoInfo, description: e.target.value})}
+          placeholder="Description"
+        />
+        <button onClick={handleUpload} style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Upload</button>
+      </Grid>
+
     </div>
   );
 };
