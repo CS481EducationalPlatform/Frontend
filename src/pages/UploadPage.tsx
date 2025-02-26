@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { gapi } from "gapi-script";
-import { UploadVideoI, uploadYTvideo } from "../services/uploadService";
+import { UploadVideoI, uploadYTvideo, LinkVideoI, linkYTvideo, ensurePlaylistExists } from "../services/uploadService";
 import Grid from "@mui/material/Grid2";
 
 interface UploadPageProps {
@@ -93,11 +93,15 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
   const [videoInfo, setVideoInfo] = useState<UploadVideoI>({
     title: "",
     description: "",
-    user_id: "1",
-    course_id: "1",
-    page_id: "1",
-    accessToken: ""
+    lesson_id: "1",
+    accessToken: "",
+    playlist: "",
   })
+  const [linkInfo, setLinkInfo] = useState<LinkVideoI>({
+    lesson_id: "1",
+    video_url: ""
+  })
+  const [playlistName, setPlaylistName] = useState("");
 
   //CHANGE to being pulled from database securely
   const CLIENT_ID = "178516670715-5l32e4c5lanhgvn8iv7sa7r23l57o2qq.apps.googleusercontent.com";
@@ -136,6 +140,28 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
       alert("Upload Failed")
     }
   };
+
+  const handleLinking = async () => {
+    if(!linkInfo.video_url) return alert("Please provide a link");
+    
+    try {
+      await linkYTvideo(linkInfo);
+      alert("Link Success")
+    } catch (error) {
+      alert("Linking Failed")
+    }
+  }
+
+  const ensurePlaylist = async () => {
+    if(!playlistName) return alert("Need Playlist Name");
+    if(!videoInfo.accessToken) return alert("Need OAUTH")
+    try{
+      await ensurePlaylistExists(playlistName, videoInfo.accessToken);
+      alert("Playlist Exists")
+    } catch (error) {
+      alert("Playlist Ensuring Failure")
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,7 +281,7 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
       */}
 
         {/* JACE */}
-        <Grid direction="column" spacing={0} alignItems="center" container sx={{width:'250px'}}>
+      <Grid direction="column" spacing={0} alignItems="center" container sx={{width:'250px'}}>
         {!videoInfo.accessToken && (
           <button onClick={handleSignIn} style={{height:'100px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Sign in with Google</button>
         )}
@@ -279,7 +305,35 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
           onChange={(e) => setVideoInfo({...videoInfo, description: e.target.value})}
           placeholder="Description"
         />
+        <textarea
+          value={videoInfo.playlist}
+          style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
+          onChange={(e) => setVideoInfo({...videoInfo, playlist: e.target.value})}
+          placeholder="Playlist"
+        />
         <button onClick={handleUpload} style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Upload</button>
+        
+
+
+        <input
+          type="text"
+          value={linkInfo.video_url}
+          onChange={(e) => setLinkInfo({...linkInfo, video_url: e.target.value})}
+          placeholder="Video URL"
+          style={{marginTop: '50px', height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
+        />
+        <button onClick={handleLinking} style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Link</button>
+        
+        
+
+        <input
+          type="text"
+          value={playlistName}
+          onChange={(e) => setPlaylistName(e.target.value)}
+          placeholder="Playlist Name"
+          style={{marginTop: '50px', height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
+        />
+        <button onClick={ensurePlaylist} style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Link</button>
       </Grid>
 
     </div>
