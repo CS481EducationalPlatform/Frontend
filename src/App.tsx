@@ -4,9 +4,13 @@ import CoursePage from "./pages/CoursePage";
 import LessonPage from "./pages/LessonPage";
 import AboutPage from "./pages/AboutPage";
 import UploadPage from "./pages/UploadPage";
+import LoginPage from "./pages/LoginPage"; 
+import AccountPage from "./pages/AccountPage";
 import "./styles/App.css";
 import "./styles/Pages.css";
+import "./styles/LoginPage.css";
 import OpenAI from 'openai';
+import SignUpPage from "./pages/SignupPage";
 
 // Translation dictionary
 const translations = {
@@ -25,8 +29,10 @@ const translations = {
     ukrainian: "Ukrainian",
     about: "About",
     upload: "Upload",
+    login: "Login",
     darkMode: "Dark Mode",
     lightMode: "Light Mode",
+    account: "Account"
   },
   ru: {
     welcome: "Добро пожаловать в Уроки Бабушки!",
@@ -43,8 +49,10 @@ const translations = {
     ukrainian: "Украинский",
     about: "О нас",
     upload: "Загрузить",
+    login: "Войти",
     darkMode: "Темный режим",
     lightMode: "Светлый режим",
+    account: "Аккаунт"
   },
   es: {
     welcome: "¡Bienvenido a las Lecciones de Babushka!",
@@ -61,8 +69,10 @@ const translations = {
     ukrainian: "Ucraniano",
     about: "Acerca de",
     upload: "Subir",
+    login: "Inicio de Sesión",
     darkMode: "Modo oscuro",
     lightMode: "Modo claro",
+    account: "Cuenta"
   },
   fr: {
     welcome: "Bienvenue aux Leçons de Babouchka !",
@@ -79,8 +89,10 @@ const translations = {
     ukrainian: "Ukrainien",
     about: "À propos",
     upload: "Télécharger",
+    login: "Se connecter",
     darkMode: "Mode sombre",
     lightMode: "Mode clair",
+    account: "Compte"
   },
   uk: {
     welcome: "Ласкаво просимо до Уроків Бабусі!",
@@ -97,8 +109,10 @@ const translations = {
     ukrainian: "Українська",
     about: "Про нас",
     upload: "Завантажити",
+    login: "Увійти",
     darkMode: "Темний режим",
     lightMode: "Світлий режим",
+    account: "Обліковий запис"
   }
 };
 
@@ -187,6 +201,15 @@ function App() {
       content: systemPrompts[language].system
     }
   ]);
+
+  //is being used to check if the user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Checking the login state
+  useEffect(() => {
+    const loggedInStatus = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(loggedInStatus);
+  }, []);
 
   const [showChat, setShowChat] = useState(false);
   const [userMessage, setUserMessage] = useState("");
@@ -381,10 +404,12 @@ function App() {
             <span>Babushka Lessons</span>
           </Link>
           <div className="nav-items">
-            <Link to="/upload" className="nav-link">{translations[language].upload}</Link>
             <Link to="/about" className="nav-link">{translations[language].about}</Link>
+            <Link to={isLoggedIn ? "/account" : "/login"}>
+               {isLoggedIn ? translations[language].account : translations[language].login}
+              </Link>
             <button 
-              className="theme-toggle"
+              className="theme-toggle" 
               onClick={toggleDarkMode}
               aria-label={isDarkMode ? translations[language].lightMode : translations[language].darkMode}
             >
@@ -449,6 +474,9 @@ function App() {
           <Route path="/course/:courseId" element={<LessonPage language={language} />} />
           <Route path="/about" element={<AboutPage language={language} />} />
           <Route path="/upload" element={<UploadPage language={language} />} />
+          <Route path="/login" element={<LoginPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
+          <Route path="/account" element={<AccountPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
+          <Route path="/signup" element={<SignUpPage language={language} />} />
         </Routes>
       </div>
     </Router>

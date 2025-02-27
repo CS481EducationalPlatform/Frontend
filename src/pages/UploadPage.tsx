@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 interface UploadPageProps {
   language: 'en' | 'ru' | 'es' | 'fr' | 'uk';
@@ -16,7 +17,8 @@ const translations = {
     videoRequired: "Video file is required",
     thumbnailRequired: "Thumbnail image is required",
     addFiles: "Add Supporting Files",
-    previewVideo: "Video Preview"
+    previewVideo: "Video Preview",
+    back: "Back",
   },
   ru: {
     title: "Загрузить Контент",
@@ -29,7 +31,8 @@ const translations = {
     videoRequired: "Требуется видео файл",
     thumbnailRequired: "Требуется изображение эскиза",
     addFiles: "Добавить Файлы",
-    previewVideo: "Предварительный Просмотр"
+    previewVideo: "Предварительный Просмотр",
+    back:"Назад"
   },
   es: {
     title: "Subir Contenido",
@@ -42,7 +45,8 @@ const translations = {
     videoRequired: "Se requiere archivo de video",
     thumbnailRequired: "Se requiere imagen en miniatura",
     addFiles: "Agregar Archivos",
-    previewVideo: "Vista Previa"
+    previewVideo: "Vista Previa",
+    back: "Volver"
   },
   fr: {
     title: "Télécharger du Contenu",
@@ -55,7 +59,8 @@ const translations = {
     videoRequired: "Le fichier vidéo est requis", 
     thumbnailRequired: "L'image miniature est requise",
     addFiles: "Ajouter des Fichiers",
-    previewVideo: "Aperçu Vidéo"
+    previewVideo: "Aperçu Vidéo",
+    back: "Retour",
   },
   uk: {
     title: "Завантажити Контент",
@@ -68,11 +73,13 @@ const translations = {
     videoRequired: "Потрібен відео файл",
     thumbnailRequired: "Потрібне зображення мініатюри",
     addFiles: "Додати Файли",
-    previewVideo: "Попередній Перегляд"
+    previewVideo: "Попередній Перегляд",
+    back: "Назад"
   }
 };
 
 const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
+  const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [video, setVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
@@ -199,6 +206,10 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
           {translations[language].upload}
         </button>
       </form>
+
+      <button className="back-account-button" onClick={() => navigate("/account")}>
+      {translations[language].back}
+      </button>
     </div>
   );
 };
