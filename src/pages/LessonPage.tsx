@@ -239,7 +239,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
         <div className="lesson-sidebar-content">
           <h2>{translations[language].courseLessons}</h2>
           <div className="lesson-list">
-            {courseLessons.map((lesson) => (
+            {courseLessons.map((lesson: LessonType) => (
               <Lesson
                 key={lesson.id}
                 lesson={lesson}

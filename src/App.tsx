@@ -413,7 +413,7 @@ function App() {
         </nav>
 
         {/* Babushka Image Now in Bottom Right */}
-        <img src="/babushka.png" alt={translations[language].babushkaAlt} className="bottom-right-image" />
+        <img src="/PrototypeCourseAndLessonPageUI/babushka.png" alt={translations[language].babushkaAlt} className="bottom-right-image" />
 
         {/* Chat Box */}
         {showChat && AI && (
