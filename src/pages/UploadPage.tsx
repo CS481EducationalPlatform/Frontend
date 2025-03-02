@@ -1,3 +1,5 @@
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 import { gapi } from "gapi-script";
 import { UploadVideoI, uploadYTvideo, LinkVideoI, linkYTvideo, ensurePlaylistExists } from "../services/uploadService";
@@ -19,7 +21,8 @@ const translations = {
     videoRequired: "Video file is required",
     thumbnailRequired: "Thumbnail image is required",
     addFiles: "Add Supporting Files",
-    previewVideo: "Video Preview"
+    previewVideo: "Video Preview",
+    back: "Back",
   },
   ru: {
     title: "Загрузить Контент",
@@ -32,7 +35,8 @@ const translations = {
     videoRequired: "Требуется видео файл",
     thumbnailRequired: "Требуется изображение эскиза",
     addFiles: "Добавить Файлы",
-    previewVideo: "Предварительный Просмотр"
+    previewVideo: "Предварительный Просмотр",
+    back:"Назад"
   },
   es: {
     title: "Subir Contenido",
@@ -45,7 +49,8 @@ const translations = {
     videoRequired: "Se requiere archivo de video",
     thumbnailRequired: "Se requiere imagen en miniatura",
     addFiles: "Agregar Archivos",
-    previewVideo: "Vista Previa"
+    previewVideo: "Vista Previa",
+    back: "Volver"
   },
   fr: {
     title: "Télécharger du Contenu",
@@ -58,7 +63,8 @@ const translations = {
     videoRequired: "Le fichier vidéo est requis", 
     thumbnailRequired: "L'image miniature est requise",
     addFiles: "Ajouter des Fichiers",
-    previewVideo: "Aperçu Vidéo"
+    previewVideo: "Aperçu Vidéo",
+    back: "Retour",
   },
   uk: {
     title: "Завантажити Контент",
@@ -71,11 +77,13 @@ const translations = {
     videoRequired: "Потрібен відео файл",
     thumbnailRequired: "Потрібне зображення мініатюри",
     addFiles: "Додати Файли",
-    previewVideo: "Попередній Перегляд"
+    previewVideo: "Попередній Перегляд",
+    back: "Назад"
   }
 };
 
 const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
+  const navigate = useNavigate();
   //Kellen
   const [title, setTitle] = useState('');
   const [video, setVideo] = useState<File | null>(null);
@@ -278,8 +286,10 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
           {translations[language].upload}
         </button>
       </form>
+      <button className="back-account-button" onClick={() => navigate("/account")}>
+      {translations[language].back}
+      </button>
       */}
-
         {/* JACE */}
       <Grid direction="column" spacing={0} alignItems="center" container sx={{width:'250px'}}>
         {!videoInfo.accessToken && (
@@ -335,7 +345,6 @@ const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
         />
         <button onClick={ensurePlaylist} style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Link</button>
       </Grid>
-
     </div>
   );
 };
