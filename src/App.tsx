@@ -133,15 +133,6 @@ const educationalTopics = {
   general: ['help', 'learn', 'study', 'understand', 'explain']
 };
 
-// Helper function to detect topics in user message
-const detectTopics = (message: string): string[] => {
-  const lowercaseMsg = message.toLowerCase();
-  return Object.entries(educationalTopics)
-    .filter(([_, keywords]) => 
-      keywords.some(keyword => lowercaseMsg.includes(keyword)))
-    .map(([topic]) => topic);
-};
-
 // Add language-specific system prompts
 const systemPrompts: Record<string, { system: string; default: string }> = {
   en: {
@@ -391,7 +382,7 @@ function App() {
         {/* Navbar */}
         <nav className="navbar">
           <Link to="/" className="nav-brand">
-            <img src="/babushka.png" alt={translations[language].babushkaAlt} className="nav-logo" />
+            <img src="/PrototypeCourseAndLessonPageUI/babushka.png" alt={translations[language].babushkaAlt} className="nav-logo" />
             <span>Babushka Lessons</span>
           </Link>
           <div className="nav-items">

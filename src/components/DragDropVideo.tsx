@@ -12,7 +12,6 @@ export const DragDropVideo: React.FC<DragDropVideoProps> = ({ onFileUploaded }) 
   const [hasUploaded, setHasUploaded] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<React.ReactNode>(<></>);
-  const [uploadUrl, setUploadUrl] = useState<string | null>(null);
 
   const handleChange = (file: File) => {
     if (!file) return;
@@ -46,8 +45,7 @@ export const DragDropVideo: React.FC<DragDropVideoProps> = ({ onFileUploaded }) 
         throw new Error('Upload failed');
       }
 
-      const data = await response.json();
-      setUploadUrl(data.url);
+      await response.json();
       setIsUploading(false);
     } catch (error) {
       setErrorMessage(<div>Upload failed: {error instanceof Error ? error.message : 'Unknown error'}</div>);
@@ -101,3 +99,5 @@ export const DragDropVideo: React.FC<DragDropVideoProps> = ({ onFileUploaded }) 
     </>
   );
 };
+
+export default DragDropVideo;

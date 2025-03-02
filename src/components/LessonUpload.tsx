@@ -1,103 +1,108 @@
 import React, { useState } from "react";
-import DragDropVideo from "./DragDropVideo";
+import { DragDropVideo } from "./DragDropVideo";
 import DragDropFiles from "./DragDropFiles";
 
-const LessonUpload = () => {
-  const [lessonTitle, setLessonTitle] = useState("");
-  const [videoFile, setVideoFile] = useState(null);
-  const [youtubeLink, setYoutubeLink] = useState("");
-  const [documents, setDocuments] = useState([]);
+interface Document {
+  name: string;
+  url: string;
+  file: File;
+}
 
-  const handleDocumentUpload = (file) => {
-    setDocuments((prevDocs) => [...prevDocs, file]);
+const LessonUpload: React.FC = () => {
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string>("");
+
+  const handleDocumentUpload = (file: File) => {
+    setDocuments(prevDocs => [...prevDocs, {
+      name: file.name,
+      url: URL.createObjectURL(file),
+      file: file
+    }]);
   };
 
-  const getYoutubeEmbedUrl = (url) => {
-    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"\s?&]+)/;
-    const match = url.match(regex);
-    return match ? `https://www.youtube.com/embed/${match[1]}` : "";
+  const handleVideoUpload = (file: File) => {
+    setVideoFile(file);
+    const url = URL.createObjectURL(file);
+    setVideoUrl(url);
   };
 
   const handleSubmit = async () => {
-    if (!lessonTitle || (!videoFile && !youtubeLink)) {
-      alert("Lesson must have a title and either a video upload or a YouTube link.");
+    if (!videoFile) {
+      alert("Please upload a video file");
       return;
     }
 
     const formData = new FormData();
-    formData.append("lessonTitle", lessonTitle);
-    if (videoFile) {
-      formData.append("video", videoFile);
-    } else if (youtubeLink) {
-      formData.append("youtubeLink", youtubeLink);
-    }
+    formData.append("video", videoFile);
+    
     documents.forEach((doc, index) => {
-      formData.append(`document_${index}`, doc);
+      formData.append(`document_${index}`, doc.file);
     });
 
     try {
-      const response = await fetch("/api/upload-lesson/", {
-        method: "POST",
-        body: formData,
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
       });
-      
-      if (response.ok) {
-        alert("Lesson uploaded successfully!");
-      } else {
-        alert("Failed to upload lesson.");
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
       }
+
+      alert('Upload successful!');
     } catch (error) {
-      console.error("Error uploading lesson:", error);
+      alert('Upload failed: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Create a New Lesson</h2>
-      <input
-        type="text"
-        placeholder="Lesson Title"
-        className="w-full p-2 border rounded mb-4"
-        value={lessonTitle}
-        onChange={(e) => setLessonTitle(e.target.value)}
-        required
-      />
-      
-      <h3 className="text-lg font-medium">Upload Video or Enter YouTube Link</h3>
-      <DragDropVideo onFileUploaded={setVideoFile} />
-      <input
-        type="text"
-        placeholder="Paste YouTube Link"
-        className="w-full p-2 border rounded mt-2"
-        value={youtubeLink}
-        onChange={(e) => {
-          setYoutubeLink(e.target.value);
-          setVideoFile(null); // Clear file if entering a link
-        }}
-      />
-      {youtubeLink && (
-        <iframe
-          className="w-full h-60 mt-2"
-          src={getYoutubeEmbedUrl(youtubeLink)}
-          frameBorder="0"
-          allowFullScreen
-        ></iframe>
+    <div className="lesson-upload">
+      <div className="upload-section">
+        <h3>Upload Video</h3>
+        <DragDropVideo onFileUploaded={handleVideoUpload} />
+        {videoUrl && (
+          <div className="video-preview">
+            <h4>Video Preview</h4>
+            <video src={videoUrl} controls width="400" />
+          </div>
+        )}
+      </div>
+
+      <div className="upload-section">
+        <h3>Upload Supporting Documents</h3>
+        <DragDropFiles onFileUploaded={handleDocumentUpload} />
+      </div>
+
+      {documents.length > 0 && (
+        <div className="documents-preview">
+          <h3>Uploaded Documents</h3>
+          <ul>
+            {documents.map((doc, index) => (
+              <li key={index}>
+                <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                  {doc.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
-      
-      <h3 className="text-lg font-medium mt-4">Upload Documents</h3>
-      <DragDropFiles onFileUploaded={handleDocumentUpload} />
-      
-      <ul className="mt-2">
-        {documents.map((doc, index) => (
-          <li key={index} className="text-sm">📄 {doc.name}</li>
-        ))}
-      </ul>
-      
+
       <button 
-        className="w-full bg-blue-500 text-white p-2 rounded mt-4"
         onClick={handleSubmit}
+        className="submit-button"
+        style={{
+          marginTop: '20px',
+          padding: '10px 20px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
       >
-        Submit Lesson
+        Upload Lesson
       </button>
     </div>
   );
