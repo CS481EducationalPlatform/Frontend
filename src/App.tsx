@@ -123,16 +123,6 @@ interface ChatMessage {
   sender: 'user' | 'babushka';
 }
 
-// Educational topics we can recognize and respond to
-const educationalTopics = {
-  algorithms: ['algorithm', 'sort', 'search', 'complexity'],
-  dataStructures: ['array', 'list', 'tree', 'graph', 'stack', 'queue'],
-  programming: ['code', 'program', 'function', 'variable', 'class'],
-  webDev: ['html', 'css', 'javascript', 'react', 'web'],
-  database: ['sql', 'database', 'query', 'table', 'join'],
-  general: ['help', 'learn', 'study', 'understand', 'explain']
-};
-
 // Add language-specific system prompts
 const systemPrompts: Record<string, { system: string; default: string }> = {
   en: {
@@ -157,13 +147,7 @@ const systemPrompts: Record<string, { system: string; default: string }> = {
   }
 };
 
-// Keep interfaces and constants outside
-interface ChatHistoryMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-}
-
-//Simple variable to catch failure
+// Simple variable to catch failure
 let AI = false;
 
 // Initialize OpenAI client outside
@@ -455,7 +439,7 @@ function App() {
           <Route path="/" element={<CoursePage language={language} />} />
           <Route path="/course/:courseId" element={<LessonPage language={language} />} />
           <Route path="/about" element={<AboutPage language={language} />} />
-          <Route path="/upload" element={<UploadPage language={language} />} />
+          <Route path="/upload" element={<UploadPage />} />
           <Route path="/login" element={<LoginPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
           <Route path="/account" element={<AccountPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
           <Route path="/signup" element={<SignUpPage language={language} />} />

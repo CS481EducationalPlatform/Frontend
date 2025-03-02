@@ -1,9 +1,11 @@
-import React from "react";
+import type { FC } from "react";
 
 interface LessonType {
+  id: number;
   title: string;
+  videoUrl: string;
+  documents: string[];
   tags: string[];
-  // Add other lesson properties as needed
 }
 
 interface LessonProps {
@@ -12,25 +14,14 @@ interface LessonProps {
   onSelect: (lesson: LessonType) => void;
 }
 
-const Lesson = ({ lesson, isActive, onSelect }: LessonProps) => {
+const Lesson: FC<LessonProps> = ({ lesson, isActive, onSelect }) => {
   return (
-    <button
-      className={`lesson-button ${
-        isActive ? "bg-blue-500 text-white" : "bg-white text-black hover:bg-gray-100"
-      }`}
+    <div
+      className={`lesson-item ${isActive ? 'active' : ''}`}
       onClick={() => onSelect(lesson)}
     >
-      <div className="lesson-content-wrapper">
-        <div className="lesson-title">{lesson.title}</div>
-        <div className="lesson-tags">
-          {lesson.tags.map((tag, index) => (
-            <span key={index} className="lesson-tag">
-              {tag}
-            </span>
-          ))}
-        </div>
-      </div>
-    </button>
+      <h3>{lesson.title}</h3>
+    </div>
   );
 };
 

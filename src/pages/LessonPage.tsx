@@ -224,14 +224,18 @@ const translations = {
 };
 
 interface LessonPageProps {
-  language: 'en' | 'ru' | 'es' | 'fr' | 'uk';
+  language: keyof typeof translations;
 }
 
 const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
-  const { courseId } = useParams();
+  const { courseId = '1' } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const courseLessons = lessons[courseId] || [];
-  const [currentLesson, setCurrentLesson] = useState(null);
+  const courseLessons: LessonType[] = lessons[courseId] || [];
+  const [currentLesson, setCurrentLesson] = useState<LessonType | null>(null);
+
+  const handleLessonSelect = (lesson: LessonType) => {
+    setCurrentLesson(lesson);
+  };
 
   return (
     <div className="lesson-page">
@@ -239,50 +243,50 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
         <div className="lesson-sidebar-content">
           <h2>{translations[language].courseLessons}</h2>
           <div className="lesson-list">
-            {courseLessons.map((lesson: LessonType) => (
+            {courseLessons.map((lesson) => (
               <Lesson
                 key={lesson.id}
                 lesson={lesson}
-                isActive={lesson.id === currentLesson?.id}
-                onSelect={setCurrentLesson}
+                isActive={currentLesson?.id === lesson.id}
+                onSelect={handleLessonSelect}
               />
             ))}
           </div>
-        </div>
-        <div className="back-button-container">
-          <button className="back-button" onClick={() => navigate("/")}>
+          <button
+            onClick={() => navigate('/courses')}
+            className="back-button"
+          >
             {translations[language].backToCourses}
           </button>
         </div>
       </div>
-
-      {/* Lesson Content Section */}
       <div className="lesson-content">
         {currentLesson ? (
           <>
-            <h2>{currentLesson?.title}</h2>
-            {currentLesson?.videoUrl && (
-              <div className="video-container" style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
-                <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0 }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-                    <YoutubeEmbedder url={currentLesson.videoUrl} width="100%" height="100%" />
-                  </div>
-                </div>
-              </div>
-            )}
-            <h3>{translations[language].courseDocuments}</h3>
-            {currentLesson?.documents.length > 0 ? (
-              <ul className="document-list">
-                {currentLesson.documents.map((doc, index) => (
-                  <li key={index}>{doc}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>{translations[language].noDocuments}</p>
-            )}
+            <div className="video-container">
+              <YoutubeEmbedder url={currentLesson.videoUrl} />
+            </div>
+            <div className="documents-section">
+              <h3>{translations[language].courseDocuments}</h3>
+              {currentLesson.documents.length > 0 ? (
+                <ul>
+                  {currentLesson.documents.map((doc: string, index: number) => (
+                    <li key={index}>
+                      <a href={`/documents/${doc}`} target="_blank" rel="noopener noreferrer">
+                        {doc}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{translations[language].noDocuments}</p>
+              )}
+            </div>
           </>
         ) : (
-          <p>{translations[language].selectLesson}</p>
+          <div className="no-lesson-selected">
+            <p>{translations[language].selectLesson}</p>
+          </div>
         )}
       </div>
     </div>

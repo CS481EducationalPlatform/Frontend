@@ -1,349 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
-import { gapi } from "gapi-script";
-import { UploadVideoI, uploadYTvideo, LinkVideoI, linkYTvideo, ensurePlaylistExists } from "../services/uploadService";
-import Grid from "@mui/material/Grid2";
+import React, { useState } from "react";
+import { DragDropVideo } from "../components/DragDropVideo";
+import DragDropFiles from "../components/DragDropFiles";
 
-interface UploadPageProps {
-  language: 'en' | 'ru' | 'es' | 'fr' | 'uk';
+interface Document {
+  name: string;
+  url: string;
+  file: File;
 }
 
-const translations = {
-  en: {
-    title: "Upload Content",
-    description: "Share your educational materials with the Babushka community.",
-    lessonTitle: "Lesson Title",
-    video: "Video File", 
-    thumbnailImage: "Thumbnail Image",
-    upload: "Upload Lesson",
-    titleRequired: "Title is required",
-    videoRequired: "Video file is required",
-    thumbnailRequired: "Thumbnail image is required",
-    addFiles: "Add Supporting Files",
-    previewVideo: "Video Preview",
-    back: "Back",
-  },
-  ru: {
-    title: "Загрузить Контент",
-    description: "Поделитесь своими учебными материалами с сообществом Бабушки.",
-    lessonTitle: "Название Урока",
-    video: "Видео Файл",
-    thumbnailImage: "Изображение Эскиза", 
-    upload: "Загрузить Урок",
-    titleRequired: "Требуется название",
-    videoRequired: "Требуется видео файл",
-    thumbnailRequired: "Требуется изображение эскиза",
-    addFiles: "Добавить Файлы",
-    previewVideo: "Предварительный Просмотр",
-    back:"Назад"
-  },
-  es: {
-    title: "Subir Contenido",
-    description: "Comparte tus materiales educativos con la comunidad Babushka.",
-    lessonTitle: "Título de la Lección",
-    video: "Archivo de Video",
-    thumbnailImage: "Imagen en Miniatura",
-    upload: "Subir Lección", 
-    titleRequired: "Se requiere título",
-    videoRequired: "Se requiere archivo de video",
-    thumbnailRequired: "Se requiere imagen en miniatura",
-    addFiles: "Agregar Archivos",
-    previewVideo: "Vista Previa",
-    back: "Volver"
-  },
-  fr: {
-    title: "Télécharger du Contenu",
-    description: "Partagez vos supports pédagogiques avec la communauté Babouchka.",
-    lessonTitle: "Titre de la Leçon",
-    video: "Fichier Vidéo",
-    thumbnailImage: "Image Miniature",
-    upload: "Télécharger la Leçon",
-    titleRequired: "Le titre est requis",
-    videoRequired: "Le fichier vidéo est requis", 
-    thumbnailRequired: "L'image miniature est requise",
-    addFiles: "Ajouter des Fichiers",
-    previewVideo: "Aperçu Vidéo",
-    back: "Retour",
-  },
-  uk: {
-    title: "Завантажити Контент",
-    description: "Поділіться своїми навчальними матеріалами зі спільнотою Бабусі.",
-    lessonTitle: "Назва Уроку",
-    video: "Відео Файл",
-    thumbnailImage: "Зображення Мініатюри",
-    upload: "Завантажити Урок",
-    titleRequired: "Потрібна назва",
-    videoRequired: "Потрібен відео файл",
-    thumbnailRequired: "Потрібне зображення мініатюри",
-    addFiles: "Додати Файли",
-    previewVideo: "Попередній Перегляд",
-    back: "Назад"
-  }
-};
+const UploadPage: React.FC = () => {
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [videoUrl, setVideoUrl] = useState<string>("");
 
-const UploadPage: React.FC<UploadPageProps> = ({ language }) => {
-  const navigate = useNavigate();
-  //Kellen
-  const [title, setTitle] = useState('');
-  const [video, setVideo] = useState<File | null>(null);
-  const [videoPreview, setVideoPreview] = useState<string | null>(null);
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [supportingFiles, setSupportingFiles] = useState<File[]>([]);
-  const [errors, setErrors] = useState({
-    title: false,
-    video: false,
-    thumbnail: false
-  });
-
-  //Jace
-  const [file, setFile] = useState<File | null>(null);
-  const [videoInfo, setVideoInfo] = useState<UploadVideoI>({
-    title: "",
-    description: "",
-    lesson_id: "1",
-    accessToken: "",
-    playlist: "",
-  })
-  const [linkInfo, setLinkInfo] = useState<LinkVideoI>({
-    lesson_id: "1",
-    video_url: ""
-  })
-  const [playlistName, setPlaylistName] = useState("");
-
-  //CHANGE to being pulled from database securely
-  const CLIENT_ID = "178516670715-5l32e4c5lanhgvn8iv7sa7r23l57o2qq.apps.googleusercontent.com";
-
-  useEffect(() => {
-    // Initialize the Google API client
-    const initClient = () => {
-      gapi.client.init({
-        clientId: CLIENT_ID,
-        scope: "https://www.googleapis.com/auth/youtube.upload",
-      });
-    };
-    gapi.load("client:auth2", initClient);
-  }, []);
-
-  const handleSignIn = async () => {
-    const authInstance = gapi.auth2.getAuthInstance();
-    const user = await authInstance.signIn();
-    const token = user.getAuthResponse().access_token;
-    setVideoInfo({...videoInfo, accessToken: token});
-    alert("Successfully signed in");
+  const handleDocumentUpload = (file: File) => {
+    setDocuments(prevDocs => [...prevDocs, {
+      name: file.name,
+      url: URL.createObjectURL(file),
+      file: file
+    }]);
   };
 
-  const handleUpload = async () => {
-    console.log(1);
-    if (!file) return alert("Please select a file");
-    if (!videoInfo.accessToken) return alert("Please sign in first");
-
-    alert("Beginning Upload");
-    console.log(2);
-    try {
-      await uploadYTvideo(videoInfo, file);
-      console.log(3);
-      alert("Database Success : Uploading to YouTube");
-    } catch (error) {
-      alert("Upload Failed")
-    }
-  };
-
-  const handleLinking = async () => {
-    if(!linkInfo.video_url) return alert("Please provide a link");
-    
-    try {
-      await linkYTvideo(linkInfo);
-      alert("Link Success")
-    } catch (error) {
-      alert("Linking Failed")
-    }
-  }
-
-  const ensurePlaylist = async () => {
-    if(!playlistName) return alert("Need Playlist Name");
-    if(!videoInfo.accessToken) return alert("Need OAUTH")
-    try{
-      await ensurePlaylistExists(playlistName, videoInfo.accessToken);
-      alert("Playlist Exists")
-    } catch (error) {
-      alert("Playlist Ensuring Failure")
-    }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const newErrors = {
-      title: !title,
-      video: !video,
-      thumbnail: !thumbnail
-    };
-
-    setErrors(newErrors);
-
-    if (!newErrors.title && !newErrors.video && !newErrors.thumbnail) {
-      // Handle form submission here
-      console.log({ title, video, thumbnail, supportingFiles });
-    }
-  };
-
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setVideo(file);
-      
-      // Create preview URL for video
-      const videoURL = URL.createObjectURL(file);
-      setVideoPreview(videoURL);
-    }
-  };
-
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setThumbnail(e.target.files[0]);
-    }
-  };
-
-  const handleSupportingFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      setSupportingFiles(prev => [...prev, ...newFiles]);
-    }
+  const handleVideoUpload = (file: File) => {
+    const url = URL.createObjectURL(file);
+    setVideoUrl(url);
   };
 
   return (
-    <div className="upload-page" style={{alignItems:'center'}}>
-      <h1>{translations[language].title}</h1>
-      <p>{translations[language].description}</p>
-      
-      {/*<form onSubmit={handleSubmit} className="upload-form">
-        <div className="form-group">
-          <label htmlFor="title">{translations[language].lessonTitle}</label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className={errors.title ? 'error' : ''}
-          />
-          {errors.title && <span className="error-message">{translations[language].titleRequired}</span>}
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="video">{translations[language].video}</label>
-          <input
-            type="file"
-            id="video"
-            accept="video/*"
-            onChange={handleVideoChange}
-            className={errors.video ? 'error' : ''}
-          />
-          {errors.video && <span className="error-message">{translations[language].videoRequired}</span>}
-        </div>
-
-        {videoPreview && (
+    <div className="lesson-upload">
+      <div className="upload-section">
+        <h3>Upload Video</h3>
+        <DragDropVideo onFileUploaded={handleVideoUpload} />
+        {videoUrl && (
           <div className="video-preview">
-            <h3>{translations[language].previewVideo}</h3>
-            <video 
-              controls 
-              src={videoPreview}
-              style={{ maxWidth: '100%', maxHeight: '400px' }}
-            />
+            <h4>Video Preview</h4>
+            <video src={videoUrl} controls width="400" />
           </div>
         )}
+      </div>
 
-        <div className="form-group">
-          <label htmlFor="thumbnail">{translations[language].thumbnailImage}</label>
-          <input
-            type="file"
-            id="thumbnail"
-            accept="image/*"
-            onChange={handleThumbnailChange}
-            className={errors.thumbnail ? 'error' : ''}
-          />
-          {errors.thumbnail && <span className="error-message">{translations[language].thumbnailRequired}</span>}
+      <div className="upload-section">
+        <h3>Upload Supporting Documents</h3>
+        <DragDropFiles onFileUploaded={handleDocumentUpload} />
+      </div>
+
+      {documents.length > 0 && (
+        <div className="documents-preview">
+          <h3>Uploaded Documents</h3>
+          <ul>
+            {documents.map((doc, index) => (
+              <li key={index}>
+                <a href={doc.url} target="_blank" rel="noopener noreferrer">
+                  {doc.name}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
+      )}
 
-        <div className="form-group">
-          <label htmlFor="supporting-files">{translations[language].addFiles}</label>
-          <input
-            type="file"
-            id="supporting-files"
-            multiple
-            onChange={handleSupportingFilesChange}
-          />
-          {supportingFiles.length > 0 && (
-            <ul className="files-list">
-              {supportingFiles.map((file, index) => (
-                <li key={index}>{file.name}</li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <button type="submit" className="upload-button">
-          {translations[language].upload}
-        </button>
-      </form>
-      <button className="back-account-button" onClick={() => navigate("/account")}>
-      {translations[language].back}
+      <button 
+        className="submit-button"
+        style={{
+          marginTop: '20px',
+          padding: '10px 20px',
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        Upload Lesson
       </button>
-      */}
-        {/* JACE */}
-      <Grid direction="column" spacing={0} alignItems="center" container sx={{width:'250px'}}>
-        {!videoInfo.accessToken && (
-          <button onClick={handleSignIn} style={{height:'100px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Sign in with Google</button>
-        )}
-        <div style={{paddingLeft:'25px', }}>
-          <input
-            type="file"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            style={{fontSize:'16px', width:'100%', height:'100px', border:'0px solid black',borderRadius:'8px', alignContent:'center'}}
-          />
-        </div>
-        <input
-          type="text"
-          value={videoInfo.title}
-          onChange={(e) => setVideoInfo({...videoInfo, title: e.target.value})}
-          placeholder="Title"
-          style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
-        />
-        <textarea
-          value={videoInfo.description}
-          style={{height:'100px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
-          onChange={(e) => setVideoInfo({...videoInfo, description: e.target.value})}
-          placeholder="Description"
-        />
-        <textarea
-          value={videoInfo.playlist}
-          style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
-          onChange={(e) => setVideoInfo({...videoInfo, playlist: e.target.value})}
-          placeholder="Playlist"
-        />
-        <button onClick={handleUpload} style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Upload</button>
-        
-
-
-        <input
-          type="text"
-          value={linkInfo.video_url}
-          onChange={(e) => setLinkInfo({...linkInfo, video_url: e.target.value})}
-          placeholder="Video URL"
-          style={{marginTop: '50px', height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
-        />
-        <button onClick={handleLinking} style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Link</button>
-        
-        
-
-        <input
-          type="text"
-          value={playlistName}
-          onChange={(e) => setPlaylistName(e.target.value)}
-          placeholder="Playlist Name"
-          style={{marginTop: '50px', height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}
-        />
-        <button onClick={ensurePlaylist} style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Link</button>
-      </Grid>
     </div>
   );
 };
