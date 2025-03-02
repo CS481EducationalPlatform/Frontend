@@ -5,7 +5,13 @@ interface Lesson {
   id: string;
   title: string;
   videoUrl: string;
-  documents?: string[];
+  documents: Document[];
+}
+
+interface Document {
+  name: string;
+  url: string;
+  type: 'pdf' | 'doc' | 'docx' | 'txt';
 }
 
 interface CourseProps {
@@ -18,9 +24,7 @@ interface CourseProps {
 const Course: React.FC<CourseProps> = ({ id, title, description, lessons }) => {
   return (
     <div className="p-4 border rounded-lg mb-4">
-      <h2
-        className="text-xl font-semibold cursor-pointer"
-      >
+      <h2 className="text-xl font-semibold cursor-pointer">
         {title}
       </h2>
       <p className="text-sm text-gray-600">{description}</p>

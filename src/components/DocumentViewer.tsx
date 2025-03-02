@@ -1,41 +1,47 @@
-import React, {useState} from 'react';
-import Mammoth from "mammoth";
+import React from 'react';
 
-const DocumentViewer = ({ file }: { file: any }) => {
-    const [content, setContent] = useState<string>("");
-    
-    const handleDocx = () => {
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-            if (event.target?.result) {
-                const arrayBuffer = event.target.result as ArrayBuffer;
-                const result = await Mammoth.convertToHtml({ arrayBuffer });
-                setContent(result.value);
-            }
-        };
-        reader.readAsArrayBuffer(file);
+interface DocumentViewerProps {
+  documentUrl: string;
+  documentType: 'pdf' | 'doc' | 'docx' | 'txt';
+}
 
+const DocumentViewer: React.FC<DocumentViewerProps> = ({ documentUrl, documentType }) => {
+  const renderDocument = () => {
+    switch (documentType) {
+      case 'pdf':
         return (
-            <div style={{width:500, height:500, border: '1px solid red', overflow:'scroll'}} dangerouslySetInnerHTML={{__html: content}}></div>
-        )
-    };
+          <iframe
+            src={documentUrl}
+            title="PDF Document"
+            className="w-full h-screen"
+          />
+        );
+      case 'doc':
+      case 'docx':
+      case 'txt':
+        // For these formats, we'll provide a download link since they can't be directly embedded
+        return (
+          <div className="text-center p-4">
+            <p>This document type cannot be previewed directly.</p>
+            <a
+              href={documentUrl}
+              download
+              className="text-blue-500 hover:text-blue-700 underline"
+            >
+              Download Document
+            </a>
+          </div>
+        );
+      default:
+        return <div>Unsupported document type</div>;
+    }
+  };
 
-    return (
-    <>
-        <div>
-            {
-            file && file["type"] == 'application/pdf' 
-            ? <iframe style={{width:500, height:500}} src={URL.createObjectURL(file)}></iframe>
-            : <></>
-            }
-            {
-            file && file["type"].includes("openxml")
-            ? handleDocx()
-            : <></>
-            }
-        </div>
-    </>
-    );
+  return (
+    <div className="document-viewer">
+      {renderDocument()}
+    </div>
+  );
 };
 
 export default DocumentViewer;

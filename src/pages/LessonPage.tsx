@@ -4,7 +4,15 @@ import { YoutubeEmbedder } from "../components/YoutubeEmbedder";
 import Lesson from "../components/Lesson";
 import "../styles/LessonPage.css"; 
 
-const lessons = {
+interface LessonType {
+  id: number;
+  title: string;
+  videoUrl: string;
+  documents: string[];
+  tags: string[];
+}
+
+const lessons: { [key: string]: LessonType[] } = {
   1: [
     { id: 1, title: "Java Basics", videoUrl: "https://www.youtube.com/watch?v=eIrMbAQSU34", documents: ["Lesson1.pdf", "Lesson1.java"], tags: ["java", "basics", "programming"] },
     { id: 2, title: "UML Diagramming", videoUrl: "https://www.youtube.com/watch?v=UI6lqHOVHic", documents: ["Lesson2.pdf", "Lesson2.java"], tags: ["uml", "design", "diagrams"] },
