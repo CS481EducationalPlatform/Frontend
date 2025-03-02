@@ -142,14 +142,8 @@ const detectTopics = (message: string): string[] => {
     .map(([topic]) => topic);
 };
 
-// Add this type for language-specific prompts
-interface LanguagePrompt {
-  system: string;
-  default: string;
-}
-
 // Add language-specific system prompts
-const systemPrompts: Record<string, LanguagePrompt> = {
+const systemPrompts: Record<string, { system: string; default: string }> = {
   en: {
     system: "You are Babushka, wise programming teacher. Speak in short proverbs and folk wisdom. 'As potato needs soil, code needs structure.' Give brief, memorable lessons.",
     default: "What wisdom do you seek, young coder?"
@@ -233,17 +227,6 @@ function App() {
     const savedTheme = localStorage.getItem('theme');
     return savedTheme === 'dark';
   });
-
-  // Toggle language handler
-  const toggleLanguage = () => {
-    setLanguage(prev => {
-      if (prev === 'en') return 'uk';
-      if (prev === 'uk') return 'ru';
-      if (prev === 'ru') return 'es';
-      if (prev === 'es') return 'fr';
-      return 'en';
-    });
-  };
 
   // Toggle dark mode handler
   const toggleDarkMode = useCallback(() => {

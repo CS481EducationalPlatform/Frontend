@@ -6,19 +6,21 @@ import { SvgIcon } from '@mui/material';
 //allow only certain extensions
 const fileTypes = ["txt", "docx", "pdf"];
 
-function DragDrop({ onFileUploaded }: { onFileUploaded: (file: any) => void }) {
+interface DragDropFilesProps {
+  onFileUploaded: (file: File) => void;
+}
 
-  const [file, setFile] = useState(null);
+export const DragDropFiles: React.FC<DragDropFilesProps> = ({ onFileUploaded }) => {
+  const [file, setFile] = useState<File | null>(null);
   const [hasUploaded, setHasUploaded] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(<></>);
+  const [errorMessage, setErrorMessage] = useState<React.ReactNode>(<></>);
 
   //Can be used as onDrop or onSelect as well, handleChange does both D&D and Upload
-  const handleChange = (file) => {
-    setHasUploaded(true);
-    setErrorMessage(<></>)
+  const handleChange = (file: File) => {
     setFile(file);
+    setHasUploaded(true);
+    setErrorMessage(<></>);
     onFileUploaded(file);
-    console.log(file);
   };
 
   const handleBadSize = () => {
@@ -55,6 +57,6 @@ function DragDrop({ onFileUploaded }: { onFileUploaded: (file: any) => void }) {
       </FileUploader>
     </>
   );
-}
+};
 
-export default DragDrop;
+export default DragDropFiles;

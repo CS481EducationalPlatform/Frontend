@@ -1,233 +1,103 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import { FileUploader } from "react-drag-drop-files";
-import UploadIcon from "@mui/icons-material/Upload";
-import { SvgIcon } from "@mui/material";
-import { gapi } from "gapi-script";
 import CircularProgress from "@mui/material/CircularProgress";
 
-function DragDropVideo() {
-  const fileTypes = ["mov", "mp4", "mpg", "mpeg4"];
-  const [file, setFile] = useState(null);
+interface DragDropVideoProps {
+  onFileUploaded: (file: File) => void;
+}
+
+export const DragDropVideo: React.FC<DragDropVideoProps> = ({ onFileUploaded }) => {
+  const fileTypes = ["MP4", "MOV", "AVI", "WMV"];
+  const [file, setFile] = useState<File | null>(null);
   const [hasUploaded, setHasUploaded] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(<></>);
-  const [uploadUrl, setUploadUrl] = useState(null);  // Track resumable URL
-  const CLIENT_ID = "178516670715-5l32e4c5lanhgvn8iv7sa7r23l57o2qq.apps.googleusercontent.com";
+  const [errorMessage, setErrorMessage] = useState<React.ReactNode>(<></>);
+  const [uploadUrl, setUploadUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Check if there's a resumable upload URL in localStorage
-    const savedUploadUrl = localStorage.getItem("resumableUploadUrl");
-    if (savedUploadUrl) {
-      setUploadUrl(savedUploadUrl);
-      setIsUploading(true);  // Indicate that an upload is in progress
-      continueUpload(savedUploadUrl);  // Attempt to continue the upload
-    }
-
-    const initClient = () => {
-      gapi.client.init({
-        clientId: CLIENT_ID,
-        scope: "https://www.googleapis.com/auth/youtube.upload",
-      });
-    };
-    gapi.load("client:auth2", initClient);
-  }, []);
-
-  const handleSignIn = async () => {
-    const auth = gapi.auth2.getAuthInstance();
-    await auth.signIn();
-    return auth.currentUser.get().getAuthResponse().access_token;
-  };
-
-  const handleChange = (file) => {
+  const handleChange = (file: File) => {
+    if (!file) return;
+    
+    setFile(file);
     setHasUploaded(true);
     setErrorMessage(<></>);
-    setFile(file);
-    console.log(file);
+    onFileUploaded(file);
   };
 
-  const continueUpload = async (savedUploadUrl) => {
-    try {
-      const response = await fetch(savedUploadUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": file["type"],
-          "Content-Length": file["size"],
-        },
-        body: file,  // Upload the file
-      });
-
-      if (response.ok) {
-        setIsUploading(false);
-        localStorage.removeItem("resumableUploadUrl");  // Clear the URL from localStorage
-        alert("Video uploaded successfully!");
-      } else {
-        throw new Error("Video upload failed. Check response.");
-      }
-    } catch (error) {
-      setIsUploading(false);
-      if(file != null){
-        console.error("Error continuing video upload:", error);
-        alert("Error continuing video upload. Check console for details.");
-      }
+  const handleUpload = async () => {
+    if (!file) {
+      setErrorMessage(<div>Please select a file first</div>);
+      return;
     }
-  };
-
-  const uploadToYouTube = async () => {
-    if (!file) return alert("Please upload a file first!");
 
     setIsUploading(true);
-
     try {
-      const token = await handleSignIn();
-      gapi.client.setToken({ access_token: token });
-
-      const metadata = {
-        snippet: {
-          title: "last temp test",
-          description: "This video was uploaded via the YouTube API!",
-          tags: ["react", "youtube", "upload"],
-          category: "27",
-        },
-        status: {
-          privacyStatus: "public",
-          madeForKids: false,
-        },
+      const headers = {
+        'Content-Type': file.type,
+        'Content-Length': file.size.toString()
       };
 
-      // Step 1: Initiate the resumable upload session
-      const initResponse = await gapi.client.request({
-        path: "https://www.googleapis.com/upload/youtube/v3/videos",
-        method: "POST",
-        params: {
-          part: "snippet,status",
-          uploadType: "resumable",
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(metadata),
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers,
+        body: file
       });
 
-      const resumableUrl = initResponse.headers.location;
-      if (!resumableUrl) {
-        throw new Error("Failed to get the resumable upload URL.");
+      if (!response.ok) {
+        throw new Error('Upload failed');
       }
 
-      // Save the resumable upload URL to localStorage for continuation on revisit
-      localStorage.setItem("resumableUploadUrl", resumableUrl);
-      setUploadUrl(resumableUrl);
-
-      // Step 2: Upload the video file
-      const uploadResponse = await fetch(resumableUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": file["type"],
-          "Content-Length": file["size"],
-        },
-        body: file,  // Upload the file
-      });
-
-      if (!uploadResponse.ok) {
-        throw new Error("Video upload failed. Check response.");
-      }
-
+      const data = await response.json();
+      setUploadUrl(data.url);
       setIsUploading(false);
-      localStorage.removeItem("resumableUploadUrl");  // Clear the URL from localStorage
-      alert("Video uploaded successfully!");
     } catch (error) {
+      setErrorMessage(<div>Upload failed: {error instanceof Error ? error.message : 'Unknown error'}</div>);
       setIsUploading(false);
-      if(file != null){
-        console.error("Error uploading video:", error);
-        alert("Error uploading video. Check console for details.");
-      }
     }
   };
 
   return (
     <>
       <FileUploader
+        multiple={false}
         handleChange={handleChange}
         name="file"
         types={fileTypes}
-        maxSize={256000}
       >
         <div
           style={{
-            height: 200,
-            width: 200,
-            border: "2px solid " + (hasUploaded ? "green" : "red"),
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 25,
+            border: "2px dashed #cccccc",
+            borderRadius: "4px",
+            padding: "20px",
+            textAlign: "center",
+            cursor: "pointer"
           }}
         >
-          <SvgIcon
-            component={UploadIcon}
-            style={{
-              position: "relative",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              color: hasUploaded ? "green" : "red",
-              opacity: "20%",
-            }}
-          />
-          <div style={{ position: "absolute" }}>
-            {hasUploaded ? (
-              <p>
-                Upload of <br />
-                {file ? file["name"] : <></>}
-                <br />
-                Successful
-              </p>
-            ) : (
-              <p>
-                <u style={{ cursor: "pointer" }}>Click Here</u>
-                <br />
-                or Drag & Drop
-                <br />
-                Video to Upload
-              </p>
-            )}
-            {errorMessage}
-          </div>
+          <p>Drag and drop a video file here, or click to select</p>
+          <p>Supported formats: {fileTypes.join(", ")}</p>
         </div>
       </FileUploader>
 
-      {file && !isUploading && (
-        <div>
-          <h3>Uploaded Video:</h3>
-          <video src={URL.createObjectURL(file)} controls width="500" />
-        </div>
-      )}
-
-      {file && (
-        <div>
-          <h3>Ready to Upload:</h3>
-          <p>{file["name"]}</p>
-          <button onClick={uploadToYouTube} disabled={isUploading}>
-            {isUploading ? (
-              <>
-                <CircularProgress size={24} style={{ marginRight: 10 }} />
-                Uploading...
-              </>
-            ) : (
-              "Upload to YouTube"
-            )}
+      {hasUploaded && (
+        <div style={{ marginTop: "20px" }}>
+          <p>Selected file: {file?.name}</p>
+          <button
+            onClick={handleUpload}
+            disabled={isUploading}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: isUploading ? "not-allowed" : "pointer"
+            }}
+          >
+            {isUploading ? <CircularProgress size={24} /> : "Upload"}
           </button>
         </div>
       )}
 
-      {isUploading && (
-        <div style={{ marginTop: 20 }}>
-          <CircularProgress />
-          <p>Uploading your video, please wait...</p>
-        </div>
-      )}
+      {errorMessage}
     </>
   );
-}
-
-export default DragDropVideo;
+};
