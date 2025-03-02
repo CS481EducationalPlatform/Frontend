@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect, useRef, useCallback } from "react";
 import CoursePage from "./pages/CoursePage";
 import LessonPage from "./pages/LessonPage";
@@ -10,7 +10,8 @@ import "./styles/App.css";
 import "./styles/Pages.css";
 import "./styles/LoginPage.css";
 import OpenAI from 'openai';
-import SignUpPage from "./pages/SignupPage";
+import SignUpPage from "./pages/SignUpPage";
+import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
 // Translation dictionary
 const translations = {
@@ -179,15 +180,18 @@ interface ChatHistoryMessage {
 
 //Simple variable to catch failure
 let AI = false;
+
+// Initialize OpenAI client outside
+let openAIClient: OpenAI | null = null;
 try {
-  // Initialize OpenAI client outside
-  const openai = new OpenAI({
+  openAIClient = new OpenAI({
     apiKey: import.meta.env.VITE_OPENAI_API_KEY,
     dangerouslyAllowBrowser: true
   });
   AI = true;
-} catch (error){
+} catch (error) {
   AI = false;
+  console.error('Failed to initialize OpenAI client:', error);
 }
 
 function App() {
@@ -195,7 +199,7 @@ function App() {
   const [language, setLanguage] = useState<'en' | 'ru' | 'es' | 'fr' | 'uk'>('en');
   
   // Then use it in other state initializations
-  const [messages, setMessages] = useState<Array<{role: string, content: string}>>([
+  const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([
     {
       role: 'system',
       content: systemPrompts[language].system
@@ -288,16 +292,20 @@ function App() {
       ]);
   
       // Prepare chat history for OpenAI API
-      const updatedMessages = [
+      const updatedMessages: ChatCompletionMessageParam[] = [
         ...messages,
         { role: 'user', content: userInput }
       ];
   
-      setMessages(updatedMessages); // Keep state in sync
+      setMessages(updatedMessages);
+  
+      if (!openAIClient) {
+        throw new Error("OpenAI client not initialized");
+      }
   
       // Call OpenAI API and WAIT for the response
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini", // Use a model you have access to
+      const completion = await openAIClient.chat.completions.create({
+        model: "gpt-4o-mini",
         messages: updatedMessages,
         temperature: 0.7,
         max_tokens: 250
