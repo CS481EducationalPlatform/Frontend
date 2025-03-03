@@ -41,7 +41,7 @@ const LessonUpload: React.FC = () => {
     });
 
     try {
-      const response = await fetch('/api/upload', {
+      const response = await fetch('https://backend-4yko.onrender.com/api/upload', {
         method: 'POST',
         body: formData
       });

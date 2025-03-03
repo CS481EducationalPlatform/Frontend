@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://127.0.0.1:8001/api/";
+const API_BASE_URL = "https://backend-4yko.onrender.com/api/";
 
 export const api = axios.create({
     baseURL: API_BASE_URL,
@@ -9,7 +9,7 @@ export const api = axios.create({
     },
 });
 
-const UPLOAD_BASE_URL = "http://127.0.0.1:8001/upload/";
+const UPLOAD_BASE_URL = "https://backend-4yko.onrender.com/upload/";
 
 export const upload = axios.create({
     baseURL: UPLOAD_BASE_URL,

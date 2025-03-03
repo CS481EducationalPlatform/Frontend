@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { YoutubeEmbedder } from "../components/YoutubeEmbedder";
 import Lesson from "../components/Lesson";
 import "../styles/LessonPage.css"; 
+
+const API_BASE_URL = 'https://backend-4yko.onrender.com';
 
 interface LessonType {
   id: number;
@@ -230,12 +232,44 @@ interface LessonPageProps {
 const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
   const { courseId = '1' } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const courseLessons: LessonType[] = lessons[courseId] || [];
+  const [courseLessons, setCourseLessons] = useState<LessonType[]>([]);
   const [currentLesson, setCurrentLesson] = useState<LessonType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchLessons = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${API_BASE_URL}/api/courses/${courseId}/lessons`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch lessons');
+        }
+        const data = await response.json();
+        setCourseLessons(data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        setCourseLessons([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLessons();
+  }, [courseId]);
 
   const handleLessonSelect = (lesson: LessonType) => {
     setCurrentLesson(lesson);
   };
+
+  if (isLoading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="error">{error}</div>;
+  }
 
   return (
     <div className="lesson-page">
@@ -272,7 +306,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
                 <ul>
                   {currentLesson.documents.map((doc: string, index: number) => (
                     <li key={index}>
-                      <a href={`/documents/${doc}`} target="_blank" rel="noopener noreferrer">
+                      <a href={`${API_BASE_URL}/api/documents/${doc}`} target="_blank" rel="noopener noreferrer">
                         {doc}
                       </a>
                     </li>

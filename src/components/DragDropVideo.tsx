@@ -35,7 +35,7 @@ export const DragDropVideo: React.FC<DragDropVideoProps> = ({ onFileUploaded }) 
         'Content-Length': file.size.toString()
       };
 
-      const response = await fetch('/api/upload', {
+      const response = await fetch('https://backend-4yko.onrender.com/api/upload', {
         method: 'POST',
         headers,
         body: file
