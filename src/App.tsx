@@ -147,20 +147,24 @@ const systemPrompts: Record<string, { system: string; default: string }> = {
   }
 };
 
-// Simple variable to catch failure
+let openAIClient: OpenAI | undefined;
 let AI = false;
 
-// Initialize OpenAI client outside
-let openAIClient: OpenAI | null = null;
 try {
-  openAIClient = new OpenAI({
-    apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true
-  });
-  AI = true;
+  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  if (apiKey) {
+    openAIClient = new OpenAI({
+      apiKey: apiKey,
+      dangerouslyAllowBrowser: true
+    });
+    AI = true;
+  } else {
+    console.log('OpenAI API key not found. Chat functionality will be disabled.');
+    AI = false;
+  }
 } catch (error) {
   AI = false;
-  console.error('Failed to initialize OpenAI client:', error);
+  console.log('Chat functionality disabled:', error instanceof Error ? error.message : 'Unknown error');
 }
 
 function App() {
