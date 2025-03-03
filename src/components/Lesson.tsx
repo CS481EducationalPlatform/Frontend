@@ -17,10 +17,21 @@ interface LessonProps {
 const Lesson: FC<LessonProps> = ({ lesson, isActive, onSelect }) => {
   return (
     <div
-      className={`lesson-item ${isActive ? 'active' : ''}`}
+      className={`lesson-button ${isActive ? 'active' : ''}`}
       onClick={() => onSelect(lesson)}
     >
-      <h3>{lesson.title}</h3>
+      <div className="lesson-content-wrapper">
+        <h3 className="lesson-title">{lesson.title}</h3>
+        {lesson.tags && lesson.tags.length > 0 && (
+          <div className="lesson-tags">
+            {lesson.tags.map((tag, index) => (
+              <span key={index} className="lesson-tag">
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

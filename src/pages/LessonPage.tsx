@@ -71,7 +71,7 @@ const convertAPILesson = (apiLesson: APILesson): LessonType => {
   
   return {
     id: apiLesson.lessonID || 0,
-    title: apiLesson.lessonName,
+    title: `${apiLesson.lessonName}${apiLesson.lessonDescription ? ` - ${apiLesson.lessonDescription}` : ''}`,
     videoUrl: videoUpload?.videoURL || '',
     documents: documentUploads.map(doc => `${doc.fileID}`),
     tags: apiLesson.tags || []
