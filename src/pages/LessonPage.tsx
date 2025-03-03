@@ -132,10 +132,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
               />
             ))}
           </div>
-          <button
-            onClick={() => navigate('/courses')}
-            className="back-button"
-          >
+          <button onClick={() => navigate('/')} className="back-button">
             {translations[language].backToCourses}
           </button>
         </div>
