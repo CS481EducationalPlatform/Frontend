@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { YoutubeEmbedder } from "../components/YoutubeEmbedder";
 import Lesson from "../components/Lesson";
-import "../styles/LessonPage.css"; 
+import "../styles/LessonPage.css";
+import { getCourseLessons } from "../services/courseService";
 
 const API_BASE_URL = 'https://backend-4yko.onrender.com';
 
@@ -54,7 +55,7 @@ const translations = {
 };
 
 interface LessonPageProps {
-  language: keyof typeof translations;
+  language: 'en' | 'ru' | 'es' | 'fr' | 'uk';
 }
 
 const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
@@ -69,11 +70,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
     const fetchLessons = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`${API_BASE_URL}/api/courses/${courseId}/lessons`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch lessons');
-        }
-        const data = await response.json();
+        const data = await getCourseLessons(parseInt(courseId));
         setCourseLessons(data);
         setError(null);
       } catch (err) {

@@ -7,25 +7,31 @@ export interface Lesson {
     LessonDescription: string;
 }
 
-// Fetch all courses
-export const getCourses = async () => {
-    const response = await api.get<Lesson[]>("/lessons/");
+// Fetch all lessons
+export const getLessons = async () => {
+    const response = await api.get<Lesson[]>("/lessons");
     return response.data;
 };
 
-// Create a new course
-export const createCourse = async (info: Lesson) => {
-    const response = await api.post<Lesson>("/lessons/", info);
+// Get a specific lesson
+export const getLesson = async (id: number) => {
+    const response = await api.get<Lesson>(`/lessons/${id}`);
     return response.data;
 };
 
-// Update a course
-export const updateCourse = async (id: number, info: Lesson) => {
-    const response = await api.put<Lesson>(`/lessons/${id}/`, info);
+// Create a new lesson
+export const createLesson = async (lesson: Lesson) => {
+    const response = await api.post<Lesson>("/lessons", lesson);
     return response.data;
 };
 
-// Delete a course
-export const deleteCourse = async (id: number) => {
-    await api.delete(`/lessons/${id}/`);
+// Update a lesson
+export const updateLesson = async (id: number, lesson: Lesson) => {
+    const response = await api.put<Lesson>(`/lessons/${id}`, lesson);
+    return response.data;
+};
+
+// Delete a lesson
+export const deleteLesson = async (id: number) => {
+    await api.delete(`/lessons/${id}`);
 };
