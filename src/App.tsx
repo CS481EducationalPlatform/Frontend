@@ -9,7 +9,6 @@ import AccountPage from "./pages/AccountPage";
 import "./styles/App.css";
 import "./styles/Pages.css";
 import "./styles/LoginPage.css";
-import OpenAI from 'openai';
 import SignUpPage from "./pages/SignUpPage";
 import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 
@@ -146,26 +145,9 @@ const systemPrompts: Record<string, { system: string; default: string }> = {
     default: "Якої мудрості шукаєш, молодий програміст?"
   }
 };
-
-let openAIClient: OpenAI | undefined;
-let AI = false;
-
-try {
-  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-  if (apiKey) {
-    openAIClient = new OpenAI({
-      apiKey: apiKey,
-      dangerouslyAllowBrowser: true
-    });
-    AI = true;
-  } else {
-    console.log('OpenAI API key not found. Chat functionality will be disabled.');
-    AI = false;
-  }
-} catch (error) {
-  AI = false;
-  console.log('Chat functionality disabled:', error instanceof Error ? error.message : 'Unknown error');
-}
+xw
+// Replace OpenAI client with simple flag
+const CHAT_ENABLED = true;
 
 function App() {
   // Define language state first
@@ -253,43 +235,40 @@ function App() {
         { text: "typing...", sender: 'babushka' }
       ]);
   
-      // Prepare chat history for OpenAI API
-      const updatedMessages: ChatCompletionMessageParam[] = [
-        ...messages,
-        { role: 'user', content: userInput }
-      ];
-  
-      setMessages(updatedMessages);
-  
-      if (!openAIClient) {
-        throw new Error("OpenAI client not initialized");
-      }
-  
-      // Call OpenAI API and WAIT for the response
-      const completion = await openAIClient.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: updatedMessages,
-        temperature: 0.7,
-        max_tokens: 250
+      // Call our backend API instead of OpenAI directly
+      const response = await fetch('https://backend-4yko.onrender.com/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userInput,
+          language: language,
+          history: messages
+        })
       });
-  
-      // Extract and validate response
-      const response = completion?.choices?.[0]?.message?.content?.trim();
+
+      if (!response.ok) {
+        throw new Error('Chat request failed');
+      }
+
+      const data = await response.json();
+      const aiResponse = data.response;
       
-      if (!response) {
-        throw new Error("No response received from OpenAI");
+      if (!aiResponse) {
+        throw new Error("No response received from chat API");
       }
   
       // Replace "typing..." with the real response
       setChatMessages(prev => [
         ...prev.slice(0, -1),
-        { text: response, sender: 'babushka' }
+        { text: aiResponse, sender: 'babushka' }
       ]);
   
       // Save assistant response to chat history
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: response }
+        { role: 'assistant', content: aiResponse }
       ]);
   
     } catch (error) {
@@ -404,7 +383,7 @@ function App() {
         <img src="/PrototypeCourseAndLessonPageUI/babushka.png" alt={translations[language].babushkaAlt} className="bottom-right-image" />
 
         {/* Chat Box */}
-        {showChat && AI && (
+        {showChat && CHAT_ENABLED && (
           <div className="chat-container">
             <button 
               className="chat-close" 
