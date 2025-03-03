@@ -145,7 +145,7 @@ const systemPrompts: Record<string, { system: string; default: string }> = {
     default: "Якої мудрості шукаєш, молодий програміст?"
   }
 };
-xw
+
 // Replace OpenAI client with simple flag
 const CHAT_ENABLED = true;
 
