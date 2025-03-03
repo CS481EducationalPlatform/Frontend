@@ -1,10 +1,19 @@
 import { api } from "./API";
 
+export interface UploadedFile {
+    fileID: number;
+    lessonID: number;
+    videoURL?: string;
+    fileBlob?: Blob;
+}
+
 export interface Lesson {
-    CourseID: number;
-    LessonID?: number;
-    LessonName: string;
-    LessonDescription: string;
+    lessonID?: number;
+    courseID?: number;
+    lessonName: string;
+    lessonDescription: string;
+    uploads?: UploadedFile[];
+    tags?: string[];
 }
 
 // Fetch all lessons

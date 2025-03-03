@@ -1,12 +1,12 @@
 import { api } from "./API";
 
 export interface Course {
-    CourseID?: number;
-    CourseName: string;
-    CourseDescription: string;
-    TopicID: number;
-    UserID: number;
-    IsApproved: boolean;
+    courseID?: number;
+    instructorID: number;
+    courseName: string;
+    courseDescription: string;
+    isPublished: boolean;
+    tags?: string[];
 }
 
 // Fetch all courses

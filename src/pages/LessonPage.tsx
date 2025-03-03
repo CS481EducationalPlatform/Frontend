@@ -4,6 +4,7 @@ import { YoutubeEmbedder } from "../components/YoutubeEmbedder";
 import Lesson from "../components/Lesson";
 import "../styles/LessonPage.css";
 import { getCourseLessons } from "../services/courseService";
+import type { Lesson as APILesson } from "../services/lessonService";
 
 const API_BASE_URL = 'https://backend-4yko.onrender.com';
 
@@ -22,41 +23,60 @@ const translations = {
     backToCourses: "Back to Courses",
     selectLesson: "Select a lesson to view its content",
     courseDocuments: "Course Documents",
-    noDocuments: "No documents available"
+    noDocuments: "No documents available",
+    noVideo: "No video available"
   },
   ru: {
     courseLessons: "Уроки Курса",
     backToCourses: "Назад к Курсам",
     selectLesson: "Выберите урок для просмотра",
     courseDocuments: "Документы Курса",
-    noDocuments: "Документы недоступны"
+    noDocuments: "Документы недоступны",
+    noVideo: "Видео недоступно"
   },
   es: {
     courseLessons: "Lecciones del Curso",
     backToCourses: "Volver a los Cursos",
     selectLesson: "Selecciona una lección para ver su contenido",
     courseDocuments: "Documentos del Curso",
-    noDocuments: "No hay documentos disponibles"
+    noDocuments: "No hay documentos disponibles",
+    noVideo: "No hay video disponible"
   },
   fr: {
     courseLessons: "Leçons du Cours",
     backToCourses: "Retour aux Cours",
     selectLesson: "Sélectionnez une leçon pour voir son contenu",
     courseDocuments: "Documents du Cours",
-    noDocuments: "Aucun document disponible"
+    noDocuments: "Aucun document disponible",
+    noVideo: "Aucune vidéo disponible"
   },
   uk: {
     courseLessons: "Уроки Курсу",
     backToCourses: "Назад до Курсів",
     selectLesson: "Виберіть урок для перегляду",
     courseDocuments: "Документи Курсу",
-    noDocuments: "Документи недоступні"
+    noDocuments: "Документи недоступні",
+    noVideo: "Відео недоступне"
   }
 };
 
 interface LessonPageProps {
   language: 'en' | 'ru' | 'es' | 'fr' | 'uk';
 }
+
+// Convert API lesson to UI lesson type
+const convertAPILesson = (apiLesson: APILesson): LessonType => {
+  const videoUpload = apiLesson.uploads?.find(upload => upload.videoURL);
+  const documentUploads = apiLesson.uploads?.filter(upload => upload.fileBlob) || [];
+  
+  return {
+    id: apiLesson.lessonID || 0,
+    title: apiLesson.lessonName,
+    videoUrl: videoUpload?.videoURL || '',
+    documents: documentUploads.map(doc => `${doc.fileID}`),
+    tags: apiLesson.tags || []
+  };
+};
 
 const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
   const { courseId = '1' } = useParams<{ courseId: string }>();
@@ -71,7 +91,8 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
       try {
         setIsLoading(true);
         const data = await getCourseLessons(parseInt(courseId));
-        setCourseLessons(data);
+        const convertedLessons = data.map(convertAPILesson);
+        setCourseLessons(convertedLessons);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -123,16 +144,20 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
         {currentLesson ? (
           <>
             <div className="video-container">
-              <YoutubeEmbedder url={currentLesson.videoUrl} />
+              {currentLesson.videoUrl ? (
+                <YoutubeEmbedder url={currentLesson.videoUrl} />
+              ) : (
+                <p>{translations[language].noVideo}</p>
+              )}
             </div>
             <div className="documents-section">
               <h3>{translations[language].courseDocuments}</h3>
               {currentLesson.documents.length > 0 ? (
                 <ul>
-                  {currentLesson.documents.map((doc: string, index: number) => (
+                  {currentLesson.documents.map((docId: string, index: number) => (
                     <li key={index}>
-                      <a href={`${API_BASE_URL}/api/documents/${doc}`} target="_blank" rel="noopener noreferrer">
-                        {doc}
+                      <a href={`${API_BASE_URL}/api/documents/${docId}`} target="_blank" rel="noopener noreferrer">
+                        Document {index + 1}
                       </a>
                     </li>
                   ))}
