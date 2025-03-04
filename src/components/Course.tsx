@@ -10,7 +10,7 @@ interface Document {
 interface Lesson {
   id: string;
   title: string;
-  videoUrl: string;
+  videoUrls: string[];
   documents: Document[];
 }
 
