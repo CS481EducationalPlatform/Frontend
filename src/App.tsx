@@ -370,11 +370,11 @@ function App() {
               onChange={(e) => setLanguage(e.target.value as 'en' | 'ru' | 'es' | 'fr' | 'uk')}
               aria-label={translations[language].toggleLanguageAriaLabel}
             >
-              <option value="en">{translations[language].english}</option>
-              <option value="uk">{translations[language].ukrainian}</option>
-              <option value="ru">{translations[language].russian}</option>
-              <option value="es">{translations[language].spanish}</option>
-              <option value="fr">{translations[language].french}</option>
+              <option value="en">English</option>
+              <option value="uk">Українська</option>
+              <option value="ru">Русский</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
             </select>
           </div>
         </nav>
