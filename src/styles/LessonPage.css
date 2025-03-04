@@ -5,6 +5,27 @@
     overflow: hidden; /* Prevent page-level scroll */
 }
 
+/* Loading state styling */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--black-white);
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
 /* Sidebar styling */
 .lesson-sidebar {
     width: 15%;
