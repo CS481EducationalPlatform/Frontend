@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://CS481EducationalPlatform.github.io/PrototypeCourseAndLessonPageUI/",
+  "homepage": "https://CS481EducationalPlatform.github.io/Frontend/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

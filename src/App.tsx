@@ -349,7 +349,7 @@ function App() {
         {/* Navbar */}
         <nav className="navbar">
           <Link to="/" className="nav-brand">
-            <img src="/PrototypeCourseAndLessonPageUI/babushka.png" alt={translations[language].babushkaAlt} className="nav-logo" />
+            <img src="/Frontend/babushka.png" alt={translations[language].babushkaAlt} className="nav-logo" />
             <span>Babushka Lessons</span>
           </Link>
           <div className="nav-items">
@@ -380,7 +380,7 @@ function App() {
         </nav>
 
         {/* Babushka Image Now in Bottom Right */}
-        <img src="/PrototypeCourseAndLessonPageUI/babushka.png" alt={translations[language].babushkaAlt} className="bottom-right-image" />
+        <img src="/Frontend/babushka.png" alt={translations[language].babushkaAlt} className="bottom-right-image" />
 
         {/* Chat Box */}
         {showChat && CHAT_ENABLED && (
