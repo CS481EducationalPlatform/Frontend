@@ -11,7 +11,7 @@ const API_BASE_URL = 'https://backend-4yko.onrender.com';
 interface LessonType {
   id: number;
   title: string;
-  videoUrl: string;
+  videoUrls: string[];
   documents: string[];
   tags: string[];
 }
@@ -66,13 +66,13 @@ interface LessonPageProps {
 
 // Convert API lesson to UI lesson type
 const convertAPILesson = (apiLesson: APILesson): LessonType => {
-  const videoUpload = apiLesson.uploads?.find(upload => upload.videoURL);
+  const videoUploads = apiLesson.uploads?.filter(upload => upload.videoURL) || [];
   const documentUploads = apiLesson.uploads?.filter(upload => upload.fileBlob) || [];
   
   return {
     id: apiLesson.lessonID || 0,
     title: `${apiLesson.lessonName}${apiLesson.lessonDescription ? ` - ${apiLesson.lessonDescription}` : ''}`,
-    videoUrl: videoUpload?.videoURL || '',
+    videoUrls: videoUploads.map(upload => upload.videoURL || ''),
     documents: documentUploads.map(doc => `${doc.fileID}`),
     tags: apiLesson.tags || []
   };
@@ -140,9 +140,13 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
       <div className="lesson-content">
         {currentLesson ? (
           <>
-            <div className="video-container">
-              {currentLesson.videoUrl ? (
-                <YoutubeEmbedder url={currentLesson.videoUrl} />
+            <div className="videos-container">
+              {currentLesson.videoUrls.length > 0 ? (
+                currentLesson.videoUrls.map((url, index) => (
+                  <div key={index} className="video-container">
+                    <YoutubeEmbedder url={url} />
+                  </div>
+                ))
               ) : (
                 <p>{translations[language].noVideo}</p>
               )}
