@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { YoutubeEmbedder } from "../components/YoutubeEmbedder";
-import Lesson, { LessonType as LessonComponentType } from "../components/Lesson";
+import Lesson from "../components/Lesson";
 import "../styles/LessonPage.css";
 import { getCourseLessons } from "../services/courseService";
 import type { Lesson as APILesson } from "../services/lessonService";
@@ -11,7 +11,6 @@ const API_BASE_URL = 'https://backend-4yko.onrender.com';
 interface LessonType {
   id: number;
   title: string;
-  videoUrl: string; // Changed to match Lesson component interface
   videoUrls: string[];
   documents: string[];
   tags: string[];
@@ -73,7 +72,6 @@ const convertAPILesson = (apiLesson: APILesson): LessonType => {
   return {
     id: apiLesson.lessonID || 0,
     title: `${apiLesson.lessonName}${apiLesson.lessonDescription ? ` - ${apiLesson.lessonDescription}` : ''}`,
-    videoUrl: videoUploads[0]?.videoURL || '', // Add videoUrl for Lesson component
     videoUrls: videoUploads.map(upload => upload.videoURL || ''),
     documents: documentUploads.map(doc => `${doc.fileID}`),
     tags: apiLesson.tags || []
@@ -107,7 +105,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
     fetchLessons();
   }, [courseId]);
 
-  const handleLessonSelect = (lesson: LessonComponentType) => {
+  const handleLessonSelect = (lesson: LessonType) => {
     // Find the full lesson data to set as current
     const fullLesson = courseLessons.find(l => l.id === lesson.id);
     if (fullLesson) {
@@ -132,11 +130,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
             {courseLessons.map((lesson) => (
               <Lesson
                 key={lesson.id}
-                lesson={{
-                  id: lesson.id,
-                  title: lesson.title,
-                  videoUrl: lesson.videoUrl
-                }}
+                lesson={lesson}
                 isActive={currentLesson?.id === lesson.id}
                 onSelect={handleLessonSelect}
               />

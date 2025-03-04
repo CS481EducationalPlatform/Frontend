@@ -3,7 +3,7 @@ import type { FC } from "react";
 interface LessonType {
   id: number;
   title: string;
-  videoUrl: string;
+  videoUrls: string[];
   documents: string[];
   tags: string[];
 }
