@@ -5,4 +5,15 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   base: '/Frontend/',
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    sourcemap: false,
+    minify: true,
+  },
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
 })
