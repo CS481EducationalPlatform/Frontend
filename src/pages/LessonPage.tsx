@@ -144,6 +144,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
       <div className="lesson-content">
         {currentLesson ? (
           <>
+            <h1 className="lesson-title-header">{currentLesson?.title || ''}</h1>
             <div className="videos-container">
               {currentLesson.videoUrls.length > 0 ? (
                 currentLesson.videoUrls.map((url, index) => (
