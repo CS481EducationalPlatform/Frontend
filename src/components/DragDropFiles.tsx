@@ -25,37 +25,57 @@ export const DragDropFiles: React.FC<DragDropFilesProps> = ({ onFileUploaded }) 
 
   const handleBadSize = () => {
     setHasUploaded(false);
-    setErrorMessage(<p>File size limited<br/>to 25 MB</p>);
+    setErrorMessage(<p className="error-message">File size limited to 25 MB</p>);
   }
 
   const handleBadType = () => {
     setHasUploaded(false);
-    setErrorMessage(<p>File types limited<br/>to {fileTypes.join(', ')}</p>);
+    setErrorMessage(<p className="error-message">File types limited to {fileTypes.join(', ')}</p>);
   }
 
   return (
-    <>
+    <div className="drag-drop-container">
       <FileUploader 
-          handleChange={handleChange}
-          name="file"
-          types={fileTypes}
-          maxSize={25}
-          hoverTitle=" "
-          onSizeError={handleBadSize}
-          onTypeError={handleBadType}
+        handleChange={handleChange}
+        name="file"
+        types={fileTypes}
+        maxSize={25}
+        hoverTitle=" "
+        onSizeError={handleBadSize}
+        onTypeError={handleBadType}
       >
-          <div style={{height:200 , width:200, border: '2px solid ' + (hasUploaded ? 'green' : 'red'), display:'flex', justifyContent:'center', alignItems:'center', borderRadius:25}}>
-              <SvgIcon component={UploadIcon} style={{position:'relative', top: 0, left: 0, width: '100%', height: '100%', color:(hasUploaded ? 'green' : 'red'), opacity:'20%'}} />
-              <div style={{position:'absolute', textWrap:'nowrap', width:200, overflow:'hidden', display:(hasUploaded ? 'flex' : 'grid'), justifyContent:'center', alignItems:'center'}}>
-                  {hasUploaded 
-                  ? <p style={{width: '90%', textOverflow:'ellipsis', overflow:'hidden', whiteSpace:'nowrap'}}>Upload of<br/>{file ? file["name"] : <></>}<br/>Successful<br/><u style={{cursor: 'pointer'}}>Upload</u> Another?</p> 
-                  : <p><u style={{cursor: 'pointer'}}>Click Here</u><br/>or<br/>Drag & Drop<br/>File to Upload</p>
-                  }
-                  {errorMessage}
-              </div>
+        <div className="upload-dropzone">
+          <SvgIcon 
+            component={UploadIcon} 
+            className="upload-icon" 
+            sx={{ 
+              color: hasUploaded ? '#4caf50' : '#757575',
+              fontSize: 60,
+              opacity: 0.5
+            }} 
+          />
+          
+          <div className="upload-text">
+            {hasUploaded ? (
+              <>
+                <p className="file-name">{file?.name}</p>
+                <p className="success-message">Document added successfully</p>
+                <p className="upload-another">Click to upload another document</p>
+              </>
+            ) : (
+              <>
+                <p className="drag-instructions">Drag and drop documents here</p>
+                <p className="or-text">- or -</p>
+                <p className="click-instructions">Click to browse files</p>
+                <p className="formats">Supported formats: {fileTypes.join(", ")}</p>
+              </>
+            )}
           </div>
+        </div>
       </FileUploader>
-    </>
+      
+      {errorMessage}
+    </div>
   );
 };
 

@@ -1,0 +1,294 @@
+/* Upload Page Styling */
+.page-container {
+  width: 100%;
+  height: calc(100vh - 64px); /* Fixed height for navbar */
+  padding: 20px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  background-color: var(--background-primary);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.lesson-upload {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto 20px;
+  padding: 30px;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: visible;
+}
+
+.lesson-upload h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: var(--black-white);
+  text-align: center;
+}
+
+.lesson-upload h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: var(--black-white);
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(125, 125, 125, 0.2);
+}
+
+/* Section layout */
+.upload-sections-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.upload-section {
+  flex: 1;
+  min-width: 300px;
+  padding: 20px;
+  background-color: var(--background-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+/* Video preview */
+.video-preview {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+.video-preview h4 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: var(--black-white);
+}
+
+.video-preview video {
+  max-width: 100%;
+  max-height: 300px; /* Limit height to prevent excessive expansion */
+  width: auto;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Document preview */
+.documents-preview {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: var(--background-primary);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+.documents-preview ul {
+  list-style-type: none;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.documents-preview li {
+  margin-bottom: 10px;
+  padding: 12px 15px;
+  background-color: rgba(125, 125, 125, 0.1);
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.documents-preview li:hover {
+  background-color: rgba(125, 125, 125, 0.2);
+}
+
+.documents-preview a {
+  color: var(--black-white);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.documents-preview a:hover {
+  text-decoration: underline;
+}
+
+/* Button container */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+/* Submit button */
+.submit-button {
+  width: 100%;
+  max-width: 200px;
+  padding: 12px 25px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.submit-button:hover {
+  background-color: #0069d9;
+}
+
+.submit-button:active {
+  transform: scale(0.98);
+}
+
+.submit-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Cancel button */
+.cancel-button {
+  width: 100%;
+  max-width: 200px;
+  padding: 12px 25px;
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.cancel-button:hover {
+  background-color: #e2e6ea;
+}
+
+.cancel-button:active {
+  transform: scale(0.98);
+}
+
+.cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Drag and Drop styling */
+.drag-drop-container {
+  width: 100%;
+}
+
+.upload-dropzone {
+  border: 2px dashed #cccccc;
+  border-radius: 8px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: rgba(125, 125, 125, 0.05);
+  min-height: 200px;
+}
+
+.upload-dropzone:hover {
+  border-color: #007bff;
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.upload-icon {
+  margin-bottom: 15px;
+}
+
+.upload-text {
+  margin-top: 10px;
+}
+
+.drag-instructions {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--black-white);
+}
+
+.or-text {
+  margin: 8px 0;
+  color: #757575;
+}
+
+.click-instructions {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #007bff;
+}
+
+.formats {
+  font-size: 0.85rem;
+  color: #757575;
+  margin-top: 10px;
+}
+
+.file-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  word-break: break-all;
+  color: var(--black-white);
+}
+
+.success-message {
+  color: #4caf50;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.upload-another {
+  color: #007bff;
+  font-size: 0.9rem;
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #f44336;
+  margin-top: 10px;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 10px;
+  }
+  
+  .lesson-upload {
+    padding: 20px;
+    margin: 0 10px 10px;
+  }
+  
+  .upload-section {
+    min-width: 100%;
+  }
+  
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .submit-button, .cancel-button {
+    max-width: 100%;
+  }
+} 

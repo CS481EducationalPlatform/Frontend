@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FileUploader } from "react-drag-drop-files";
-import CircularProgress from "@mui/material/CircularProgress";
+import UploadIcon from '@mui/icons-material/Upload';
+import { SvgIcon } from '@mui/material';
 
 interface DragDropVideoProps {
   onFileUploaded: (file: File) => void;
@@ -10,7 +11,6 @@ export const DragDropVideo: React.FC<DragDropVideoProps> = ({ onFileUploaded }) 
   const fileTypes = ["MP4", "MOV", "AVI", "WMV"];
   const [file, setFile] = useState<File | null>(null);
   const [hasUploaded, setHasUploaded] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<React.ReactNode>(<></>);
 
   const handleChange = (file: File) => {
@@ -22,81 +22,59 @@ export const DragDropVideo: React.FC<DragDropVideoProps> = ({ onFileUploaded }) 
     onFileUploaded(file);
   };
 
-  const handleUpload = async () => {
-    if (!file) {
-      setErrorMessage(<div>Please select a file first</div>);
-      return;
-    }
+  const handleBadSize = () => {
+    setHasUploaded(false);
+    setErrorMessage(<p className="error-message">File size limited to 100 MB</p>);
+  };
 
-    setIsUploading(true);
-    try {
-      const headers = {
-        'Content-Type': file.type,
-        'Content-Length': file.size.toString()
-      };
-
-      const response = await fetch('https://backend-4yko.onrender.com/api/upload', {
-        method: 'POST',
-        headers,
-        body: file
-      });
-
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-
-      await response.json();
-      setIsUploading(false);
-    } catch (error) {
-      setErrorMessage(<div>Upload failed: {error instanceof Error ? error.message : 'Unknown error'}</div>);
-      setIsUploading(false);
-    }
+  const handleBadType = () => {
+    setHasUploaded(false);
+    setErrorMessage(<p className="error-message">File types limited to {fileTypes.join(', ')}</p>);
   };
 
   return (
-    <>
+    <div className="drag-drop-container">
       <FileUploader
         multiple={false}
         handleChange={handleChange}
         name="file"
         types={fileTypes}
+        maxSize={100}
+        onSizeError={handleBadSize}
+        onTypeError={handleBadType}
       >
-        <div
-          style={{
-            border: "2px dashed #cccccc",
-            borderRadius: "4px",
-            padding: "20px",
-            textAlign: "center",
-            cursor: "pointer"
-          }}
-        >
-          <p>Drag and drop a video file here, or click to select</p>
-          <p>Supported formats: {fileTypes.join(", ")}</p>
+        <div className="upload-dropzone">
+          <SvgIcon 
+            component={UploadIcon} 
+            className="upload-icon" 
+            sx={{ 
+              color: hasUploaded ? '#4caf50' : '#757575',
+              fontSize: 60,
+              opacity: 0.5
+            }} 
+          />
+          
+          <div className="upload-text">
+            {hasUploaded ? (
+              <>
+                <p className="file-name">{file?.name}</p>
+                <p className="success-message">Video added successfully</p>
+                <p className="upload-another">Click to upload a different video</p>
+              </>
+            ) : (
+              <>
+                <p className="drag-instructions">Drag and drop a video file here</p>
+                <p className="or-text">- or -</p>
+                <p className="click-instructions">Click to browse files</p>
+                <p className="formats">Supported formats: {fileTypes.join(", ")}</p>
+              </>
+            )}
+          </div>
         </div>
       </FileUploader>
 
-      {hasUploaded && (
-        <div style={{ marginTop: "20px" }}>
-          <p>Selected file: {file?.name}</p>
-          <button
-            onClick={handleUpload}
-            disabled={isUploading}
-            style={{
-              padding: "10px 20px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: isUploading ? "not-allowed" : "pointer"
-            }}
-          >
-            {isUploading ? <CircularProgress size={24} /> : "Upload"}
-          </button>
-        </div>
-      )}
-
       {errorMessage}
-    </>
+    </div>
   );
 };
 
