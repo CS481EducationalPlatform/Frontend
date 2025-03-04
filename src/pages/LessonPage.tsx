@@ -149,7 +149,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
               {currentLesson.videoUrls.length > 0 ? (
                 currentLesson.videoUrls.map((url, index) => (
                   <div key={index} className="video-container">
-                    <YoutubeEmbedder url={url} />
+                    <YoutubeEmbedder url={url} videoIndex={index + 1} />
                   </div>
                 ))
               ) : (

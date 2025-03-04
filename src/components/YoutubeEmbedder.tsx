@@ -4,12 +4,14 @@ interface YoutubeEmbedderProps {
   url: string;
   width?: number;
   height?: number;
+  videoIndex?: number;
 }
 
 export const YoutubeEmbedder: React.FC<YoutubeEmbedderProps> = ({ 
   url, 
   width = 560, 
-  height = 315 
+  height = 315,
+  videoIndex
 }) => {
   const [videoTitle, setVideoTitle] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -62,7 +64,11 @@ export const YoutubeEmbedder: React.FC<YoutubeEmbedderProps> = ({
     <div className="youtube-video">
       {isLoading && <p>Loading video title...</p>}
       {error && <p>Error: {error}</p>}
-      {!isLoading && !error && <h3 className="video-title">{videoTitle}</h3>}
+      {!isLoading && !error && (
+        <h3 className="video-title">
+          {videoIndex ? `${videoIndex}. ${videoTitle}` : videoTitle}
+        </h3>
+      )}
       <iframe
         width={width}
         height={height}
