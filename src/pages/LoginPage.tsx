@@ -66,6 +66,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ language, setIsLoggedIn }) =>{
     const [error, setError] = useState("");
     const navigate = useNavigate();
   
+    const handleOauthChanged = (value:boolean) => {
+      if(value){
+        localStorage.setItem("isLoggedIn", "true");
+        setIsLoggedIn(true);
+        navigate("/account"); 
+        console.log("Signed In With OAuth 2.0");
+      }
+    };
+
     const handleSubmit = (e: { preventDefault: () => void; }) => {
       e.preventDefault();
       if (username && password) {
@@ -80,11 +89,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ language, setIsLoggedIn }) =>{
   
     return (
       <div className="login-container">
-        <h1>{translations[language].login}</h1>
+        <h1>
+          {translations[language].login}
+        </h1>
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label>{translations[language].username}</label>
+            <label>
+              {translations[language].username}
+            </label>
             <input
               type="text"
               value={username}
@@ -92,7 +105,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ language, setIsLoggedIn }) =>{
             />
           </div>
           <div className="input-group">
-            <label>{translations[language].password}</label>
+            <label>
+              {translations[language].password}
+            </label>
             <input
               type="password"
               value={password}
@@ -100,15 +115,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ language, setIsLoggedIn }) =>{
             />
           </div>
           <button type="submit" className="login-button">
-          {translations[language].login}
+            {translations[language].login}
           </button>
         </form>
-        <p> {translations[language].noacc} </p>
+        <p>
+          {translations[language].noacc}
+        </p>
         <button className="sign-up-button" onClick={() => navigate("/signup")}>
-        {translations[language].signup}
+          {translations[language].signup}
         </button>
-        <p> {translations[language].or} </p>
-        <GoogleLoginComponent />
+        <p>
+          {translations[language].or}
+        </p>
+        <GoogleLoginComponent onOauth={handleOauthChanged}/>
       </div>
     );
   };

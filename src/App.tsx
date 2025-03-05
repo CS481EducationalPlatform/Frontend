@@ -6,6 +6,7 @@ import AboutPage from "./pages/AboutPage";
 import UploadPage from "./pages/UploadPage";
 import LoginPage from "./pages/LoginPage"; 
 import AccountPage from "./pages/AccountPage";
+import ModifyPage from "./pages/ModifyPage";
 import "./styles/App.css";
 import "./styles/Pages.css";
 import "./styles/LoginPage.css";
@@ -32,7 +33,8 @@ const translations = {
     login: "Login",
     darkMode: "Dark Mode",
     lightMode: "Light Mode",
-    account: "Account"
+    account: "Account",
+    modify: "Modify"
   },
   ru: {
     welcome: "Добро пожаловать в Уроки Бабушки!",
@@ -52,7 +54,8 @@ const translations = {
     login: "Войти",
     darkMode: "Темный режим",
     lightMode: "Светлый режим",
-    account: "Аккаунт"
+    account: "Аккаунт",
+    modify: "Модифицировать"
   },
   es: {
     welcome: "¡Bienvenido a las Lecciones de Babushka!",
@@ -72,7 +75,8 @@ const translations = {
     login: "Inicio de Sesión",
     darkMode: "Modo oscuro",
     lightMode: "Modo claro",
-    account: "Cuenta"
+    account: "Cuenta",
+    modify: "Modificar"
   },
   fr: {
     welcome: "Bienvenue aux Leçons de Babouchka !",
@@ -92,7 +96,8 @@ const translations = {
     login: "Se connecter",
     darkMode: "Mode sombre",
     lightMode: "Mode clair",
-    account: "Compte"
+    account: "Compte",
+    modify: "Modifier"
   },
   uk: {
     welcome: "Ласкаво просимо до Уроків Бабусі!",
@@ -112,7 +117,8 @@ const translations = {
     login: "Увійти",
     darkMode: "Темний режим",
     lightMode: "Світлий режим",
-    account: "Обліковий запис"
+    account: "Обліковий запис",
+    modify: "Змінити"
   }
 };
 
@@ -356,7 +362,10 @@ function App() {
             <Link to="/about" className="nav-link">{translations[language].about}</Link>
             <Link to={isLoggedIn ? "/account" : "/login"}>
                {isLoggedIn ? translations[language].account : translations[language].login}
-              </Link>
+            </Link>
+            <Link to={isLoggedIn ? "/modify" : ""}>
+              {isLoggedIn ? translations[language].modify : ""}
+            </Link>
             <button 
               className="theme-toggle" 
               onClick={toggleDarkMode}
@@ -425,6 +434,7 @@ function App() {
           <Route path="/upload" element={<UploadPage />} />
           <Route path="/login" element={<LoginPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
           <Route path="/account" element={<AccountPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
+          <Route path="/modify" element={<ModifyPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
           <Route path="/signup" element={<SignUpPage language={language} />} />
         </Routes>
       </div>

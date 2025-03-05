@@ -9,11 +9,16 @@ export const api = axios.create({
     },
 });
 
-const UPLOAD_BASE_URL = "https://backend-4yko.onrender.com/api/upload";
-
 export const upload = axios.create({
-    baseURL: UPLOAD_BASE_URL,
+    baseURL: API_BASE_URL + '/upload',
     headers: {
         "Content-Type": "multipart/form-data",
     },
 });
+
+export const youtube = axios.create({
+    baseURL: API_BASE_URL + '/youtube',
+    headers: {
+        "Content-Type": "application/json"
+    }
+})
