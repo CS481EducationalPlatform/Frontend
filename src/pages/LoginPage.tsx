@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "../styles/LoginPage.css";
 import GoogleLoginComponent from "../components/GoogleLoginComponent";
 import { useNavigate } from "react-router-dom";
@@ -61,9 +61,11 @@ const translations ={
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ language, setIsLoggedIn }) =>{
+    /*
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    */
     const navigate = useNavigate();
   
     const handleOauthChanged = (value:boolean) => {
@@ -75,6 +77,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ language, setIsLoggedIn }) =>{
       }
     };
 
+    /*
     const handleSubmit = (e: { preventDefault: () => void; }) => {
       e.preventDefault();
       if (username && password) {
@@ -86,6 +89,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ language, setIsLoggedIn }) =>{
         setError("Username and password are required");
       }
     };
+    */
   
     return (
       <div className="login-container">
