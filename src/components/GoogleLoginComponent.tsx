@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const CLIENT_ID = "178516670715-5l32e4c5lanhgvn8iv7sa7r23l57o2qq.apps.googleusercontent.com";
 const CLIENT_ID2 = "961838062810-eh97iiq2d6eobfp3b20n65lc5l3a1sp9.apps.googleusercontent.com";
 const CLIENT_ID3 = "595459553093-rb03rl24l4l4oece2leb1re5t0f3t1ra.apps.googleusercontent.com";
+const CLIENT_IDS = [CLIENT_ID, CLIENT_ID2, CLIENT_ID3]
 
 interface GoogleLoginProps {
   onOauth: (value: boolean) => void;
@@ -16,7 +17,7 @@ const GoogleLoginComponent:React.FC<GoogleLoginProps> = ({onOauth}) => {
     // Initialize the Google API client
     const initClient = () => {
       gapi.client.init({
-        clientId: CLIENT_ID,
+        clientId: CLIENT_IDS[0],
         scope: "https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.force-ssl email profile openid",
       });
     };

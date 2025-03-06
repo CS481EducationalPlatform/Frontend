@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {useForm} from 'react-hook-form';
 import "../styles/AccountPage.css";
 import "../styles/Pages.css";
-import { Video, VideoUpdateData, APIResponse, handleAPIResponse, fetchVideos, deleteVideo, updateVideo} from '../services/videoService'
+import { Video, VideoUpdateData, fetchVideos, deleteVideo, updateVideo} from '../services/videoService'
 import { Grid2 } from "@mui/material";
 
 interface ModifyPageProps {
@@ -61,7 +61,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) =>{
   const [actionInProgress, setActionInProgress] = useState<boolean>(false);
   const [actionResult, setActionResult] = useState<{success:boolean; message:string} | null>(null);
 
-  const { register, handleSubmit, setValue, reset, formState: {errors}} = useForm<VideoUpdateData>();
+  const { register, handleSubmit, setValue, formState: {errors}} = useForm<VideoUpdateData>();
 
   //Function to open update modal and populate form with current video data
   const openUpdateModal = (video: Video) => {
