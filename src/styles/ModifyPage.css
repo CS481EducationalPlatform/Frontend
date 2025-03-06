@@ -135,6 +135,8 @@
   
   .action-buttons {
     display: flex;
+    position: relative;
+    bottom: 5px;
   }
   
   .edit-button, .delete-button {

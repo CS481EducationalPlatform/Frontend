@@ -189,6 +189,13 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                                         {...register('tags')}
                                     />
                                 </div>
+                                <div className="form-group">
+                                    <label className="form-label">Description</label>
+                                    <input
+                                        className="form-input"
+                                        {...register('description')}
+                                    />
+                                </div>
                                 <div className="modal-button-group">
                                     <button
                                         type="button"
