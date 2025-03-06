@@ -1,8 +1,10 @@
 import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import {useForm} from 'react-hook-form';
+import "../styles/AccountPage.css";
+import "../styles/Pages.css";
+import "../styles/ModifyPage.css";
 import { Video, VideoUpdateData, fetchVideos, deleteVideo, updateVideo} from '../services/videoService'
-import { Grid2 } from "@mui/material";
 
 interface ModifyPageProps {
     language: 'en' | 'ru' | 'es' | 'fr' | 'uk';
@@ -39,217 +41,6 @@ const translations = {
         welcome: "Ласкаво просимо ",
         upload: "Завантажити",
         modify: "Змінити"
-    }
-}
-
-// Page styles
-const pageStyles = {
-    container: {
-        padding: '20px',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        fontFamily: 'Arial, sans-serif',
-        color: '#333'
-    },
-    header: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '20px'
-    },
-    title: {
-        fontSize: '24px',
-        fontWeight: 'bold',
-        margin: '0'
-    },
-    buttonContainer: {
-        display: 'flex',
-        gap: '10px'
-    },
-    uploadButton: {
-        backgroundColor: '#4285f4',
-        color: 'white',
-        border: 'none',
-        padding: '10px 20px',
-        borderRadius: '4px',
-        cursor: 'pointer',
-        fontWeight: 'bold',
-        display: 'flex',
-        alignItems: 'center'
-    },
-    logoutButton: {
-        backgroundColor: '#f44336',
-        color: 'white',
-        border: 'none',
-        padding: '10px 20px',
-        borderRadius: '4px',
-        cursor: 'pointer'
-    },
-    videoList: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px'
-    },
-    videoItem: {
-        display: 'flex',
-        border: '1px solid #ddd',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        backgroundColor: '#fff',
-        boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-    },
-    thumbnail: {
-        width: '300px',
-        maxHeight: '250px',
-        objectFit: 'cover'
-    },
-    videoDetails: {
-        flex: 1,
-        padding: '16px'
-    },
-    videoTitle: {
-        fontSize: '18px',
-        fontWeight: 'bold',
-        marginTop: '0',
-        marginBottom: '8px'
-    },
-    videoDescription: {
-        fontSize: '14px',
-        color: '#666',
-        marginBottom: '16px'
-    },
-    actionButtons: {
-        display: 'flex',
-        gap: '8px'
-    },
-    editButton: {
-        backgroundColor: '#4285f4',
-        color: 'white',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '4px',
-        cursor: 'pointer'
-    },
-    deleteButton: {
-        backgroundColor: '#f44336',
-        color: 'white',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '4px',
-        cursor: 'pointer'
-    },
-    loadingText: {
-        textAlign: 'center',
-        fontSize: '16px',
-        color: '#666'
-    },
-    errorText: {
-        color: '#f44336',
-        textAlign: 'center',
-        padding: '16px',
-        border: '1px solid #f44336',
-        borderRadius: '4px',
-        backgroundColor: '#ffebee'
-    },
-    noVideosText: {
-        textAlign: 'center',
-        fontSize: '16px',
-        color: '#666'
-    }
-}
-
-// Modal styles
-const modalStyles = {
-    overlay: {
-        position: 'fixed',
-        top: '0',
-        left: '0',
-        right: '0',
-        bottom: '0',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: '1000'
-    },
-    modal: {
-        width: '500px',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        padding: '24px',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-    },
-    modalHeader: {
-        fontSize: '20px',
-        fontWeight: 'bold',
-        marginBottom: '16px',
-        borderBottom: '1px solid #eee',
-        paddingBottom: '8px'
-    },
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px'
-    },
-    formGroup: {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px'
-    },
-    label: {
-        fontSize: '14px',
-        fontWeight: 'bold'
-    },
-    input: {
-        padding: '8px 12px',
-        border: '1px solid #ddd',
-        borderRadius: '4px',
-        fontSize: '14px'
-    },
-    errorMessage: {
-        color: '#f44336',
-        fontSize: '12px',
-        marginTop: '4px'
-    },
-    buttonGroup: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        gap: '8px',
-        marginTop: '16px'
-    },
-    cancelButton: {
-        backgroundColor: '#9e9e9e',
-        color: 'white',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '4px',
-        cursor: 'pointer'
-    },
-    submitButton: {
-        backgroundColor: '#4caf50',
-        color: 'white',
-        border: 'none',
-        padding: '8px 16px',
-        borderRadius: '4px',
-        cursor: 'pointer'
-    },
-    disabledButton: {
-        opacity: '0.7',
-        cursor: 'not-allowed'
-    },
-    successMessage: {
-        backgroundColor: '#e8f5e9',
-        color: '#2e7d32',
-        padding: '10px',
-        borderRadius: '4px',
-        marginBottom: '16px'
-    },
-    errorResult: {
-        backgroundColor: '#ffebee',
-        color: '#c62828',
-        padding: '10px',
-        borderRadius: '4px',
-        marginBottom: '16px'
     }
 }
 
@@ -305,18 +96,18 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
     }, [])
 
     return (
-        <div style={pageStyles.container}>
-            <div style={pageStyles.header}>
-                <h1 style={pageStyles.title}>{translations[language].welcome}{username}!</h1>
-                <div style={pageStyles.buttonContainer}>
+        <div className="account-page">
+            <div className="header-container">
+                <h1 className="page-title">{translations[language].welcome}{username}!</h1>
+                <div className="button-container">
                     <button 
-                        style={pageStyles.uploadButton} 
+                        className="upload-button" 
                         onClick={() => navigate("/upload")}
                     >
                         + {translations[language].upload}
                     </button>
                     <button 
-                        style={pageStyles.logoutButton} 
+                        className="logout-button" 
                         onClick={handleLogout}
                     > 
                         {translations[language].logout}
@@ -324,40 +115,40 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                 </div>
             </div>
 
-            <h1 style={pageStyles.title}>YouTube Video Manager</h1>
+            <h1 className="page-title">YouTube Video Manager</h1>
 
-            {loading && <p style={pageStyles.loadingText}>Loading Videos...</p>}
+            {loading && <p className="loading-text">Loading Videos...</p>}
 
             {error && (
-                <div style={pageStyles.errorText}>{error}</div>
+                <div className="error-message">{error}</div>
             )}
 
             {!loading && videos.length === 0 && (
-                <p style={pageStyles.noVideosText}>No Videos Found.</p>
+                <p className="no-videos-text">No Videos Found.</p>
             )}
 
-            <div style={pageStyles.videoList}>
+            <div className="video-list">
                 {videos.map(video => (
-                    <div style={pageStyles.videoItem} key={video.id}>
+                    <div className="video-item" key={video.id}>
                         <div>
                             <img 
                                 src={video.thumbnail_url} 
                                 alt={video.title} 
-                                style={pageStyles.thumbnail}
+                                className="video-thumbnail"
                             />
                         </div>
-                        <div style={pageStyles.videoDetails}>
-                            <h2 style={pageStyles.videoTitle}>{video.title}</h2>
-                            <p style={pageStyles.videoDescription}>{video.description}</p>
-                            <div style={pageStyles.actionButtons}>
+                        <div className="video-details">
+                            <h2 className="video-title">{video.title}</h2>
+                            <p className="video-description">{video.description}</p>
+                            <div className="action-buttons">
                                 <button 
-                                    style={pageStyles.editButton} 
+                                    className="edit-button" 
                                     onClick={() => openUpdateModal(video)}
                                 >
                                     Edit
                                 </button>
                                 <button 
-                                    style={pageStyles.deleteButton} 
+                                    className="delete-button" 
                                     onClick={() => openDeleteModal(video)}
                                 >
                                     Delete
@@ -369,53 +160,47 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
             </div>
 
             {isUpdateModalOpen && selectedVideo && (
-                <div style={modalStyles.overlay}>
-                    <div style={modalStyles.modal}>
-                        <h2 style={modalStyles.modalHeader}>
+                <div className="modal-overlay">
+                    <div className="modal-container">
+                        <h2 className="modal-header">
                             Update Video
                         </h2>
 
                         {actionResult && (
-                            <div style={actionResult.status >= 400 ? modalStyles.errorResult : modalStyles.successMessage}>
+                            <div className={actionResult.status >= 400 ? "error-result" : "success-message"}>
                                 {actionResult.message}
                             </div>
                         )}
 
-                        <form onSubmit={handleSubmit(onUpdateSubmit)} style={modalStyles.form}>
-                            <div style={modalStyles.formGroup}>
-                                <label style={modalStyles.label}>Title</label>
+                        <form onSubmit={handleSubmit(onUpdateSubmit)} className="modal-form">
+                            <div className="form-group">
+                                <label className="form-label">Title</label>
                                 <input
-                                    style={modalStyles.input}
+                                    className="form-input"
                                     {...register('title', {required: 'Title Required'})}
                                 />
-                                {errors.title && <p style={modalStyles.errorMessage}>{errors.title.message}</p>}
+                                {errors.title && <p className="form-error">{errors.title.message}</p>}
                             </div>
-                            <div style={modalStyles.formGroup}>
-                                <label style={modalStyles.label}>Tags (comma seperated)</label>
+                            <div className="form-group">
+                                <label className="form-label">Tags (comma seperated)</label>
                                 <input
-                                    style={modalStyles.input}
+                                    className="form-input"
                                     {...register('tags')}
                                 />
                             </div>
-                            <div style={modalStyles.buttonGroup}>
+                            <div className="modal-button-group">
                                 <button
                                     type="button"
                                     onClick={() => setIsUpdateModalOpen(false)}
                                     disabled={actionInProgress}
-                                    style={{
-                                        ...modalStyles.cancelButton,
-                                        ...(actionInProgress ? modalStyles.disabledButton : {})
-                                    }}
+                                    className={`cancel-button ${actionInProgress ? 'button-disabled' : ''}`}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={actionInProgress}
-                                    style={{
-                                        ...modalStyles.submitButton,
-                                        ...(actionInProgress ? modalStyles.disabledButton : {})
-                                    }}
+                                    className={`submit-button ${actionInProgress ? 'button-disabled' : ''}`}
                                 >
                                     {actionInProgress ? 'Updating...' : 'Update Video'}
                                 </button>
@@ -426,30 +211,27 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
             )}
 
             {isDeleteModalOpen && selectedVideo && (
-                <div style={modalStyles.overlay}>
-                    <div style={modalStyles.modal}>
-                        <h2 style={modalStyles.modalHeader}>
+                <div className="modal-overlay">
+                    <div className="modal-container">
+                        <h2 className="modal-header">
                             Confirm Deletion
                         </h2>
                         
                         {actionResult && (
-                            <div style={actionResult.status >= 400 ? modalStyles.errorResult : modalStyles.successMessage}>
+                            <div className={actionResult.status >= 400 ? "error-result" : "success-message"}>
                                 {actionResult.message}
                             </div>
                         )}
                         
-                        <p style={{ marginBottom: '20px' }}>
+                        <p className="delete-question">
                             Are you sure you want to delete <strong>{selectedVideo.title}</strong>?
                         </p>
                         
-                        <div style={modalStyles.buttonGroup}>
+                        <div className="modal-button-group">
                             <button
                                 onClick={() => setIsDeleteModalOpen(false)}
                                 disabled={actionInProgress}
-                                style={{
-                                    ...modalStyles.cancelButton,
-                                    ...(actionInProgress ? modalStyles.disabledButton : {})
-                                }}
+                                className={`cancel-button ${actionInProgress ? 'button-disabled' : ''}`}
                             >
                                 Cancel
                             </button>
@@ -457,10 +239,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                                 onClick={() => deleteVideo(selectedVideo.youtube_url, setActionInProgress, setActionResult, setIsDeleteModalOpen, setLoading, setError, setVideos)}
                                 type="submit"
                                 disabled={actionInProgress}
-                                style={{
-                                    ...modalStyles.deleteButton,
-                                    ...(actionInProgress ? modalStyles.disabledButton : {})
-                                }}
+                                className={`delete-button ${actionInProgress ? 'button-disabled' : ''}`}
                             >
                                 {actionInProgress ? 'Deleting...' : 'Delete Video'}
                             </button>
