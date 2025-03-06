@@ -8,7 +8,7 @@ interface DragDropVideoProps {
 }
 
 export const DragDropVideo: React.FC<DragDropVideoProps> = ({ onFileUploaded }) => {
-  const fileTypes = ["MP4", "MOV", "AVI", "WMV"];
+  const fileTypes = ["MP4"];
   const [file, setFile] = useState<File | null>(null);
   const [hasUploaded, setHasUploaded] = useState(false);
   const [errorMessage, setErrorMessage] = useState<React.ReactNode>(<></>);
