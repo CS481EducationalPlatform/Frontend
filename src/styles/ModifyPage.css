@@ -1,10 +1,12 @@
-/* AccountPage.css */
 .account-page {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
     color: #333;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
   
   .header-container {
@@ -38,12 +40,24 @@
   }
   
   .logout-button {
-    background-color: #f44336;
+    background-color: #2196f3; /* Primary blue */
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s;
+  }
+  
+  .logout-button:hover {
+    background-color: #0d8bf2; /* Darker blue on hover */
+  }
+  
+  .scrollable-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
   }
   
   .loading-text {
@@ -80,6 +94,8 @@
     overflow: hidden;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-bottom: 60px; /* Space for the action buttons */
   }
   
   .video-thumbnail {
@@ -91,6 +107,8 @@
   .video-details {
     flex: 1;
     padding: 16px;
+    display: flex;
+    flex-direction: column;
   }
   
   .video-title {
@@ -104,29 +122,47 @@
     font-size: 14px;
     color: #666;
     margin-bottom: 16px;
+    flex: 1;
   }
   
   .action-buttons {
     display: flex;
-    gap: 8px;
+    gap: 12px;
+    position: absolute;
+    bottom: 16px;
+    left: 316px; /* Positioned to align with the start of video details */
+  }
+  
+  .edit-button, .delete-button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    transition: transform 0.1s, box-shadow 0.1s;
   }
   
   .edit-button {
     background-color: #4285f4;
     color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
+  }
+  
+  .edit-button:hover {
+    background-color: #3367d6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   .delete-button {
     background-color: #f44336;
     color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
+  }
+  
+  .delete-button:hover {
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   /* Modal Styles */
@@ -237,4 +273,23 @@
   
   .delete-question {
     margin-bottom: 20px;
+  }
+  
+  /* Custom scrollbar */
+  .scrollable-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .scrollable-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  .scrollable-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+  }
+  
+  .scrollable-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
   }
