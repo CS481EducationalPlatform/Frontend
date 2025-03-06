@@ -114,139 +114,141 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                     </button>
                 </div>
             </div>
+            <div className="list-container">
 
-            <h1 className="page-title">YouTube Video Manager</h1>
+                <h1 className="page-title">YouTube Video Manager</h1>
 
-            {loading && <p className="loading-text">Loading Videos...</p>}
+                {loading && <p className="loading-text">Loading Videos...</p>}
 
-            {error && (
-                <div className="error-message">{error}</div>
-            )}
+                {error && (
+                    <div className="error-message">{error}</div>
+                )}
 
-            {!loading && videos.length === 0 && (
-                <p className="no-videos-text">No Videos Found.</p>
-            )}
+                {!loading && videos.length === 0 && (
+                    <p className="no-videos-text">No Videos Found.</p>
+                )}
 
-            <div className="video-list">
-                {videos.map(video => (
-                    <div className="video-item" key={video.id}>
-                        <div>
-                            <img 
-                                src={video.thumbnail_url} 
-                                alt={video.title} 
-                                className="video-thumbnail"
-                            />
-                        </div>
-                        <div className="video-details">
-                            <h2 className="video-title">{video.title}</h2>
-                            <p className="video-description">{video.description}</p>
-                            <div className="action-buttons">
-                                <button 
-                                    className="edit-button" 
-                                    onClick={() => openUpdateModal(video)}
-                                >
-                                    Edit
-                                </button>
-                                <button 
-                                    className="delete-button" 
-                                    onClick={() => openDeleteModal(video)}
-                                >
-                                    Delete
-                                </button>
+                <div className="video-list">
+                    {videos.map(video => (
+                        <div className="video-item" key={video.id}>
+                            <div>
+                                <img 
+                                    src={video.thumbnail_url} 
+                                    alt={video.title} 
+                                    className="video-thumbnail"
+                                />
                             </div>
+                            <div className="video-details">
+                                <h2 className="video-title">{video.title}</h2>
+                                <p className="video-description">{video.description}</p>
+                                <div className="action-buttons">
+                                    <button 
+                                        className="edit-button" 
+                                        onClick={() => openUpdateModal(video)}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button 
+                                        className="delete-button" 
+                                        onClick={() => openDeleteModal(video)}
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {isUpdateModalOpen && selectedVideo && (
+                    <div className="modal-overlay">
+                        <div className="modal-container">
+                            <h2 className="modal-header">
+                                Update Video
+                            </h2>
+
+                            {actionResult && (
+                                <div className={actionResult.status >= 400 ? "error-result" : "success-message"}>
+                                    {actionResult.message}
+                                </div>
+                            )}
+
+                            <form onSubmit={handleSubmit(onUpdateSubmit)} className="modal-form">
+                                <div className="form-group">
+                                    <label className="form-label">Title</label>
+                                    <input
+                                        className="form-input"
+                                        {...register('title', {required: 'Title Required'})}
+                                    />
+                                    {errors.title && <p className="form-error">{errors.title.message}</p>}
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Tags (comma seperated)</label>
+                                    <input
+                                        className="form-input"
+                                        {...register('tags')}
+                                    />
+                                </div>
+                                <div className="modal-button-group">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsUpdateModalOpen(false)}
+                                        disabled={actionInProgress}
+                                        className={`cancel-button ${actionInProgress ? 'button-disabled' : ''}`}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={actionInProgress}
+                                        className={`submit-button ${actionInProgress ? 'button-disabled' : ''}`}
+                                    >
+                                        {actionInProgress ? 'Updating...' : 'Update Video'}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                ))}
-            </div>
+                )}
 
-            {isUpdateModalOpen && selectedVideo && (
-                <div className="modal-overlay">
-                    <div className="modal-container">
-                        <h2 className="modal-header">
-                            Update Video
-                        </h2>
-
-                        {actionResult && (
-                            <div className={actionResult.status >= 400 ? "error-result" : "success-message"}>
-                                {actionResult.message}
-                            </div>
-                        )}
-
-                        <form onSubmit={handleSubmit(onUpdateSubmit)} className="modal-form">
-                            <div className="form-group">
-                                <label className="form-label">Title</label>
-                                <input
-                                    className="form-input"
-                                    {...register('title', {required: 'Title Required'})}
-                                />
-                                {errors.title && <p className="form-error">{errors.title.message}</p>}
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">Tags (comma seperated)</label>
-                                <input
-                                    className="form-input"
-                                    {...register('tags')}
-                                />
-                            </div>
+                {isDeleteModalOpen && selectedVideo && (
+                    <div className="modal-overlay">
+                        <div className="modal-container">
+                            <h2 className="modal-header">
+                                Confirm Deletion
+                            </h2>
+                            
+                            {actionResult && (
+                                <div className={actionResult.status >= 400 ? "error-result" : "success-message"}>
+                                    {actionResult.message}
+                                </div>
+                            )}
+                            
+                            <p className="delete-question">
+                                Are you sure you want to delete <strong>{selectedVideo.title}</strong>?
+                            </p>
+                            
                             <div className="modal-button-group">
                                 <button
-                                    type="button"
-                                    onClick={() => setIsUpdateModalOpen(false)}
+                                    onClick={() => setIsDeleteModalOpen(false)}
                                     disabled={actionInProgress}
                                     className={`cancel-button ${actionInProgress ? 'button-disabled' : ''}`}
                                 >
                                     Cancel
                                 </button>
                                 <button
+                                    onClick={() => deleteVideo(selectedVideo.youtube_url, setActionInProgress, setActionResult, setIsDeleteModalOpen, setLoading, setError, setVideos)}
                                     type="submit"
                                     disabled={actionInProgress}
-                                    className={`submit-button ${actionInProgress ? 'button-disabled' : ''}`}
+                                    className={`delete-button ${actionInProgress ? 'button-disabled' : ''}`}
                                 >
-                                    {actionInProgress ? 'Updating...' : 'Update Video'}
+                                    {actionInProgress ? 'Deleting...' : 'Delete Video'}
                                 </button>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-
-            {isDeleteModalOpen && selectedVideo && (
-                <div className="modal-overlay">
-                    <div className="modal-container">
-                        <h2 className="modal-header">
-                            Confirm Deletion
-                        </h2>
-                        
-                        {actionResult && (
-                            <div className={actionResult.status >= 400 ? "error-result" : "success-message"}>
-                                {actionResult.message}
-                            </div>
-                        )}
-                        
-                        <p className="delete-question">
-                            Are you sure you want to delete <strong>{selectedVideo.title}</strong>?
-                        </p>
-                        
-                        <div className="modal-button-group">
-                            <button
-                                onClick={() => setIsDeleteModalOpen(false)}
-                                disabled={actionInProgress}
-                                className={`cancel-button ${actionInProgress ? 'button-disabled' : ''}`}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={() => deleteVideo(selectedVideo.youtube_url, setActionInProgress, setActionResult, setIsDeleteModalOpen, setLoading, setError, setVideos)}
-                                type="submit"
-                                disabled={actionInProgress}
-                                className={`delete-button ${actionInProgress ? 'button-disabled' : ''}`}
-                            >
-                                {actionInProgress ? 'Deleting...' : 'Delete Video'}
-                            </button>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };
