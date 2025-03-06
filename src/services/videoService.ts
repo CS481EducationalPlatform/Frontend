@@ -141,6 +141,8 @@ export const deleteVideo = async (youtubeUrl: string, setActionInProgress:React.
             body: JSON.stringify({youtube_url: youtubeUrl}),
         })
 
+        console.log('Delete Response : ', response)
+
         if(response.data && response.status){
             setActionResult({
                 status: response.status,
@@ -218,6 +220,8 @@ export const updateVideo = async (youtubeUrl:string, data:VideoUpdateData, setAc
                 ...data
             }),
         })
+
+        console.log('Update Response : ', response)
 
         if(response.data && response.status){
             setActionResult({
