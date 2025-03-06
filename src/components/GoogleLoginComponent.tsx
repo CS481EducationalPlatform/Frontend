@@ -1,5 +1,5 @@
 import { gapi } from "gapi-script";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 //CHANGE to being pulled from database securely
 const CLIENT_ID = "178516670715-5l32e4c5lanhgvn8iv7sa7r23l57o2qq.apps.googleusercontent.com";
