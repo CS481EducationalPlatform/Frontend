@@ -59,7 +59,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) =>{
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [actionInProgress, setActionInProgress] = useState<boolean>(false);
-  const [actionResult, setActionResult] = useState<{success:boolean; message:string} | null>(null);
+  const [actionResult, setActionResult] = useState<{status:number; message:string} | null>(null);
 
   const { register, handleSubmit, setValue, formState: {errors}} = useForm<VideoUpdateData>();
 

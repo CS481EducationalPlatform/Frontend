@@ -93,13 +93,13 @@ export const fetchVideos = async (setLoading:React.Dispatch<React.SetStateAction
 }
 
 //Function to delete a youtube video
-export const deleteVideo = async (youtubeUrl: string, setActionInProgress:React.Dispatch<React.SetStateAction<boolean>>, setActionResult:React.Dispatch<React.SetStateAction<{success:boolean;message:string;} | null>>, setIsDeleteModalOpen:React.Dispatch<React.SetStateAction<boolean>>, setLoading:React.Dispatch<React.SetStateAction<boolean>>, setError:React.Dispatch<React.SetStateAction<string | null>>, setVideos:React.Dispatch<React.SetStateAction<Video[]>>) => {
+export const deleteVideo = async (youtubeUrl: string, setActionInProgress:React.Dispatch<React.SetStateAction<boolean>>, setActionResult:React.Dispatch<React.SetStateAction<{status:number;message:string;} | null>>, setIsDeleteModalOpen:React.Dispatch<React.SetStateAction<boolean>>, setLoading:React.Dispatch<React.SetStateAction<boolean>>, setError:React.Dispatch<React.SetStateAction<string | null>>, setVideos:React.Dispatch<React.SetStateAction<Video[]>>) => {
     setActionInProgress(true);
 
     const token = localStorage.getItem("access_token");
     if (!token){
         setActionResult({
-            success: false,
+            status: 400,
             message: 'No Access Token Found. Please Re-Authenticate with YouTube'
         })
         setActionInProgress(false);
@@ -107,6 +107,7 @@ export const deleteVideo = async (youtubeUrl: string, setActionInProgress:React.
     }
 
     try {
+        /*
         const response = await fetch('http://127.0.0.1:8001/youtube/delete/', {
             method: 'POST',
             headers: {
@@ -115,7 +116,7 @@ export const deleteVideo = async (youtubeUrl: string, setActionInProgress:React.
             },
             body: JSON.stringify({youtube_url: youtubeUrl}),
         });
-
+        
         const result = await handleAPIResponse(response);
 
         setActionResult({
@@ -129,8 +130,34 @@ export const deleteVideo = async (youtubeUrl: string, setActionInProgress:React.
                 fetchVideos(setLoading, setError, setVideos);
             }, 1000)
         }
+        */
+
+        const response = await youtube.post('delete/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({youtube_url: youtubeUrl}),
+        })
+
+        if(response.data && response.status){
+            setActionResult({
+                status: response.status,
+                message: response.statusText || response.status == 200 ? 'Video Deleted' : "Failed to Delete Video"
+            })
+        }
+
+        if(response.status && response.status == 200){
+            setTimeout(() => {
+                setIsDeleteModalOpen(false);
+                fetchVideos(setLoading, setError, setVideos);
+            }, 1000)
+        }
+
+        return response;
     } catch (err) {
-        setActionResult({success: false, message: 'Video Deletion Failed'});
+        setActionResult({status: 400, message: 'Video Deletion Failed'});
         console.error(err);
     } finally {
         setActionInProgress(false);
@@ -138,13 +165,13 @@ export const deleteVideo = async (youtubeUrl: string, setActionInProgress:React.
   }
 
 //Function to update a youtube video
-export const updateVideo = async (youtubeUrl:string, data:VideoUpdateData, setActionInProgress:React.Dispatch<React.SetStateAction<boolean>>, setActionResult:React.Dispatch<React.SetStateAction<{success: boolean; message: string;} | null>>, setIsUpdateModalOpen:React.Dispatch<React.SetStateAction<boolean>>, setLoading:React.Dispatch<React.SetStateAction<boolean>>, setError:React.Dispatch<React.SetStateAction<string | null>>, setVideos:React.Dispatch<React.SetStateAction<Video[]>>) => {
+export const updateVideo = async (youtubeUrl:string, data:VideoUpdateData, setActionInProgress:React.Dispatch<React.SetStateAction<boolean>>, setActionResult:React.Dispatch<React.SetStateAction<{status: number; message: string;} | null>>, setIsUpdateModalOpen:React.Dispatch<React.SetStateAction<boolean>>, setLoading:React.Dispatch<React.SetStateAction<boolean>>, setError:React.Dispatch<React.SetStateAction<string | null>>, setVideos:React.Dispatch<React.SetStateAction<Video[]>>) => {
     setActionInProgress(true);
 
     const token = localStorage.getItem("access_token");
     if (!token){
         setActionResult({
-            success: false,
+            status: 400,
             message: 'No Access Token Found. Please Re-Authenticate with YouTube'
         })
         setActionInProgress(false);
@@ -152,6 +179,7 @@ export const updateVideo = async (youtubeUrl:string, data:VideoUpdateData, setAc
     }
 
     try {
+        /*
         const response = await fetch('http://127.0.0.1:8001/youtube/update/', {
             method: 'POST',
             headers: {
@@ -167,7 +195,7 @@ export const updateVideo = async (youtubeUrl:string, data:VideoUpdateData, setAc
         const result = await handleAPIResponse(response);
         
         setActionResult({
-            success: result.success,
+            status: result.success,
             message: result.message || result.error || (result.success ? 'Video Updated' : "Failed to Update Video")
         })
 
@@ -177,8 +205,37 @@ export const updateVideo = async (youtubeUrl:string, data:VideoUpdateData, setAc
                 fetchVideos(setLoading, setError, setVideos);
             }, 1000)
         }
+        */
+
+        const response = await youtube.post('update/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                youtube_url: youtubeUrl,
+                ...data
+            }),
+        })
+
+        if(response.data && response.status){
+            setActionResult({
+                status: response.status,
+                message: response.statusText || response.status == 200 ? 'Video Updated' : "Failed to Update Video"
+            })
+        }
+
+        if(response.status && response.status == 200){
+            setTimeout(() => {
+                setIsUpdateModalOpen(false);
+                fetchVideos(setLoading, setError, setVideos);
+            }, 1000)
+        }
+        
+        return response;
     } catch (err){
-        setActionResult({success:false, message: 'Video Update Failed'});
+        setActionResult({status:400, message: 'Video Update Failed'});
         console.error(err);
     } finally {
         setActionInProgress(false);
