@@ -100,12 +100,12 @@
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: relative;
-    padding-bottom: 60px; /* Space for the action buttons */
+    /* Remove the padding-bottom that was creating extra space */
   }
   
   .video-thumbnail {
     width: 300px;
-    max-height: 250px;
+    height: 200px; /* Set a fixed height for thumbnails */
     object-fit: cover;
   }
   
@@ -114,6 +114,7 @@
     padding: 16px;
     display: flex;
     flex-direction: column;
+    position: relative; /* Make this relative for positioning the buttons */
   }
   
   .video-title {
@@ -127,13 +128,17 @@
     font-size: 14px;
     color: #666;
     margin-bottom: 16px;
-    flex: 1;
+    /* Add max-height and overflow to prevent long descriptions from expanding */
+    max-height: 120px;
+    overflow-y: auto;
   }
   
   .action-buttons {
     display: flex;
+    /* Position at the bottom of video-details instead of video-item */
     position: absolute;
     bottom: 16px;
+    left: 16px; /* Add left padding to align with the rest of the content */
   }
   
   .edit-button, .delete-button {
