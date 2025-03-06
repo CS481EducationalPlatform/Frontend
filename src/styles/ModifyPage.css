@@ -132,10 +132,8 @@
   
   .action-buttons {
     display: flex;
-    gap: 12px;
     position: absolute;
     bottom: 16px;
-    left: 316px; /* Positioned to align with the start of video details */
   }
   
   .edit-button, .delete-button {
