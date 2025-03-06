@@ -431,7 +431,7 @@ function App() {
           <Route path="/" element={<CoursePage language={language} />} />
           <Route path="/course/:courseId" element={<LessonPage language={language} />} />
           <Route path="/about" element={<AboutPage language={language} />} />
-          <Route path="/upload" element={<UploadPage />} />
+          <Route path="/upload" element={<UploadPage language={language}/>} />
           <Route path="/login" element={<LoginPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
           <Route path="/account" element={<AccountPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
           <Route path="/modify" element={<ModifyPage language={language} setIsLoggedIn={setIsLoggedIn}/>} />
