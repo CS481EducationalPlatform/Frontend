@@ -140,6 +140,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                             </div>
                             <div className="video-details">
                                 <h2 className="video-title">{video.title}</h2>
+                                <a className="video-url" href={video.youtube_url}>{video.youtube_url}</a>
                                 <p className="video-description">{video.description}</p>
                                 <div className="action-buttons">
                                     <button 

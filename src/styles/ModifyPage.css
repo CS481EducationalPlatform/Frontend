@@ -108,6 +108,15 @@
     height: 200px; /* Set a fixed height for thumbnails */
     object-fit: cover;
   }
+
+  .video-url {
+    color: blue;
+    font-size: 16px;
+  }
+
+  .video-url:visited {
+    color:blueviolet;
+  }
   
   .video-details {
     flex: 1;
