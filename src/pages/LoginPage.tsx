@@ -92,6 +92,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ language, setIsLoggedIn }) =>{
         <h1>
           {translations[language].login}
         </h1>
+        {/*
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
@@ -127,6 +128,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ language, setIsLoggedIn }) =>{
         <p>
           {translations[language].or}
         </p>
+        */}
         <GoogleLoginComponent onOauth={handleOauthChanged}/>
       </div>
     );
