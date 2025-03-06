@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {useForm} from 'react-hook-form';
 import "../styles/AccountPage.css";
 import "../styles/Pages.css";
@@ -140,7 +140,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                             </div>
                             <div className="video-details">
                                 <h2 className="video-title">{video.title}</h2>
-                                <a className="video-url" href={video.youtube_url}>{video.youtube_url}</a>
+                                <Link className="video-url" to={video.youtube_url}>{video.youtube_url}</Link>
                                 <p className="video-description">{video.description}</p>
                                 <div className="action-buttons">
                                     <button 
