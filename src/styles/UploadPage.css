@@ -292,3 +292,104 @@
     max-width: 100%;
   }
 } 
+
+/* Add these styles to your UploadPage.css file */
+
+/* Fallback Prompt Overlay */
+.fallback-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.fallback-prompt {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.fallback-prompt h4 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.fallback-prompt .warning {
+  color: #ff5722;
+  font-weight: 500;
+  margin: 15px 0;
+  font-size: 14px;
+}
+
+.fallback-prompt .button-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Progress Bar */
+.progress-container {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.progress-container p {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.progress-bar {
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4285f4;
+  transition: width 0.3s ease;
+}
+
+/* Buttons */
+.primary-button {
+  padding: 10px 20px;
+  background-color: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.primary-button:hover {
+  background-color: #3367d6;
+}
+
+.primary-button:disabled {
+  background-color: #a4c2f4;
+  cursor: not-allowed;
+}
+
+/* Adjust existing buttons if needed */
+.submit-button, 
+.cancel-button, 
+.link-button {
+  min-width: 120px; /* Ensures better alignment */
+}

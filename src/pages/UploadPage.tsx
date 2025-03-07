@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { DragDropVideo } from "../components/DragDropVideo";
 import DragDropFiles from "../components/DragDropFiles";
-import { UploadVideoI, uploadYTvideo, LinkVideoI, linkYTvideo } from "../services/uploadService";
+import { 
+  UploadVideoI, 
+  uploadYTvideo, 
+  directUploadYTvideo, 
+  LinkVideoI, 
+  linkYTvideo 
+} from "../services/uploadService";
 import GoogleLoginComponent from '../components/GoogleLoginComponent';
 import "../styles/UploadPage.css";
 
@@ -34,8 +40,14 @@ const translations = {
     uploadDocuments: "Upload Supporting Documents",
     uploadedDocuments: "Uploaded Documents",
     uploading: "Uploading...",
-    cancel: "Cancel"
+    cancel: "Cancel",
+    // New translations
+    uploadFailed: "Upload failed. Would you like to try uploading directly from your browser?",
+    uploadUsingBrowser: "Upload using browser",
+    uploadWarning: "This will use your internet connection and may take longer",
+    uploadProgress: "Upload progress: "
   },
+  // Other language translations would need similar additions
   ru: {
     title: "Загрузить Контент",
     description: "Поделитесь своими учебными материалами с сообществом Бабушки.",
@@ -53,9 +65,16 @@ const translations = {
     uploadDocuments: "Загрузить Дополнительные Документы",
     uploadedDocuments: "Загруженные Документы",
     uploading: "Загрузка...",
-    cancel: "Отмена"
+    cancel: "Отмена",
+    // New translations
+    uploadFailed: "Ошибка загрузки. Хотите попробовать загрузить напрямую из браузера?",
+    uploadUsingBrowser: "Загрузить через браузер",
+    uploadWarning: "Это будет использовать ваше интернет-соединение и может занять больше времени",
+    uploadProgress: "Прогресс загрузки: "
   },
+  // Add these keys for other languages too
   es: {
+    // Existing translations...
     title: "Subir Contenido",
     description: "Comparte tus materiales educativos con la comunidad Babushka.",
     lessonTitle: "Título de la Lección",
@@ -72,9 +91,15 @@ const translations = {
     uploadDocuments: "Subir Documentos de Apoyo",
     uploadedDocuments: "Documentos Subidos",
     uploading: "Subiendo...",
-    cancel: "Cancelar"
+    cancel: "Cancelar",
+    // New translations
+    uploadFailed: "Error de carga. ¿Desea intentar cargar directamente desde su navegador?",
+    uploadUsingBrowser: "Cargar con el navegador",
+    uploadWarning: "Esto utilizará su conexión a Internet y puede llevar más tiempo",
+    uploadProgress: "Progreso de carga: "
   },
   fr: {
+    // Existing translations...
     title: "Télécharger du Contenu",
     description: "Partagez vos supports pédagogiques avec la communauté Babouchka.",
     lessonTitle: "Titre de la Leçon",
@@ -91,9 +116,15 @@ const translations = {
     uploadDocuments: "Télécharger Documents de Support",
     uploadedDocuments: "Documents Téléchargés",
     uploading: "Téléchargement en cours...",
-    cancel: "Annuler"
+    cancel: "Annuler",
+    // New translations
+    uploadFailed: "Échec du téléchargement. Souhaitez-vous essayer de télécharger directement depuis votre navigateur?",
+    uploadUsingBrowser: "Télécharger avec le navigateur",
+    uploadWarning: "Cela utilisera votre connexion Internet et peut prendre plus de temps",
+    uploadProgress: "Progression du téléchargement: "
   },
   uk: {
+    // Existing translations...
     title: "Завантажити Контент",
     description: "Поділіться своїми навчальними матеріалами зі спільнотою Бабусі.",
     lessonTitle: "Назва Уроку",
@@ -110,7 +141,12 @@ const translations = {
     uploadDocuments: "Завантажити Документи Підтримки",
     uploadedDocuments: "Завантажені Документи",
     uploading: "Завантаження...",
-    cancel: "Скасувати"
+    cancel: "Скасувати",
+    // New translations
+    uploadFailed: "Завантаження не вдалося. Бажаєте спробувати завантажити безпосередньо з браузера?",
+    uploadUsingBrowser: "Завантажити через браузер",
+    uploadWarning: "Це використовуватиме ваше інтернет-з'єднання і може зайняти більше часу",
+    uploadProgress: "Прогрес завантаження: "
   }
 };
 
@@ -142,6 +178,11 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
     video_url: ""
   });
 
+  // New state variables for fallback handling
+  const [showFallbackPrompt, setShowFallbackPrompt] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isClientUploading, setIsClientUploading] = useState(false);
+
   // OAuth handling
   const handleOauthChanged = (value: boolean) => {
     if(value){
@@ -167,6 +208,19 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
     }]);
   };
 
+  // Progress tracking for uploads
+  const updateUploadProgress = (progress: number) => {
+    setUploadProgress(progress);
+  };
+
+  // Cancel upload function
+  const cancelUpload = () => {
+    setIsSubmitting(false);
+    setIsClientUploading(false);
+    setUploadProgress(0);
+    setShowFallbackPrompt(false);
+  };
+
   // Submit functions
   const handleYoutubeUpload = async () => {
     if (!videoFile) return alert("Please select a video file");
@@ -177,6 +231,8 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
     }
 
     setIsSubmitting(true);
+    setUploadProgress(0);
+    setShowFallbackPrompt(false);
     
     try {
       // Update videoInfo with title
@@ -186,14 +242,62 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
         description: videoInfo.description || `Lesson: ${title}`
       };
       
-      await uploadYTvideo(updatedVideoInfo, videoFile);
+      // Attempt server-side upload
+      const result = await uploadYTvideo(updatedVideoInfo, videoFile, updateUploadProgress);
+      
+      // If there's an error, show fallback prompt
+      if (result.error) {
+        setShowFallbackPrompt(true);
+        setIsSubmitting(false);
+        return;
+      }
+      
+      // Success!
       alert("Upload successful! Your video is being processed on YouTube.");
       navigate("/");
     } catch (error) {
       console.error("Upload error:", error);
-      alert("An error occurred during upload. Please try again.");
-    } finally {
+      setShowFallbackPrompt(true);
       setIsSubmitting(false);
+    }
+  };
+
+  // Client-side fallback upload function
+  const handleClientSideUpload = async () => {
+    if (!videoFile) return;
+    
+    setIsClientUploading(true);
+    setShowFallbackPrompt(false);
+    setUploadProgress(0);
+    
+    try {
+      // Update videoInfo with title
+      const updatedVideoInfo = {
+        ...videoInfo,
+        title: title,
+        description: videoInfo.description || `Lesson: ${title}`
+      };
+      
+      // Attempt direct client-side upload
+      const result = await directUploadYTvideo(
+        updatedVideoInfo, 
+        videoFile,
+        updateUploadProgress
+      );
+      
+      // Process result
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      
+      // Success!
+      alert("Upload successful! Your video is being processed on YouTube.");
+      navigate("/");
+    } catch (error) {
+      console.error("Client-side upload error:", error);
+      alert("An error occurred during upload. Please try again later.");
+    } finally {
+      setIsClientUploading(false);
     }
   };
 
@@ -212,6 +316,14 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
     }
   };
 
+  // Reset the form function
+  const resetForm = () => {
+    setShowFallbackPrompt(false);
+    setIsSubmitting(false);
+    setIsClientUploading(false);
+    setUploadProgress(0);
+  };
+
   // Load access token on component mount
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
@@ -225,6 +337,32 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
       <div className="lesson-upload">
         <h2>{translations[language].createNewLesson}</h2>
         <p>{translations[language].description}</p>
+        
+        {/* Fallback Prompt Modal */}
+        {showFallbackPrompt && (
+          <div className="fallback-prompt-overlay">
+            <div className="fallback-prompt">
+              <h4>{translations[language].uploadFailed}</h4>
+              <p className="warning">{translations[language].uploadWarning}</p>
+              <div className="button-group">
+                <button 
+                  className="primary-button"
+                  onClick={handleClientSideUpload}
+                  disabled={isClientUploading}
+                >
+                  {translations[language].uploadUsingBrowser}
+                </button>
+                <button 
+                  className="cancel-button"
+                  onClick={resetForm}
+                  disabled={isClientUploading}
+                >
+                  {translations[language].cancel}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         
         <div className="upload-sections-container">
           {/* Video Upload Section */}
@@ -312,6 +450,19 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
           </div>
         </div>
         
+        {/* Progress Bar */}
+        {(isSubmitting || isClientUploading) && uploadProgress > 0 && (
+          <div className="progress-container">
+            <p>{translations[language].uploadProgress} {uploadProgress}%</p>
+            <div className="progress-bar">
+              <div 
+                className="progress-fill" 
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
+        
         {/* Google Login Section */}
         {!videoInfo.accessToken && (
           <div className="google-login-section">
@@ -326,18 +477,28 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
           <button 
             className="submit-button"
             onClick={handleYoutubeUpload}
-            disabled={isSubmitting || !videoFile || !videoInfo.accessToken}
+            disabled={isSubmitting || isClientUploading || !videoFile || !videoInfo.accessToken}
           >
-            {isSubmitting ? translations[language].uploading : translations[language].upload}
+            {isSubmitting || isClientUploading ? translations[language].uploading : translations[language].upload}
           </button>
           
-          <button 
-            className="cancel-button"
-            onClick={() => navigate("/")}
-            disabled={isSubmitting}
-          >
-            {translations[language].cancel}
-          </button>
+          {(isSubmitting || isClientUploading) && (
+            <button 
+              className="cancel-button"
+              onClick={cancelUpload}
+            >
+              {translations[language].cancel}
+            </button>
+          )}
+          
+          {!(isSubmitting || isClientUploading) && (
+            <button 
+              className="cancel-button"
+              onClick={() => navigate("/")}
+            >
+              {translations[language].cancel}
+            </button>
+          )}
         </div>
       </div>
     </div>
