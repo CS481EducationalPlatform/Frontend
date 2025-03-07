@@ -132,6 +132,7 @@ export const deleteVideo = async (youtubeUrl: string, setActionInProgress:React.
         }
         */
 
+        /*
         const response = await youtube.post('delete/', {
             method: 'POST',
             headers: {
@@ -140,6 +141,16 @@ export const deleteVideo = async (youtubeUrl: string, setActionInProgress:React.
             },
             body: JSON.stringify({youtube_url: youtubeUrl}),
         })
+        */
+
+        const response = await youtube.post('delete/', 
+            {youtube_url: youtubeUrl},
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
 
         console.log('Delete Response : ', response)
 
