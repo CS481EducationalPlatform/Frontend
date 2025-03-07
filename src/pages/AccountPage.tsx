@@ -185,9 +185,11 @@ const AccountPage: React.FC<AccountPageProps> = ({ language, setIsLoggedIn }) =>
                   onClick={() => {
                     const newId = courses.length + moreCourses.length;
                     const updatedCourse = {...editingCourse, id: newId};
-                    addMoreCourses([...moreCourses, updatedCourse]);
-                    setEditingCourse(newCourse);
-                    setOpenCreateCourseModal(false);
+                    callMulti(
+                      addMoreCourses([...moreCourses, updatedCourse]),
+                      setEditingCourse(newCourse),
+                      setOpenCreateCourseModal(false)
+                    )
                   }} 
                 >
                   Create Course
