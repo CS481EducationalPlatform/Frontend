@@ -74,38 +74,29 @@ export const uploadYTvideo = async (info: UploadVideoI, file: File) => {
     formData.append("accessToken", info.accessToken);
 
     try {
-        /*
-        const response = await upload.post("video/", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-        */
-
         const response = await fetch('/api/upload_video/', {
             method: 'POST',
             body: formData,
         });
+        
+        // Check if response is ok before trying to parse JSON
+        if (!response.ok) {
+            const errorText = await response.text(); // Get raw text instead of trying to parse JSON
+            console.error('Server response:', errorText);
+            throw new Error(`Server responded with status ${response.status}: ${errorText}`);
+        }
+        
+        // Now try to parse JSON only if we have a successful response
         const data = await response.json();
-
-        if (response.status === 200) {
-            return data;
-        }
-        if (response.status === 500) {
-            throw new Error(data.error || 'Server error during upload');
-        }
+        return data;
+        
+    } catch (error) {
+        console.error('Upload error:', error);
         return {
-            error: data.error || `Server responded with status ${response.status}`,
+            error: error instanceof Error ? error.message : 'Unknown upload error',
             message: 'Upload failed'
         };
-        } catch (error) {
-            console.error('Upload error:', error);
-            // Return the error response to allow fallback
-            return {
-                error: error instanceof Error ? error.message : 'Unknown upload error',
-                message: 'Upload failed'
-            };
-        }
+    }
 };
 
 export const directUploadYTvideo = async (info: UploadVideoI, file: File) => {
