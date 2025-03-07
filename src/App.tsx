@@ -242,7 +242,7 @@ function App() {
       ]);
   
       // Call our backend API instead of OpenAI directly
-      const response = await fetch('https://backend-4yko.onrender.com/api/chat', {
+      const response = await fetch(process.env.REACT_APP_PLACEMENT == "Local" ? "https://localhost:5173/api/chat" :"https://backend-4yko.onrender.com/api/chat", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

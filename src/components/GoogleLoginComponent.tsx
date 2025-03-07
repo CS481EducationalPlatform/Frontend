@@ -1,10 +1,9 @@
 import { gapi } from "gapi-script";
 import { useEffect } from "react";
 
-//CHANGE to being pulled from database securely
-const CLIENT_ID = "178516670715-5l32e4c5lanhgvn8iv7sa7r23l57o2qq.apps.googleusercontent.com";
-const CLIENT_ID2 = "961838062810-eh97iiq2d6eobfp3b20n65lc5l3a1sp9.apps.googleusercontent.com";
-const CLIENT_ID3 = "595459553093-rb03rl24l4l4oece2leb1re5t0f3t1ra.apps.googleusercontent.com";
+const CLIENT_ID = process.env.REACT_APP_CLIENT_ID1;
+const CLIENT_ID2 = process.env.REACT_APP_CLIENT_ID2;
+const CLIENT_ID3 = process.env.REACT_APP_CLIENT_ID3;
 const CLIENT_IDS = [CLIENT_ID, CLIENT_ID2, CLIENT_ID3]
 
 interface GoogleLoginProps {

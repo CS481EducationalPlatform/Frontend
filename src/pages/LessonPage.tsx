@@ -6,7 +6,7 @@ import "../styles/LessonPage.css";
 import { getCourseLessons } from "../services/courseService";
 import type { Lesson as APILesson } from "../services/lessonService";
 
-const API_BASE_URL = 'https://backend-4yko.onrender.com';
+const API_BASE_URL = process.env.REACT_APP_PLACEMENT == "Local" ? "https://localhost:5173" :"https://backend-4yko.onrender.com";
 
 interface LessonType {
   id: number;
