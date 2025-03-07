@@ -147,7 +147,10 @@ export const directUploadYTvideo = async (info: UploadVideoI, file: File) => {
         );
   
         console.log("Upload successful!", response.data);
+
+        return response.data
       } catch (error) {
         console.error("Upload failed", error);
+        return null;
       }
 };

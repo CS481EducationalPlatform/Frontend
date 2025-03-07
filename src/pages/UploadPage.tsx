@@ -262,7 +262,6 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
     if (!videoFile) return;
     
     setIsClientUploading(true);
-    setShowFallbackPrompt(false);
     setUploadProgress(0);
     
     try {
@@ -274,14 +273,18 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
       };
       
       // Attempt direct client-side upload
-      directUploadYTvideo(
+      const result = await directUploadYTvideo(
         updatedVideoInfo, 
         videoFile
       );
-      
-      // Success!
-      alert("Upload successful! Your video is being processed on YouTube.");
-      navigate("/");
+
+      if(result){
+        alert("Upload successful! Your video is being processed on YouTube.");
+        return result;
+      }else {
+        alert("Failure");
+      }
+      setShowFallbackPrompt(false);
     } catch (error) {
       console.error("Client-side upload error:", error);
       alert("An error occurred during upload. Please try again later.");
