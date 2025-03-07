@@ -62,61 +62,50 @@ export const linkYTvideo = async (info: LinkVideoI) => {
     }
 }
 
-export const uploadYTvideo = async (
-    params: UploadVideoI, 
-    file: File,
-    onProgress?: (progress: number) => void
-  ): Promise<UploadResponse> => {
-    const { title, description, lesson_id, accessToken, playlist } = params;
-    
-    // Create form data to send to the backend
+export const uploadYTvideo = async (info: UploadVideoI, file: File) => {
+    console.log("Upload called in services:", info, file);
+
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('title', title);
-    formData.append('description', description ? description : "");
-    formData.append('lesson_id', lesson_id ? lesson_id : '1');
-    formData.append('accessToken', accessToken);
-    
-    if (playlist) {
-      formData.append('playlist', playlist);
-    }
-    
-    if(onProgress){
-        //Do Nothing I just need this to get rid of an error, but I need onProgress later
-    }
+    formData.append("file", file); // Append the file
+    formData.append("title", info.title);
+    formData.append("description", !info.description ? "" : info.description);
+    formData.append("lesson_id", !info.lesson_id ? "" : info.lesson_id);
+    formData.append("playlist", !info.playlist ? "" : info.playlist);
+    formData.append("accessToken", info.accessToken);
 
     try {
-      // First attempt - use server-side (Celery/Redis) upload
-      const response = await fetch('/api/upload_video/', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      const data = await response.json();
-      
-      // If server responds with success
-      if (response.status === 200) {
-        return data;
-      }
-      
-      // If server responds with 500, throw error to trigger fallback
-      if (response.status === 500) {
-        throw new Error(data.error || 'Server error during upload');
-      }
-      
-      // For other error statuses
-      return {
-        error: data.error || `Server responded with status ${response.status}`,
-        message: 'Upload failed'
-      };
-    } catch (error) {
-      console.error('Upload error:', error);
-      // Return the error response to allow fallback
-      return {
-        error: error instanceof Error ? error.message : 'Unknown upload error',
-        message: 'Upload failed'
-      };
-    }
+        /*
+        const response = await upload.post("video/", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+        */
+
+        const response = await fetch('/api/upload_video/', {
+            method: 'POST',
+            body: formData,
+        });
+        const data = await response.json();
+
+        if (response.status === 200) {
+            return data;
+        }
+        if (response.status === 500) {
+            throw new Error(data.error || 'Server error during upload');
+        }
+        return {
+            error: data.error || `Server responded with status ${response.status}`,
+            message: 'Upload failed'
+        };
+        } catch (error) {
+            console.error('Upload error:', error);
+            // Return the error response to allow fallback
+            return {
+                error: error instanceof Error ? error.message : 'Unknown upload error',
+                message: 'Upload failed'
+            };
+        }
 };
 
 export const directUploadYTvideo = async (info: UploadVideoI, file: File) => {

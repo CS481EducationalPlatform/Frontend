@@ -208,11 +208,6 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
     }]);
   };
 
-  // Progress tracking for uploads
-  const updateUploadProgress = (progress: number) => {
-    setUploadProgress(progress);
-  };
-
   // Cancel upload function
   const cancelUpload = () => {
     setIsSubmitting(false);
@@ -243,7 +238,7 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
       };
       
       // Attempt server-side upload
-      const result = await uploadYTvideo(updatedVideoInfo, videoFile, updateUploadProgress);
+      const result = await uploadYTvideo(updatedVideoInfo, videoFile);
       
       // If there's an error, show fallback prompt
       if (result.error) {
@@ -279,16 +274,10 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
       };
       
       // Attempt direct client-side upload
-      const result = await directUploadYTvideo(
+      directUploadYTvideo(
         updatedVideoInfo, 
-        videoFile,
-        updateUploadProgress
+        videoFile
       );
-      
-      // Process result
-      if (result.error) {
-        throw new Error(result.error);
-      }
       
       // Success!
       alert("Upload successful! Your video is being processed on YouTube.");
