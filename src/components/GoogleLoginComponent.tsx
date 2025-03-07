@@ -6,6 +6,8 @@ const CLIENT_ID2 = process.env.REACT_APP_CLIENT_ID2;
 const CLIENT_ID3 = process.env.REACT_APP_CLIENT_ID3;
 const CLIENT_IDS = [CLIENT_ID, CLIENT_ID2, CLIENT_ID3]
 
+console.log(CLIENT_IDS)
+
 interface GoogleLoginProps {
   onOauth: (value: boolean) => void;
 }
