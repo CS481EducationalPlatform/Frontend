@@ -245,11 +245,9 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
         setShowFallbackPrompt(true);
         setIsSubmitting(false);
         return;
+      } else {
+        alert("Upload successful! Your video is being processed on YouTube.");
       }
-      
-      // Success!
-      alert("Upload successful! Your video is being processed on YouTube.");
-      navigate("/");
     } catch (error) {
       console.error("Upload error:", error);
       setShowFallbackPrompt(true);
