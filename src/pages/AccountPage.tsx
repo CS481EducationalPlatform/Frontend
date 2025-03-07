@@ -149,31 +149,51 @@ const AccountPage: React.FC<AccountPageProps> = ({ language, setIsLoggedIn }) =>
       </div>
 
       {openCreateCourseModal ? 
-        <div style={{position:"absolute", top:"0", left:"0", width:"100vw", height: "100vh", justifyContent:"center", alignContent:"center"}}>
-          <div style={{position:"absolute", left:"40vw", width:'30vw', height:'30vh', background:'black'}}>
-            <input
-              type="text"
-              value={editingCourse.title}
-              onChange={(e) => setEditingCourse({...editingCourse, title: e.target.value})}
-              placeholder="Title"
-            />
-            <input
-              type="text"
-              value={editingCourse.description}
-              onChange={(e) => setEditingCourse({...editingCourse, description: e.target.value})}
-              placeholder="Description"
-            />
-            <button onClick={() => callMulti(
-              console.log(courses.length + moreCourses.length), 
-              setEditingCourse({...editingCourse, id: courses.length + moreCourses.length}), 
-              console.log(editingCourse),
-              addMoreCourses([...moreCourses, editingCourse]), 
-              console.log(moreCourses), 
-              setEditingCourse(newCourse))} 
-              style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>
-                Update
-            </button>
-            <button onClick={() => setOpenCreateCourseModal(false)} style={{height:'30px', width:'200px', borderRadius:'8px', border:'0px solid black'}}>Cancel</button>
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <h2 className="modal-header">Create New Course</h2>
+            <div className="modal-form">
+              <div className="form-group">
+                <label className="form-label">Course Title</label>
+                <input
+                  className="form-input"
+                  type="text"
+                  value={editingCourse.title}
+                  onChange={(e) => setEditingCourse({...editingCourse, title: e.target.value})}
+                  placeholder="Enter course title"
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Course Description</label>
+                <input
+                  className="form-input"
+                  type="text"
+                  value={editingCourse.description}
+                  onChange={(e) => setEditingCourse({...editingCourse, description: e.target.value})}
+                  placeholder="Enter course description"
+                />
+              </div>
+              <div className="modal-button-group">
+                <button 
+                  className="modal-button cancel-button" 
+                  onClick={() => setOpenCreateCourseModal(false)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="modal-button update-button"
+                  onClick={() => {
+                    const newId = courses.length + moreCourses.length;
+                    const updatedCourse = {...editingCourse, id: newId};
+                    addMoreCourses([...moreCourses, updatedCourse]);
+                    setEditingCourse(newCourse);
+                    setOpenCreateCourseModal(false);
+                  }} 
+                >
+                  Create Course
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       : <></>}

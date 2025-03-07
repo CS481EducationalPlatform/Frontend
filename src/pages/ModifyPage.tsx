@@ -90,6 +90,11 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
         navigate("/login");
     };
 
+    const callMulti = (...functions: React.SetStateAction<any>[]) => (event:any) => {
+        const value = event.target.value;
+        functions.forEach((func) => func(value));
+    }
+
     //Fetch on mount
     useEffect(() => {
         fetchVideos(setLoading, setError, setVideos);
@@ -200,7 +205,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                                 <div className="modal-button-group">
                                     <button
                                         type="button"
-                                        onClick={() => setIsUpdateModalOpen(false)}
+                                        onClick={() => callMulti(setIsUpdateModalOpen(false), setActionResult(null))}
                                         disabled={actionInProgress}
                                         className={`cancel-button ${actionInProgress ? 'button-disabled' : ''}`}
                                     >
