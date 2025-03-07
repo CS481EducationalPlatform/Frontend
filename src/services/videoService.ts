@@ -220,6 +220,7 @@ export const updateVideo = async (youtubeUrl:string, data:VideoUpdateData, setAc
         }
         */
 
+        /*
         const response = await youtube.post('update/', {
             method: 'POST',
             headers: {
@@ -231,6 +232,18 @@ export const updateVideo = async (youtubeUrl:string, data:VideoUpdateData, setAc
                 ...data
             }),
         })
+        */
+
+        const response = await youtube.post(
+            'update/', 
+            { youtube_url: youtubeUrl, ...data },  // Request body
+            {  // Request config object with headers
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              }
+            }
+          );
 
         console.log('Update Response : ', response)
 
