@@ -39,20 +39,21 @@
 /* Course Grid Styling */
 .course-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 300px); /* Auto-fit columns of 300px */
-    justify-content: center; /* Center the grid in the container */
+    grid-template-columns: repeat(auto-fit, 300px);
+    justify-content: center;
     gap: 20px;
     position: absolute;
-    top: 180px;
-    bottom: 40px;
-    overflow-y: auto; /* Enable vertical scrolling */
-    overflow-x: hidden; /* Hide horizontal overflow */
+    top: 100px;
+    bottom: 60px;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 20px;
     width: calc(100% - 40px);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
+    left: 50%;
+    transform: translateX(-50%);
 }
-
 
 .course-button {
     width: 300px;
