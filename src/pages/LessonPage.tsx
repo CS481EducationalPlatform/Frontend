@@ -24,7 +24,8 @@ const translations = {
     selectLesson: "Select a lesson to view its content",
     courseDocuments: "Course Documents",
     noDocuments: "No documents available",
-    noVideo: "No video available"
+    noVideo: "No video available",
+    noLessons: "This course has no lessons yet"
   },
   ru: {
     courseLessons: "Уроки Курса",
@@ -32,7 +33,8 @@ const translations = {
     selectLesson: "Выберите урок для просмотра",
     courseDocuments: "Документы Курса",
     noDocuments: "Документы недоступны",
-    noVideo: "Видео недоступно"
+    noVideo: "Видео недоступно",
+    noLessons: "В этом курсе пока нет уроков"
   },
   es: {
     courseLessons: "Lecciones del Curso",
@@ -40,7 +42,8 @@ const translations = {
     selectLesson: "Selecciona una lección para ver su contenido",
     courseDocuments: "Documentos del Curso",
     noDocuments: "No hay documentos disponibles",
-    noVideo: "No hay video disponible"
+    noVideo: "No hay video disponible",
+    noLessons: "Este curso aún no tiene lecciones"
   },
   fr: {
     courseLessons: "Leçons du Cours",
@@ -48,7 +51,8 @@ const translations = {
     selectLesson: "Sélectionnez une leçon pour voir son contenu",
     courseDocuments: "Documents du Cours",
     noDocuments: "Aucun document disponible",
-    noVideo: "Aucune vidéo disponible"
+    noVideo: "Aucune vidéo disponible",
+    noLessons: "Ce cours n'a pas encore de leçons"
   },
   uk: {
     courseLessons: "Уроки Курсу",
@@ -56,7 +60,8 @@ const translations = {
     selectLesson: "Виберіть урок для перегляду",
     courseDocuments: "Документи Курсу",
     noDocuments: "Документи недоступні",
-    noVideo: "Відео недоступне"
+    noVideo: "Відео недоступне",
+    noLessons: "У цьому курсі ще немає уроків"
   }
 };
 
@@ -95,7 +100,12 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
         setCourseLessons(convertedLessons);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
+        // Check if it's a 404 error
+        if (err instanceof Error && err.message.includes('404')) {
+          setError(translations[language].noLessons);
+        } else {
+          setError(err instanceof Error ? err.message : 'An error occurred');
+        }
         setCourseLessons([]);
       } finally {
         setIsLoading(false);
@@ -103,7 +113,7 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
     };
 
     fetchLessons();
-  }, [courseId]);
+  }, [courseId, language]);
 
   const handleLessonSelect = (lesson: LessonType) => {
     // Find the full lesson data to set as current
@@ -118,7 +128,16 @@ const LessonPage: React.FC<LessonPageProps> = ({ language }) => {
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return (
+      <div className="lesson-page">
+        <div className="error-container">
+          <div className="error-message">{error}</div>
+          <button onClick={() => navigate('/')} className="back-button">
+            {translations[language].backToCourses}
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
