@@ -39,19 +39,20 @@
 /* Course Grid Styling */
 .course-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 300px);
-    justify-content: center;
+    grid-template-columns: repeat(auto-fit, 300px); /* Auto-fit columns of 300px */
+    justify-content: center; /* Center the grid in the container */
     gap: 20px;
     position: absolute;
     top: 180px;
     bottom: 40px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal overflow */
     padding: 20px;
     width: calc(100% - 40px);
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
 }
+
 
 .course-button {
     width: 300px;
