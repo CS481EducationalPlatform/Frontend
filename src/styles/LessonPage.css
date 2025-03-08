@@ -243,6 +243,7 @@
   height: 100%;
   gap: 2rem;
   padding: 2rem;
+  margin-left: 40%;
 }
 
 .error-message {
