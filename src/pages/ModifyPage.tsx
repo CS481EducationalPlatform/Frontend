@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {useForm} from 'react-hook-form';
-import "../styles/AccountPage.css";
+import "../styles/modifyPage.css";
 import "../styles/Pages.css";
 import "../styles/ModifyPage.css";
 import { Video, VideoUpdateData, fetchVideos, deleteVideo, updateVideo} from '../services/videoService'
@@ -44,7 +44,7 @@ const translations = {
     }
 }
 
-const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => {
+const ModifyPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => {
     const username = localStorage.getItem("username") || "Guest";
     const navigate = useNavigate();
 
@@ -101,19 +101,21 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
     }, [])
 
     return (
-        <div className="account-page">
+        <div className="modify-page" data-cy="modify-page">
             <div className="header-container">
-                <h1 className="page-title">{translations[language].welcome}{username}!</h1>
+                <h1 className="page-title" data-cy="welcome-message">{translations[language].welcome}{username}!</h1>
                 <div className="button-container">
                     <button 
                         className="upload-button" 
                         onClick={() => navigate("/upload")}
+                        data-cy="upload-button"
                     >
                         + {translations[language].upload}
                     </button>
                     <button 
                         className="logout-button" 
                         onClick={handleLogout}
+                        data-cy="logout-button"
                     > 
                         {translations[language].logout}
                     </button>
@@ -123,40 +125,43 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
 
                 <h1 className="page-title">YouTube Video Manager</h1>
 
-                {loading && <p className="loading-text">Loading Videos...</p>}
+                {loading && <p className="loading-text" data-cy="loading-indicator">Loading Videos...</p>}
 
                 {error && (
-                    <div className="error-message">{error}</div>
+                    <div className="error-message" data-cy="error-message">{error}</div>
                 )}
 
                 {!loading && videos.length === 0 && (
-                    <p className="no-videos-text">No Videos Found.</p>
+                    <p className="no-videos-text" data-cy="no-videos-message">No Videos Found.</p>
                 )}
 
-                <div className="video-list">
+                <div className="video-list" data-cy="video-list">
                     {videos.map(video => (
-                        <div className="video-item" key={video.id}>
+                        <div className="video-item" key={video.id} data-cy="video-item">
                             <div>
                                 <img 
                                     src={video.thumbnail_url} 
                                     alt={video.title} 
                                     className="video-thumbnail"
+                                    data-cy="video-thumbnail"
                                 />
                             </div>
                             <div className="video-details">
-                                <h2 className="video-title">{video.title}</h2>
-                                <Link className="video-url" to={video.youtube_url}>{video.youtube_url}</Link>
-                                <p className="video-description">{video.description}</p>
+                                <h2 className="video-title" data-cy="video-title">{video.title}</h2>
+                                <Link className="video-url" to={video.youtube_url} data-cy="video-url">{video.youtube_url}</Link>
+                                <p className="video-description" data-cy="video-description">{video.description}</p>
                                 <div className="action-buttons">
                                     <button 
                                         className="edit-button" 
                                         onClick={() => openUpdateModal(video)}
+                                        data-cy="edit-button"
                                     >
                                         Edit
                                     </button>
                                     <button 
                                         className="delete-button" 
                                         onClick={() => openDeleteModal(video)}
+                                        data-cy="delete-button"
                                     >
                                         Delete
                                     </button>
@@ -167,31 +172,36 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                 </div>
 
                 {isUpdateModalOpen && selectedVideo && (
-                    <div className="modal-overlay">
-                        <div className="modal-container">
-                            <h2 className="modal-header">
+                    <div className="modal-overlay" data-cy="modal-overlay">
+                        <div className="modal-container" data-cy="update-modal">
+                            <h2 className="modal-header" data-cy="modal-header">
                                 Update Video
                             </h2>
 
                             {actionResult && (
-                                <div className={actionResult.status >= 400 ? "error-result" : "success-message"}>
+                                <div 
+                                    className={actionResult.status >= 400 ? "error-result" : "success-message"}
+                                    data-cy={actionResult.status >= 400 ? "error-result" : "success-message"}
+                                >
                                     {actionResult.message}
                                 </div>
                             )}
 
-                            <form onSubmit={handleSubmit(onUpdateSubmit)} className="modal-form">
+                            <form onSubmit={handleSubmit(onUpdateSubmit)} className="modal-form" data-cy="update-form">
                                 <div className="form-group">
                                     <label className="form-label">Title</label>
                                     <input
                                         className="form-input"
+                                        data-cy="title-input"
                                         {...register('title', {required: 'Title Required'})}
                                     />
-                                    {errors.title && <p className="form-error">{errors.title.message}</p>}
+                                    {errors.title && <p className="form-error" data-cy="title-error">{errors.title.message}</p>}
                                 </div>
                                 <div className="form-group">
                                     <label className="form-label">Tags (comma seperated)</label>
                                     <input
                                         className="form-input"
+                                        data-cy="tags-input"
                                         {...register('tags')}
                                     />
                                 </div>
@@ -199,6 +209,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                                     <label className="form-label">Description</label>
                                     <input
                                         className="form-input"
+                                        data-cy="description-input"
                                         {...register('description')}
                                     />
                                 </div>
@@ -208,6 +219,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                                         onClick={() => callMulti(setIsUpdateModalOpen(false), setActionResult(null))}
                                         disabled={actionInProgress}
                                         className={`cancel-button ${actionInProgress ? 'button-disabled' : ''}`}
+                                        data-cy="cancel-button"
                                     >
                                         Cancel
                                     </button>
@@ -215,6 +227,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                                         type="submit"
                                         disabled={actionInProgress}
                                         className={`submit-button ${actionInProgress ? 'button-disabled' : ''}`}
+                                        data-cy="submit-button"
                                     >
                                         {actionInProgress ? 'Updating...' : 'Update Video'}
                                     </button>
@@ -225,19 +238,22 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                 )}
 
                 {isDeleteModalOpen && selectedVideo && (
-                    <div className="modal-overlay">
-                        <div className="modal-container">
-                            <h2 className="modal-header">
+                    <div className="modal-overlay" data-cy="modal-overlay">
+                        <div className="modal-container" data-cy="delete-modal">
+                            <h2 className="modal-header" data-cy="modal-header">
                                 Confirm Deletion
                             </h2>
                             
                             {actionResult && (
-                                <div className={actionResult.status >= 400 ? "error-result" : "success-message"}>
+                                <div 
+                                    className={actionResult.status >= 400 ? "error-result" : "success-message"}
+                                    data-cy={actionResult.status >= 400 ? "error-result" : "success-message"}
+                                >
                                     {actionResult.message}
                                 </div>
                             )}
                             
-                            <p className="delete-question">
+                            <p className="delete-question" data-cy="delete-confirmation">
                                 Are you sure you want to delete <strong>{selectedVideo.title}</strong>?
                             </p>
                             
@@ -246,6 +262,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                                     onClick={() => setIsDeleteModalOpen(false)}
                                     disabled={actionInProgress}
                                     className={`cancel-button ${actionInProgress ? 'button-disabled' : ''}`}
+                                    data-cy="cancel-delete-button"
                                 >
                                     Cancel
                                 </button>
@@ -254,6 +271,7 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
                                     type="submit"
                                     disabled={actionInProgress}
                                     className={`delete-button ${actionInProgress ? 'button-disabled' : ''}`}
+                                    data-cy="confirm-delete-button"
                                 >
                                     {actionInProgress ? 'Deleting...' : 'Delete Video'}
                                 </button>
@@ -266,4 +284,4 @@ const AccountPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => 
     );
 };
 
-export default AccountPage;
+export default ModifyPage;

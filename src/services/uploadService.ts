@@ -108,40 +108,47 @@ export const directUploadYTvideo = async (info: UploadVideoI, file: File) => {
     //const playlist = info.playlist;
     const access_token = info.accessToken;
 
-    const metadata = {
-        snippet:{
-            title:title,
-            description:description,
-            tags:["react", 'api', 'babushka'],
-            categoryId: "27",
-        },
-        status:{
-            madeForKids:false,
-            privacyStatus: "public",
-        }
-    }
-
-    const formData = new FormData();
-    formData.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
-    formData.append("file", file);
-
     try {
-        const response = await axios.post(
-          "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-  
-        console.log("Upload successful!", response.data);
+        const initResponse = await axios.post(
+            "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
+            JSON.stringify({
+                snippet: {
+                    title: title,
+                    description: description,
+                    tags:["react", 'api', 'babushka'],
+                    categoryId: "27",
+                },
+                status:{
+                    madeForKids:false,
+                    privacyStatus: "public",
+                }
+            }),
+            {
+              headers: {
+                Authorization: `Bearer ${access_token}`,
+                "Content-Type": "application/json",
+                "X-Upload-Content-Type": file.type,
+                "X-Upload-Content-Length": file.size
+              }
+            }
+          );
 
-        return response.data
-      } catch (error) {
+        const uploadUrl = initResponse.headers.location; // Google provides the actual upload URL
+        const uploadResponse = await axios.put(
+            uploadUrl,
+            file, // Just the file, not the FormData
+            {
+                headers: {
+                    "Content-Type": file.type
+                },
+            // No need for Authorization header in this second request
+            }
+        ); 
+
+        console.log("Upload successful!", uploadResponse.data);
+        return uploadResponse.data;
+    } catch (error) {
         console.error("Upload failed", error);
         return null;
-      }
-};
+    }
+}

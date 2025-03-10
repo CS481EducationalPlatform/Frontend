@@ -277,6 +277,7 @@ const UploadPage: React.FC<UploadPageProps> = ({ language = 'en' }) => {
       );
 
       if(result){
+        console.log(result)
         alert("Upload successful! Your video is being processed on YouTube.");
         return result;
       }else {
