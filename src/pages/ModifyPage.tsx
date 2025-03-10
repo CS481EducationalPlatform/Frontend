@@ -101,9 +101,10 @@ const ModifyPage: React.FC<ModifyPageProps> = ({ language, setIsLoggedIn }) => {
     }, [])
 
     return (
-        <div className="modify-page" data-cy="modify-page">
+        //<div className="modify-page" {...{"data-cy": "modify-page"}}>
+        <div data-cy="modify-page" className="modify-page">
             <div className="header-container">
-                <h1 className="page-title" data-cy="welcome-message">{translations[language].welcome}{username}!</h1>
+                <h1 data-cy="welcome-message" className="welcome-message">{translations[language].welcome}{username}!</h1>
                 <div className="button-container">
                     <button 
                         className="upload-button" 

@@ -21,7 +21,7 @@
     height: 70vh;
   }
   
-  .page-title {
+  .page-title, .welcome-message {
     font-size: 24px;
     font-weight: bold;
     margin: 0;
