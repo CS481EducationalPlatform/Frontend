@@ -19,13 +19,13 @@
     cursor: pointer;
     transition: background-color 0.2s;
     font-family: 'Inter', sans-serif;
-  }
-  
-  .upload-page-button:hover, .logout-button:hover, .edit-button:hover {
-    background-color: #2563eb;
-  }
+}
 
-  .logout-button{
+.upload-page-button:hover, .logout-button:hover, .edit-button:hover {
+    background-color: #2563eb;
+}
+
+.logout-button {
     position: absolute;
     bottom: 15px;
     left: 35px;
@@ -34,9 +34,110 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 20px;
-  }
+}
 
-  /* Modal Overlay */
+/* Course Grid Styling */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 300px);
+    justify-content: center;
+    gap: 20px;
+    position: absolute;
+    top: 180px;
+    bottom: 60px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    width: calc(100% - 40px);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.course-button {
+    width: 300px;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    background-color: var(--button-background-primary);
+    color: #ffffff;
+    border: 2px solid var(--black-white);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: wrap;
+}
+
+.course-icon {
+    font-size: 2rem;
+    margin-bottom: 0.1rem;
+}
+
+.course-title-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.2;
+}
+
+.course-button:hover {
+    background-color: #17396f;
+    color: white;
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+}
+
+.course-instructor {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: auto;
+    padding-top: 0.5rem;
+    font-style: italic;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    width: 100%;
+}
+
+.course-description {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: normal;
+    margin: 0.25rem 0;
+}
+
+.course-title-text p {
+    margin: 0.25rem 0;
+}
+
+/* Add dark mode scrollbar styles */
+[data-theme="dark"] .course-grid::-webkit-scrollbar-track {
+    background: #2d2d2d;
+}
+
+[data-theme="dark"] .course-grid::-webkit-scrollbar-thumb {
+    background: #666;
+}
+
+[data-theme="dark"] .course-grid::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+
+/* Modal Overlay */
 .modal-overlay {
   position: fixed;
   top: 0;

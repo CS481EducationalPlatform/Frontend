@@ -233,3 +233,24 @@
   gap: 20px;
   margin-bottom: 30px;
 }
+
+/* Error styling */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 2rem;
+  padding: 2rem;
+  margin-left: 40%;
+}
+
+.error-message {
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--black-white);
+  text-align: center;
+  max-width: 600px;
+  line-height: 1.4;
+}
