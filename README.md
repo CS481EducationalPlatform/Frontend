@@ -46,10 +46,12 @@ export default {
 VITE_OPENAI_API_KEY=your_openai_api_key
 ```
 
-### Known Bugs
-- Hosted Upload/Edit/Delete not properly going through if backend does not spool up Redis : Host Issue
+### Known Bugs or Issues
+- Hosted Upload not properly going through if backend does not spool up Redis : Host Issue
 - User Accounts need to be implemented, currently OAuth based and not touching backend
 - Playlists for Upload/Edit/Delete code is there but not connected
+- Cypress code is started for ModifyPage and structure in place, more tests need function and creation
+- Lint testing and other functional testing needed
 
 
 ### License
