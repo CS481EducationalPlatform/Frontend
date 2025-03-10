@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {useForm} from 'react-hook-form';
-import "../styles/modifyPage.css";
 import "../styles/Pages.css";
 import "../styles/ModifyPage.css";
 import { Video, VideoUpdateData, fetchVideos, deleteVideo, updateVideo} from '../services/videoService'
